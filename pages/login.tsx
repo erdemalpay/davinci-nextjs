@@ -1,5 +1,6 @@
 import React from "react";
 import { useRouter } from 'next/router'
+import { login, LoginCredentials } from '../utils/api/auth';
 
 interface FormElements extends HTMLFormControlsCollection {
 	username: HTMLInputElement,
@@ -16,15 +17,11 @@ const Index = () => {
     const handleSubmit = (event: React.FormEvent<LoginFormElement>) => {
         event.preventDefault();
         const {username, password} = (event.target as LoginFormElement).elements;
-        let payload = {
+        let payload:LoginCredentials = {
             username: username.value,
             password: password.value,
         };
-        console.log("payload", payload);
-        fetch(`https://apiv2.davinciboardgame.com/auth/login`, {
-            method: "POST",
-            body: JSON.stringify(payload),
-        }).then(() => {
+        login(payload).then(() => {
             router.push('/user')
         })
     };

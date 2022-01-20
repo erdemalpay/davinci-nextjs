@@ -1,21 +1,13 @@
 import { GetServerSideProps } from "next";
 
-interface UserProps {
-	name: string;
-	role: string;
-}
+import { get } from "../utils/api/user";
+import type { User } from "../utils/api/user";
 
-export const getServerSideProps: GetServerSideProps<UserProps> = async (context) => {
-		const { req } = context;
-    const {cookies} = req
+export const getServerSideProps: GetServerSideProps<User> = async ({ req }) => {
+		const {cookies} = req;
 		
-		const res = await fetch(`https://apiv2.davinciboardgame.com/user/profile`, {
-		headers: {
-			Cookie: `jwt=${cookies.jwt}`
-		}});
+		const { name, role }= await get({path: '/user/profile', cookies });
 		
-		const data = await res.json();
-		const { name, role } = data;
 		return {
 			props: {
 				name,
@@ -24,7 +16,7 @@ export const getServerSideProps: GetServerSideProps<UserProps> = async (context)
 		};
 }
 
-export default function User({ name, role }: UserProps) {
+export default function User({ name, role }: User) {
 	return (
 		<div>
 			<h1>Name: {name}</h1>
