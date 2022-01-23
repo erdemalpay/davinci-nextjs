@@ -17,6 +17,7 @@ const LoginPage:NextPage = () => {
 
     const handleSubmit = (event: React.FormEvent<LoginFormElement>) => {
         event.preventDefault();
+
         const {username, password} = (event.target as LoginFormElement).elements;
         let payload:LoginCredentials = {
             username: username.value,
