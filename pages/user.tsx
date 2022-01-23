@@ -9,7 +9,7 @@ const path = '/user/profile';
 export const getServerSideProps: GetServerSideProps = async (context) => {
 	const {req} = context;
 	const {cookies} = req;
-	console.dir(req.headers);
+	console.debug(cookies);
 	const { name, role } = await get({path, cookies });
 
 	return {
