@@ -4,8 +4,10 @@ export interface LoginCredentials {
 }
 
 export async function login(payload: LoginCredentials) {
-	return fetch(`${process.env.API_HOST}/auth/login`, {
+	console.log({payload});
+	return fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/login`, {
 		method: "POST",
 		body: JSON.stringify(payload),
+		headers: {'Content-Type':'application/json'},
 	});
 }

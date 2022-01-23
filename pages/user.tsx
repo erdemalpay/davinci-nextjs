@@ -1,26 +1,46 @@
 import { GetServerSideProps } from "next";
+import useSWR, { SWRConfig } from 'swr'
 
 import { get } from "../utils/api/user";
 import type { User } from "../utils/api/user";
 
-export const getServerSideProps: GetServerSideProps<User> = async ({ req }) => {
-		const {cookies} = req;
-		
-		const { name, role }= await get({path: '/user/profile', cookies });
-		
-		return {
-			props: {
-				name,
-				role,
-			},
-		};
+const path = '/user/profile';
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+	const {req} = context;
+	const {cookies} = req;
+	console.dir(req.headers);
+	const { name, role } = await get({path, cookies });
+
+	return {
+		props: {
+			fallback: {
+				[path]: {
+					name,
+					role,
+				}
+			}
+		},
+	};
 }
 
-export default function User({ name, role }: User) {
+function UserComponent() {
+	const { data, error } = useSWR(path);
+	if (error) return <p>An error has occurred.</p>;
+  if (!data) return <p>Loading...</p>;
+	const {name, role} = data;
 	return (
 		<div>
 			<h1>Name: {name}</h1>
 			<h2>Role: {role}</h2>
 		</div>
 	);
+}
+
+export default function Page({ fallback }: { fallback: {[path]: User }}) {
+  return (
+    <SWRConfig value={{ fallback }}>
+      <UserComponent />
+    </SWRConfig>
+  )
 }

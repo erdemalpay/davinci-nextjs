@@ -11,14 +11,16 @@ export interface User {
 }
 
 export async function get({path, cookies}: GetUser): Promise<User> {
-	const headers:HeadersInit = {};
+	const headers:HeadersInit = {'Content-Type':'application/json'};
 	if (cookies) {
 		headers.Cookie = `jwt=${cookies.jwt}`
 	}
-	console.log(`${process.env.API_HOST}${path}`);
-	const res = await fetch(`${process.env.API_HOST}${path}`, {
-		headers
-});
+	console.log({headers});
+	const res = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}${path}`, {
+		headers,
+		credentials: 'include',
+		mode: 'cors'
+	});
 	
 	const data = await res.json();
 	const { name, role } = data;

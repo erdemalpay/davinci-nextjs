@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouter } from 'next/router'
 import { login, LoginCredentials } from '../utils/api/auth';
+import { NextPage } from "next";
 
 interface FormElements extends HTMLFormControlsCollection {
 	username: HTMLInputElement,
@@ -11,7 +12,7 @@ interface LoginFormElement extends HTMLFormElement {
  readonly elements: FormElements
 }
 
-const Index = () => {
+const LoginPage:NextPage = () => {
     const router = useRouter();
 
     const handleSubmit = (event: React.FormEvent<LoginFormElement>) => {
@@ -56,4 +57,4 @@ const Index = () => {
         </div>
     );
 };
-export default Index;
+export default LoginPage;
