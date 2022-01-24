@@ -2,6 +2,7 @@ import React from "react";
 import { useRouter } from 'next/router'
 import { login, LoginCredentials } from '../utils/api/auth';
 import { NextPage } from "next";
+import Cookies from 'js-cookie';
 
 interface FormElements extends HTMLFormControlsCollection {
 	username: HTMLInputElement,
@@ -23,7 +24,11 @@ const LoginPage:NextPage = () => {
             username: username.value,
             password: password.value,
         };
-        login(payload).then(() => {
+        login(payload).then((res) => {
+            return res.json();
+        }).then(data => {
+            const {token} = data;
+            Cookies.set('jwt', token);
             router.push('/user')
         })
     };
