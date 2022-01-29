@@ -1,15 +1,22 @@
 import { NextPage } from "next";
-
+import { DateInput } from "../components/DateInput";
+import { InputWithLabel } from '../components/InputWithLabel';
 const TablesPage:NextPage = () => {
 	return (
-<div className="flex items-center justify-center">
-  <div className="datepicker relative form-floating mb-3 xl:w-96">
-    <input type="date"
-      className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none"
-      placeholder="Select a date" />
-    <label htmlFor="floatingInput" className="text-gray-700">Select a date</label>
-  </div>
-</div>
+		<div className="m-8">
+			<div className="mb-8">
+				<label htmlFor="date" className="text-gray-800 dark:text-gray-100 text-sm font-bold leading-tight tracking-normal mb-2">
+						Date
+					</label>
+				<DateInput id="date"/>
+			</div>
+			<div>
+				<div className="flex">
+				<InputWithLabel label='Active Table' type="number" className='w-full' />
+				<InputWithLabel label='Total Table' type="number" readOnly className='w-full'/>
+				</div>
+			</div>
+		</div>
 	);
 }
 
