@@ -63,7 +63,9 @@ const LoginPage: NextPage = () => {
                   required
                   name="username"
                   id="username"
-                  className="h-10 px-2 w-full rounded mt-2 text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 dark:border-gray-700 dark:focus:border-indigo-600 focus:outline-none focus:border focus:border-indigo-700 border-gray-300 border shadow"
+                  className={`h-10 px-2 w-full rounded mt-2 text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-800 dark:border-gray-700 dark:focus:border-indigo-600 focus:outline-none focus:border focus:border-indigo-700 ${
+                    error ? "border-red-300" : "border-gray-300"
+                  } border shadow`}
                   type="text"
                 />
               </div>
