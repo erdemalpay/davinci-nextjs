@@ -3,7 +3,7 @@ import { useState } from "react";
 import { DateInput } from "../components/DateInput";
 import { Header } from "../components/Header";
 import { InputWithLabel } from "../components/InputWithLabel";
-import { CreateTableDialog } from "../components/Dialog";
+import { CreateTableDialog } from "../components/CreateTableDialog";
 
 const TablesPage: NextPage = () => {
   let [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
@@ -28,7 +28,7 @@ const TablesPage: NextPage = () => {
                   </button>
                 </div>
                 <div className="flex flex-col gap-8">
-                  <div className="flex">
+                  <div className="flex flex-col md:flex-row">
                     <InputWithLabel
                       label="Active Table"
                       type="number"
@@ -40,9 +40,10 @@ const TablesPage: NextPage = () => {
                       type="number"
                       readOnly
                       className="w-full"
+                      value={1}
                     />
                   </div>
-                  <div className="flex">
+                  <div className="flex flex-col md:flex-row">
                     <InputWithLabel
                       label="Active Customer"
                       type="number"

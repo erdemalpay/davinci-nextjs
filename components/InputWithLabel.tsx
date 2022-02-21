@@ -9,6 +9,7 @@ export interface LabelWrapperProps {
   readOnly?: boolean;
   className?: string;
   min?: number;
+  value?: string | number;
 }
 
 export function InputWithLabel({
@@ -23,12 +24,12 @@ export function InputWithLabel({
         id={id}
         {...props}
         type={type}
-        className="w-full peer placeholder-transparent text-gray-600 border-0 border-b-[1px] dark:text-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 bg-white font-normal h-10 text-base border-gray-300"
+        className="w-full text-gray-600 border-0 border-b-[1px] dark:text-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 bg-white font-normal h-10 text-base border-gray-300"
         placeholder=""
       />
       <label
         htmlFor={id}
-        className="text-gray-800 dark:text-gray-100 text-xs absolute left-0 -top-3.5 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-2 peer-placeholder-shown:text-gray-400 peer-focus:-top-3.5 peer-focus:text-gray-600 peer-focus:text-xs"
+        className="text-gray-800 dark:text-gray-100 text-xs absolute left-0 -top-2.5"
       >
         {label}
       </label>
