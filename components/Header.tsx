@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useProfile } from "../pages/hooks/useProfile";
+import { useProfile } from "../hooks/useProfile";
 export function Header() {
   const [show, setShow] = useState(false);
   const [profile, setProfile] = useState(false);
