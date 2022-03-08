@@ -1,8 +1,8 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { login, LoginCredentials } from "../utils/api/auth";
+
 import { NextPage } from "next";
-import Cookies from "js-cookie";
 
 interface FormElements extends HTMLFormControlsCollection {
   username: HTMLInputElement;
@@ -28,9 +28,7 @@ const LoginPage: NextPage = () => {
 
     try {
       setError(false);
-      const res = await login(payload);
-      const { token } = await res.data;
-      Cookies.set("jwt", token);
+      await login(payload);
       router.push("/user");
     } catch (error) {
       setError(true);

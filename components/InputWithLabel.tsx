@@ -3,6 +3,7 @@ import { DateInput } from "./DateInput";
 export type InputType = "date" | "autocomplete" | "text" | "number" | "time";
 
 export interface LabelWrapperProps {
+  name: string;
   label: string;
   type?: InputType;
   id?: string;
@@ -10,12 +11,14 @@ export interface LabelWrapperProps {
   className?: string;
   min?: number;
   value?: string | number;
+  onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
 export function InputWithLabel({
   label,
   type = "text",
   id = label.toLowerCase(),
+  onChange,
   ...props
 }: LabelWrapperProps) {
   return (
@@ -26,6 +29,7 @@ export function InputWithLabel({
         type={type}
         className="w-full text-gray-600 border-0 border-b-[1px] dark:text-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 bg-white font-normal h-10 text-base border-gray-300"
         placeholder=""
+        onChange={onChange}
       />
       <label
         htmlFor={id}

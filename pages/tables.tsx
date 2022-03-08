@@ -1,11 +1,10 @@
-import { NextPage } from "next";
 import { useState } from "react";
 import { DateInput } from "../components/DateInput";
 import { Header } from "../components/Header";
 import { InputWithLabel } from "../components/InputWithLabel";
 import { CreateTableDialog } from "../components/CreateTableDialog";
 
-const TablesPage: NextPage = () => {
+const TablesPage = () => {
   let [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
   return (
     <>
@@ -30,12 +29,14 @@ const TablesPage: NextPage = () => {
                 <div className="flex flex-col gap-8">
                   <div className="flex flex-col md:flex-row">
                     <InputWithLabel
+                      name="activeTable"
                       label="Active Table"
                       type="number"
                       readOnly
                       className="w-full"
                     />
                     <InputWithLabel
+                      name="totalTable"
                       label="Total Table"
                       type="number"
                       readOnly
@@ -45,12 +46,14 @@ const TablesPage: NextPage = () => {
                   </div>
                   <div className="flex flex-col md:flex-row">
                     <InputWithLabel
+                      name="activeCustomer"
                       label="Active Customer"
                       type="number"
                       readOnly
                       className="w-full"
                     />
                     <InputWithLabel
+                      name="totalCustomer"
                       label="Total Customer"
                       type="number"
                       readOnly
@@ -59,6 +62,7 @@ const TablesPage: NextPage = () => {
                   </div>
                   <div className="w-full">
                     <InputWithLabel
+                      name="mentors"
                       type="autocomplete"
                       label="Who's at cafe?"
                       className="w-full"

@@ -2,6 +2,10 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
 import { InputWithLabel } from "./InputWithLabel";
+import { useState } from "react";
+import { format } from "date-fns";
+import { Table } from "../types";
+import { useForm } from "../hooks/useForm";
 
 export function CreateTableDialog({
   isOpen,
@@ -10,6 +14,17 @@ export function CreateTableDialog({
   isOpen: boolean;
   close: () => void;
 }) {
+  const date = format(new Date(), "yyyy-MM-dd");
+  const startHour = format(new Date(), "HH:mm");
+  const initialTable: Table = {
+    name: "",
+    date,
+    playerCount: 1,
+    startHour,
+    gameplays: [],
+  };
+  const { data, handleUpdate } = useForm(initialTable);
+
   return (
     <Transition
       show={isOpen}
@@ -39,18 +54,37 @@ export function CreateTableDialog({
                     <XIcon className="h-6 w-6" />
                   </button>
                 </div>
-                <div className="px-4 md:px-10 pt-6 md:pt-12 md:pb-4 pb-7">
-                  <div className="mt-2 flex flex-col gap-4">
-                    <InputWithLabel label="Table Name" type="text" />
+                <div className="px-4 md:px-10 md:pt-4 md:pb-4 pb-8">
+                  <div className="flex flex-col gap-4">
                     <InputWithLabel
+                      name="name"
+                      label="Table Name"
+                      type="text"
+                      onChange={handleUpdate}
+                    />
+                    <InputWithLabel
+                      name="playerCount"
                       label="Player Count"
                       type="number"
                       min={1}
+                      value={data.playerCount}
+                      onChange={handleUpdate}
                     />
                   </div>
                   <div className="mt-2 flex gap-2">
-                    <InputWithLabel label="Start Time" type="time" />
-                    <InputWithLabel label="End Time" type="time" />
+                    <InputWithLabel
+                      name="startTime"
+                      label="Start Time"
+                      type="time"
+                      value={data.startHour}
+                      onChange={handleUpdate}
+                    />
+                    <InputWithLabel
+                      name="endTime"
+                      label="End Time"
+                      type="time"
+                      onChange={handleUpdate}
+                    />
                   </div>
                   <div className="flex items-center justify-between mt-9">
                     <button
@@ -59,7 +93,10 @@ export function CreateTableDialog({
                     >
                       Cancel
                     </button>
-                    <button className="px-6 py-3 bg-indigo-700 hover:bg-opacity-80 shadow rounded text-sm text-white">
+                    <button
+                      className="px-6 py-3 bg-indigo-700 hover:bg-opacity-80 shadow rounded text-sm text-white"
+                      onClick={() => console.log({ data })}
+                    >
                       Create Table
                     </button>
                   </div>

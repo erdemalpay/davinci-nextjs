@@ -1,8 +1,8 @@
 import { GetServerSideProps } from "next";
 import useSWR, { SWRConfig } from "swr";
 
-import { get } from "../utils/api/user";
-import type { User } from "../utils/api/user";
+import { get } from "../utils/api";
+import type { User } from "../types";
 
 const path = "/user/profile";
 

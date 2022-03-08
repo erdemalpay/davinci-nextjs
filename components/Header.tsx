@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { useProfile } from "../hooks/useProfile";
+import { LocationSelector } from "./LocationSelector";
+
 export function Header() {
-  const [show, setShow] = useState(false);
-  const [profile, setProfile] = useState(false);
   const { name } = useProfile();
+  const [show, setShow] = useState(false);
+
   return (
     <div>
       {/* Mobile */}
@@ -46,7 +48,7 @@ export function Header() {
                 </div>
                 <div
                   id="cross"
-                  className="  text-white"
+                  className="text-white"
                   onClick={() => setShow(!show)}
                 >
                   <svg
@@ -120,7 +122,7 @@ export function Header() {
           </div>
         </div>
       </div>
-      {/* Mobile */}
+      {/* Mobile End*/}
       <div>
         {/* Navigation starts */}
         <nav className="w-full bg-gray-800 shadow">
@@ -131,61 +133,7 @@ export function Header() {
               </h3>
             </div>
             <div className="w-full xl:w-auto h-full flex items-center justify-end">
-              <div className="h-full flex">
-                <div
-                  aria-haspopup="true"
-                  className="cursor-pointer hidden xl:flex items-center pl-8 relative"
-                  onClick={() => setProfile(!profile)}
-                >
-                  {profile ? (
-                    <ul className="p-2 w-40 border-r bg-white absolute rounded z-40 left-0 shadow mt-40 ">
-                      <li className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal py-2 hover:text-indigo-700 focus:text-indigo-700 focus:outline-none">
-                        <div className="flex items-center">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            className="icon icon-tabler icon-tabler-user"
-                            width={20}
-                            height={20}
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="currentColor"
-                            fill="none"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path stroke="none" d="M0 0h24v24H0z" />
-                            <circle cx={12} cy={7} r={4} />
-                            <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
-                          </svg>
-                          <span className="ml-2">My Profile</span>
-                        </div>
-                      </li>
-                      <li className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mt-2 py-2 hover:text-indigo-700 flex items-center focus:text-indigo-700 focus:outline-none">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="icon icon-tabler icon-tabler-settings"
-                          width={20}
-                          height={20}
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          fill="none"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        >
-                          <path stroke="none" d="M0 0h24v24H0z" />
-                          <path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                          <circle cx={12} cy={12} r={3} />
-                        </svg>
-                        <span className="ml-2">Account Settings</span>
-                      </li>
-                    </ul>
-                  ) : (
-                    ""
-                  )}
-                  <p className="text-white text-sm ml-2">{name}</p>
-                </div>
-              </div>
+              <LocationSelector />
             </div>
             <div className="visible xl:hidden flex items-center relative">
               <ul className="p-2 w-64 border-r bg-white absolute top-0 -ml-2 rounded right-0 shadow mt-12 hidden">
