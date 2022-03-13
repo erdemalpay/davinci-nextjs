@@ -1,45 +1,33 @@
 import { GetServerSideProps } from "next";
-import useSWR, { SWRConfig } from "swr";
+import Cookies from "js-cookie";
 
 import { get } from "../utils/api";
 import type { User } from "../types";
+import { useQuery } from "react-query";
+import { getToken } from "../utils/serverUtils";
+import { getCurrentUser } from "../utils/api/user";
 
 const path = "/user/profile";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { req } = context;
-  const { cookies } = req;
-  const { name, role } = await get({ path, cookies });
-
-  return {
-    props: {
-      fallback: {
-        [path]: {
-          name,
-          role,
-        },
-      },
-    },
-  };
+  const user = await getCurrentUser({ context });
+  return { props: { user } };
 };
 
-function UserComponent() {
-  const { data, error } = useSWR(path);
+export default function UserComponent({ user: initialUser }: { user: User }) {
+  const token = Cookies.get("jwt");
+
+  const { data, error } = useQuery(path, () => getCurrentUser(), {
+    initialData: initialUser,
+  });
   if (error) return <p>An error has occurred.</p>;
   if (!data) return <p>Loading...</p>;
-  const { name, role } = data;
+  const user = data || initialUser;
+  const { name, role } = user;
   return (
     <div>
       <h1>Name: {name}</h1>
       <h2>Role: {role}</h2>
     </div>
-  );
-}
-
-export default function Page({ fallback }: { fallback: { [path]: User } }) {
-  return (
-    <SWRConfig value={{ fallback }}>
-      <UserComponent />
-    </SWRConfig>
   );
 }

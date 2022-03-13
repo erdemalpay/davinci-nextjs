@@ -1,10 +1,32 @@
 import { useState } from "react";
-import { DateInput } from "../components/DateInput";
-import { Header } from "../components/Header";
-import { InputWithLabel } from "../components/InputWithLabel";
-import { CreateTableDialog } from "../components/CreateTableDialog";
+import { DateInput } from "../../components/DateInput";
+import { Header } from "../../components/Header";
+import { InputWithLabel } from "../../components/InputWithLabel";
+import { CreateTableDialog } from "../../components/CreateTableDialog";
+import { GetServerSideProps } from "next";
+import { getTables } from "../../utils/api/table";
+import { Table } from "../../types";
+import { getToken } from "../../utils/serverUtils";
 
-const TablesPage = () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const location = Number(context.params?.location);
+  const initialTables = await getTables({ location, context });
+  return {
+    props: {
+      location,
+      initialTables,
+    },
+  };
+};
+
+const TablesPage = ({
+  initialTables,
+  location,
+}: {
+  initialTables: Table[];
+  location: Number;
+}) => {
+  const [tables, setTables] = useState(initialTables);
   let [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
   return (
     <>
@@ -75,6 +97,7 @@ const TablesPage = () => {
         </div>
       </div>
       <CreateTableDialog
+        location={location}
         isOpen={isCreateTableDialogOpen}
         close={() => setIsCreateTableDialogOpen(false)}
       />

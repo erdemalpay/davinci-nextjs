@@ -6,8 +6,13 @@ import { useState } from "react";
 import { Location } from "../types";
 import App from "next/app";
 
+import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
+
 function MyApp({ Component, pageProps }: AppProps) {
   const { locations } = pageProps;
+
+  const [queryClient] = useState(() => new QueryClient());
+
   const [selectedLocation, setSelectedLocation] = useState<Location>(
     locations[0]
   );
@@ -19,9 +24,13 @@ function MyApp({ Component, pageProps }: AppProps) {
   };
 
   return (
-    <LocationContext.Provider value={initalLocationValue}>
-      <Component {...pageProps} />;
-    </LocationContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <Hydrate state={pageProps.dehydratedState}>
+        <LocationContext.Provider value={initalLocationValue}>
+          <Component {...pageProps} />
+        </LocationContext.Provider>
+      </Hydrate>
+    </QueryClientProvider>
   );
 }
 

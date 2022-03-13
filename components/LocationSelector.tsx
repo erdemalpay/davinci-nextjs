@@ -10,7 +10,7 @@ export function LocationSelector() {
       {locations.map((location, index) => {
         return (
           <DropdownItem
-            key={location.id}
+            key={location.name}
             onClick={() => setSelectedLocation(locations[index])}
             text={location.name}
           />

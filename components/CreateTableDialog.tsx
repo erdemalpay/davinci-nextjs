@@ -2,15 +2,17 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
 import { InputWithLabel } from "./InputWithLabel";
-import { useState } from "react";
 import { format } from "date-fns";
 import { Table } from "../types";
 import { useForm } from "../hooks/useForm";
+import { createTable } from "../utils/api/table";
 
 export function CreateTableDialog({
+  location,
   isOpen,
   close,
 }: {
+  location: Number;
   isOpen: boolean;
   close: () => void;
 }) {
@@ -19,11 +21,17 @@ export function CreateTableDialog({
   const initialTable: Table = {
     name: "",
     date,
+    location,
     playerCount: 1,
     startHour,
     gameplays: [],
   };
   const { data, handleUpdate } = useForm(initialTable);
+
+  async function handleCreate() {
+    await createTable({ payload: data });
+    close();
+  }
 
   return (
     <Transition
@@ -95,7 +103,7 @@ export function CreateTableDialog({
                     </button>
                     <button
                       className="px-6 py-3 bg-indigo-700 hover:bg-opacity-80 shadow rounded text-sm text-white"
-                      onClick={() => console.log({ data })}
+                      onClick={handleCreate}
                     >
                       Create Table
                     </button>

@@ -15,7 +15,7 @@ export type Table = {
   name: string;
   date: string;
   playerCount: number;
-  location?: Location;
+  location?: Number;
   startHour: string;
   finishHour?: string;
   gameplays: Gameplay[];
