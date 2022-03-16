@@ -19,7 +19,6 @@ export async function login(payload: LoginCredentials) {
     payload,
   });
   const { token } = response.data;
-  console.log({ token });
 
   Cookies.set("jwt", token);
 }

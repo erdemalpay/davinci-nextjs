@@ -12,7 +12,7 @@ export function CreateTableDialog({
   isOpen,
   close,
 }: {
-  location: Number;
+  location: number;
   isOpen: boolean;
   close: () => void;
 }) {
@@ -74,7 +74,6 @@ export function CreateTableDialog({
                       name="playerCount"
                       label="Player Count"
                       type="number"
-                      min={1}
                       value={data.playerCount}
                       onChange={handleUpdate}
                     />
@@ -102,7 +101,7 @@ export function CreateTableDialog({
                       Cancel
                     </button>
                     <button
-                      className="px-6 py-3 bg-indigo-700 hover:bg-opacity-80 shadow rounded text-sm text-white"
+                      className="px-6 py-3 bg-gray-800 hover:bg-opacity-80 shadow rounded text-sm text-white"
                       onClick={handleCreate}
                     >
                       Create Table

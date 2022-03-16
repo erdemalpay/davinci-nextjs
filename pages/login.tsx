@@ -91,7 +91,7 @@ const LoginPage: NextPage = () => {
               )}
             </div>
             <div className="px-2 mb-16 sm:mb-56 md:mb-16 sm:px-6">
-              <button className="focus:outline-none w-full bg-indigo-700 transition duration-150 ease-in-out hover:bg-indigo-600 rounded text-white px-8 py-3 text-sm mt-6">
+              <button className="focus:outline-none w-full bg-gray-800 transition duration-150 ease-in-out hover:bg-gray-600 rounded text-white px-8 py-3 text-sm mt-6">
                 Login
               </button>
             </div>

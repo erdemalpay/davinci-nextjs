@@ -2,7 +2,7 @@ import { DateInput } from "./DateInput";
 
 export type InputType = "date" | "autocomplete" | "text" | "number" | "time";
 
-export interface LabelWrapperProps {
+export interface InputWithLabelProps {
   name: string;
   label: string;
   type?: InputType;
@@ -19,10 +19,11 @@ export function InputWithLabel({
   type = "text",
   id = label.toLowerCase(),
   onChange,
+  min = 1,
   ...props
-}: LabelWrapperProps) {
+}: InputWithLabelProps) {
   return (
-    <div className="relative md:pr-16 mt-4 w-full">
+    <div className="relative mt-4 w-full">
       <input
         id={id}
         {...props}

@@ -3,7 +3,7 @@ import { Table } from "../../types/index";
 import { PossibleContext } from "../serverUtils";
 
 interface TableRequest extends PossibleContext {
-  location: Number;
+  location: number;
 }
 
 interface TableCreateRequest extends PossibleContext {

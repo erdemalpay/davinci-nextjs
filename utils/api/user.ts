@@ -7,3 +7,7 @@ export function getCurrentUser({
 }: PossibleContext = {}): Promise<User> {
   return get<User>({ path: "/users/me", context });
 }
+
+export function getUsers({ context }: PossibleContext): Promise<User[]> {
+  return get<User[]>({ path: "/users/all", context });
+}

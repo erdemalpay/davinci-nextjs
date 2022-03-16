@@ -4,10 +4,10 @@ import { useState } from "react";
 export function DateInput({ ...props }) {
   const [date, setDate] = useState(new Date());
   return (
-    <div className="relative md:mr-16 mt-10 h-full">
+    <div className="relative mt-10 h-full">
       <DatePicker
         {...props}
-        className="border-0 border-b-2 peer placeholder-transparent"
+        className="border-0 border-b-2 text-2xl peer placeholder-transparent"
         selected={date}
         onChange={(date) => setDate(date as Date)}
         nextMonthButtonLabel=">"
