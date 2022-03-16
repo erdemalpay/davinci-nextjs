@@ -33,8 +33,18 @@ const TablesPage = ({
   users: User[];
   location: number;
 }) => {
-  const [tables, setTables] = useState(initialTables);
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
+  const [tables, setTables] = useState(initialTables);
+  const activeTables = tables.filter((table) => !table.finishHour);
+  const activeTableCount = activeTables.length;
+  const totalTableCount = tables.length;
+
+  const activeCustomerCount = activeTables.reduce((prev, curr) => {
+    return prev + curr.playerCount;
+  }, 0);
+  const totalCustomerCount = activeTables.reduce((prev, curr) => {
+    return prev + curr.playerCount;
+  }, 0);
 
   return (
     <>
@@ -61,6 +71,7 @@ const TablesPage = ({
                 type="number"
                 readOnly
                 className="w-full"
+                value={activeTableCount}
               />
               <InputWithLabel
                 name="totalTable"
@@ -68,7 +79,7 @@ const TablesPage = ({
                 type="number"
                 readOnly
                 className="w-full"
-                value={1}
+                value={totalTableCount}
               />
 
               <InputWithLabel
@@ -77,6 +88,7 @@ const TablesPage = ({
                 type="number"
                 readOnly
                 className="w-full"
+                value={activeCustomerCount}
               />
               <InputWithLabel
                 name="totalCustomer"
@@ -84,6 +96,7 @@ const TablesPage = ({
                 type="number"
                 readOnly
                 className="w-full"
+                value={totalCustomerCount}
               />
             </div>
           </div>
