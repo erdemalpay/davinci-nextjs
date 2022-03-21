@@ -26,6 +26,7 @@ export function InputWithLabel({
     <div className="relative mt-4 w-full">
       <input
         id={id}
+        min={min}
         {...props}
         type={type}
         className="w-full text-gray-600 border-0 border-b-[1px] dark:text-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 bg-white font-normal h-10 text-base border-gray-300"

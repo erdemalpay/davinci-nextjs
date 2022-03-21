@@ -11,5 +11,6 @@ export function useForm<T>(initialData: T) {
   return {
     handleUpdate,
     data,
+    setData,
   };
 }

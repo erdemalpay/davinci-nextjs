@@ -4,37 +4,45 @@ import { Header } from "../../components/Header";
 import { InputWithLabel } from "../../components/InputWithLabel";
 import { CreateTableDialog } from "../../components/CreateTableDialog";
 import { GetServerSideProps } from "next";
-import { getTables } from "../../utils/api/table";
-import { Table, User } from "../../types";
+import { getTables, useGetTables } from "../../utils/api/table";
+import { Table, User, Game } from "../../types";
 import { TableCard } from "../../components/TableCard";
 import { getUsers } from "../../utils/api/user";
 import { TagListWithAutocomplete } from "../../components/TagListWithAutocomplete";
 import { TagType } from "../../types/index";
+import { getGames, useGetGames } from "../../utils/api/game";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);
-  const initialTables = await getTables({ location, context });
-  const users = await getUsers({ context });
+  const initialTables = await getTables({ context });
+  const initialGames = await getGames({ context });
+  const mentors = await getUsers({ context });
   return {
     props: {
       location,
       initialTables,
-      users,
+      initialGames,
+      mentors,
     },
   };
 };
 
 const TablesPage = ({
   initialTables,
-  users,
+  mentors,
   location,
+  initialGames,
 }: {
   initialTables: Table[];
-  users: User[];
+  mentors: User[];
   location: number;
+  initialGames: Game[];
 }) => {
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
-  const [tables, setTables] = useState(initialTables);
+  let { tables } = useGetTables(initialTables);
+  tables = tables || initialTables;
+  let { games } = useGetGames(initialGames);
+  games = games || initialGames;
   const activeTables = tables.filter((table) => !table.finishHour);
   const activeTableCount = activeTables.length;
   const totalTableCount = tables.length;
@@ -100,23 +108,20 @@ const TablesPage = ({
               />
             </div>
           </div>
-          <div className="w-full">
-            {/* <InputWithLabel
-              name="mentors"
-              type="autocomplete"
-              label="Who's at cafe?"
-              className="w-full"
-            /> */}
-          </div>
           <TagListWithAutocomplete
-            suggestions={users as TagType<User>[]}
+            suggestions={mentors as TagType<User>[]}
             name="employees"
             label="Who's at cafe?"
           />
         </div>
         <div className="w-full grid grid-cols-4 gap-8 mt-12">
           {tables.map((table) => (
-            <TableCard key={table._id} table={table} />
+            <TableCard
+              key={table._id}
+              table={table}
+              mentors={mentors}
+              games={games as Game[]}
+            />
           ))}
         </div>
       </div>

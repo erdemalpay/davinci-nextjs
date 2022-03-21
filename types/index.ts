@@ -1,13 +1,15 @@
 export type Gameplay = {
+  _id?: number;
   date: string;
   startHour: string;
   playerCount: number;
-  game: number;
+  game?: number;
   mentor: string;
+  location: number;
 };
 
 export type Location = {
-  id: number;
+  _id: number;
   name: string;
 };
 
@@ -23,11 +25,20 @@ export type Table = {
 };
 
 export type User = {
+  _id: string;
   name: string;
   role: string;
 };
 
-export type TagType<T> = {
+export type Game = {
+  _id: number;
   name: string;
-  _id: string;
+  image: string;
+  thumbnail: string;
+  expansion: boolean;
+};
+
+export type TagType<T> = {
+  _id: string | number;
+  name: string;
 } & T;

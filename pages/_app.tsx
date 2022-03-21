@@ -12,7 +12,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { locations } = pageProps;
 
   const [queryClient] = useState(() => new QueryClient());
-
   const [selectedLocation, setSelectedLocation] = useState<Location>(
     locations[0]
   );

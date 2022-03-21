@@ -6,7 +6,9 @@ import { TagType } from "../types";
 
 interface AutocompleteProps<T> extends InputWithLabelProps {
   suggestions: T[];
+  initialValue?: T;
   handleSelection: (item: T) => void;
+  showSelected?: boolean;
 }
 
 const ForwardedInputWithLabel = forwardRef(InputWithLabel);
@@ -16,8 +18,9 @@ export function Autocomplete<T>({
   name,
   label,
   handleSelection,
+  showSelected = false,
 }: AutocompleteProps<TagType<T>>) {
-  const [selected, setSelected] = useState<T>();
+  const [selected, setSelected] = useState<TagType<T>>();
   const [query, setQuery] = useState("");
 
   const filteredSuggestions =
@@ -32,7 +35,13 @@ export function Autocomplete<T>({
 
   return (
     <div className="w-full flex">
-      <Combobox value={selected} onChange={handleSelection}>
+      <Combobox
+        value={selected}
+        onChange={(e) => {
+          setSelected(e as TagType<T>);
+          handleSelection(e as TagType<T>);
+        }}
+      >
         <div className="relative mt-1 w-full">
           <div className="relative w-full text-left bg-white rounded-lg cursor-default sm:text-sm overflow-hidden">
             <Combobox.Input
@@ -44,7 +53,7 @@ export function Autocomplete<T>({
                 className="w-full focus:border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 outline-0"
                 name={name}
                 label={label}
-                value={query}
+                value={showSelected ? selected?.name || query : query}
               />
             </Combobox.Input>
             <Combobox.Button className="absolute bottom-2 right-0 flex items-center pr-2">
@@ -77,24 +86,11 @@ export function Autocomplete<T>({
                     }
                     value={suggestion}
                   >
-                    {({ selected, active }) => (
+                    {() => (
                       <>
-                        <span
-                          className={`block truncate ${
-                            selected ? "font-medium" : "font-normal"
-                          }`}
-                        >
+                        <span className={"block truncate font-normal"}>
                           {suggestion.name}
                         </span>
-                        {selected ? (
-                          <span
-                            className={`absolute inset-y-0 left-0 flex items-center pl-3 ${
-                              active ? "text-white" : "text-teal-600"
-                            }`}
-                          >
-                            <CheckIcon className="w-5 h-5" aria-hidden="true" />
-                          </span>
-                        ) : null}
                       </>
                     )}
                   </Combobox.Option>

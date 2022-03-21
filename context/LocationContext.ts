@@ -10,4 +10,5 @@ type LocationContextType = {
 export const LocationContext = createContext<LocationContextType>({
   locations: [],
   setSelectedLocation: () => {},
+  selectedLocation: undefined,
 });
