@@ -1,6 +1,6 @@
 import { User } from "../../types";
 import { get } from "../api";
-import { PossibleContext } from "../serverUtils";
+import { PossibleContext } from "../token";
 
 export function getCurrentUser({
   context,

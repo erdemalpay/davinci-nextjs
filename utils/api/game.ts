@@ -1,6 +1,6 @@
 import { Game } from "../../types";
 import { get } from ".";
-import { PossibleContext } from "../serverUtils";
+import { PossibleContext } from "../token";
 import { useQuery } from "react-query";
 
 const getAllGamesQuery = "/games/all";

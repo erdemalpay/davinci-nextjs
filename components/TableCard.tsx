@@ -1,10 +1,13 @@
 import { PlusIcon, PencilIcon, FlagIcon } from "@heroicons/react/solid";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { Gameplay, Table, User, Game } from "../types";
 import { GameplayDialog } from "./GameplayDialog";
 import { InputWithLabel } from "./InputWithLabel";
 import { CardAction } from "./CardAction";
 import { format } from "date-fns";
+import { getDuration } from "../utils/time";
+import { useUpdateTableMutation } from "../utils/api/table";
+import { useForm } from "../hooks/useForm";
 
 export interface TableCardProps {
   table: Table;
@@ -20,6 +23,10 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     setSelectedGameplay(undefined);
     setIsGameplayDialogOpen(true);
   }
+
+  const { data, handleUpdate } = useForm(table);
+
+  const { mutate: updateTable } = useUpdateTableMutation();
 
   function getGameName(id: number) {
     const game = games.find((game) => game._id === id);
@@ -42,8 +49,18 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     mentor: "-",
   };
 
+  function updateTableHandler(event: FormEvent<HTMLInputElement>) {
+    handleUpdate(event);
+    const target = event.target as HTMLInputElement;
+
+    updateTable({
+      id: table._id!,
+      updates: { [target.name]: target.valueAsNumber },
+    });
+  }
+
   return (
-    <div className="bg-white rounded-md shadow overflow-y-auto sm:h-auto">
+    <div className="bg-white rounded-md shadow overflow-y-auto sm:h-auto break-inside-avoid mb-4">
       <div className="bg-gray-100 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
         <p className="text-base font-semibold">{table.name}</p>
         <div className="flex justify-end w-2/3 gap-4">
@@ -74,14 +91,21 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
             name="playerCount"
             label="Player Count"
             type="number"
-            value={table.playerCount}
-            readOnly
+            defaultValue={table.playerCount}
+            onChange={updateTableHandler}
           />
         </div>
-        <div className="flex flex-col-reverse gap-4">
-          {table.gameplays.map((gameplay) => {
+        <div className="flex flex-col space-y-2 mt-2">
+          {table.gameplays?.reverse().map((gameplay) => {
             return (
-              <h1 key={gameplay._id}>{getGameName(gameplay.game as number)}</h1>
+              <div key={gameplay._id} className="flex justify-between text-xs">
+                <h1 className="text-xs">
+                  {getGameName(gameplay.game as number)}
+                </h1>
+                <h5 className="text-xs">
+                  {getDuration(gameplay.startHour, gameplay.finishHour)}
+                </h5>
+              </div>
             );
           })}
         </div>

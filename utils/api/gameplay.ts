@@ -1,6 +1,6 @@
 import { post } from "./index";
 import { Gameplay, Table } from "../../types/index";
-import { PossibleContext } from "../serverUtils";
+import { PossibleContext } from "../token";
 import { useMutation, useQueryClient } from "react-query";
 import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
@@ -22,6 +22,7 @@ export function createGameplay({
 
 export function useGameplayMutation() {
   const { selectedLocation } = useContext(LocationContext);
+
   const tablesQuery = `/tables/all?location=${selectedLocation?._id}`;
   const queryClient = useQueryClient();
   return useMutation(createGameplay, {

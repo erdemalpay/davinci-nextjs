@@ -11,6 +11,7 @@ export interface InputWithLabelProps {
   className?: string;
   min?: number;
   value?: string | number;
+  defaultValue?: string | number;
   onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 

@@ -1,18 +1,17 @@
 import axios from "axios";
-import { getToken, PossibleContext } from "../serverUtils/index";
+import { getToken, PossibleContext } from "../token";
 
-interface GetRequest extends PossibleContext {
+interface BaseRequest extends PossibleContext {
   path: string;
 }
 
-interface PostRequest<P> extends PossibleContext {
-  path: string;
+interface RequestWithPayload<P> extends BaseRequest {
   payload: P;
 }
 
 const baseURL = `${process.env.NEXT_PUBLIC_API_HOST}`;
 
-export async function get<T>({ path, context }: GetRequest): Promise<T> {
+export async function get<T>({ path, context }: BaseRequest): Promise<T> {
   const token = getToken({ context });
   const headers: HeadersInit = { "Content-Type": "application/json" };
   if (token) {
@@ -32,13 +31,43 @@ export async function get<T>({ path, context }: GetRequest): Promise<T> {
 export async function post<P, R>({
   path,
   payload,
-}: PostRequest<P>): Promise<R> {
+}: RequestWithPayload<P>): Promise<R> {
   const headers: HeadersInit = {};
   const token = getToken();
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
   return axios.post(`${baseURL}${path}`, payload, {
+    headers,
+  });
+}
+
+// P = payload, R = ResponseType
+export async function put<P, R>({
+  path,
+  payload,
+}: RequestWithPayload<P>): Promise<R> {
+  const headers: HeadersInit = {};
+  const token = getToken();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return axios.put(`${baseURL}${path}`, payload, {
+    headers,
+  });
+}
+
+// P = payload, R = ResponseType
+export async function patch<P, R>({
+  path,
+  payload,
+}: RequestWithPayload<P>): Promise<R> {
+  const headers: HeadersInit = {};
+  const token = getToken();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return axios.patch(`${baseURL}${path}`, payload, {
     headers,
   });
 }

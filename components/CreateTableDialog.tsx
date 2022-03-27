@@ -27,10 +27,10 @@ export function CreateTableDialog({
     gameplays: [],
   };
   const { data, handleUpdate } = useForm(initialTable);
-  const { mutateAsync } = useCreateTableMutation();
+  const { mutate: createTable } = useCreateTableMutation();
 
   async function handleCreate() {
-    await mutateAsync({ payload: data });
+    createTable(data);
     close();
   }
 

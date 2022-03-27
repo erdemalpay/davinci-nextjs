@@ -114,7 +114,7 @@ const TablesPage = ({
             label="Who's at cafe?"
           />
         </div>
-        <div className="w-full grid grid-cols-4 gap-8 mt-12">
+        <div className="h-full columns-4 gap-8 mt-4">
           {tables.map((table) => (
             <TableCard
               key={table._id}

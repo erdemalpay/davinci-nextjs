@@ -2,6 +2,7 @@ export type Gameplay = {
   _id?: number;
   date: string;
   startHour: string;
+  finishHour?: string;
   playerCount: number;
   game?: number;
   mentor: string;
