@@ -1,10 +1,18 @@
 import React, { useState } from "react";
 import { useProfile } from "../hooks/useProfile";
 import { LocationSelector } from "./LocationSelector";
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 
 export function Header() {
   const { name } = useProfile();
   const [show, setShow] = useState(false);
+  const router = useRouter();
+
+  function logout() {
+    Cookies.remove("jwt");
+    router.push("/login");
+  }
 
   return (
     <div>
@@ -132,8 +140,14 @@ export function Header() {
                 Da Vinci Panel
               </h3>
             </div>
-            <div className="w-full xl:w-auto h-full flex items-center justify-end">
+            <div className="w-full xl:w-auto h-full flex items-center justify-end gap-x-4">
               <LocationSelector />
+              <button
+                onClick={logout}
+                className="focus:outline-none text-white text-sm border p-2 rounded-sm border-neutral-50 flex gap-2"
+              >
+                Logout
+              </button>
             </div>
             <div className="visible xl:hidden flex items-center relative">
               <ul className="p-2 w-64 border-r bg-white absolute top-0 -ml-2 rounded right-0 shadow mt-12 hidden">
@@ -201,7 +215,7 @@ export function Header() {
                   </svg>
                   <span className="ml-2">Products</span>
                 </li>
-                <li className="flex xl:hidden cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mt-2 py-2 hover:text-indigo-700 flex items-center focus:text-indigo-700 focus:outline-none">
+                <li className="flex xl:hidden cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mt-2 py-2 hover:text-indigo-700 items-center focus:text-indigo-700 focus:outline-none">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="icon icon-tabler icon-tabler-settings"

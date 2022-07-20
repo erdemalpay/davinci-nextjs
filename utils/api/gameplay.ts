@@ -4,6 +4,8 @@ import { PossibleContext } from "../token";
 import { useMutation, useQueryClient } from "react-query";
 import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
+import { SelectedDateContext } from "../../context/SelectedDateContext";
+import { format } from "date-fns";
 
 interface GameplayCreateRequest extends PossibleContext {
   table: number;
@@ -22,8 +24,10 @@ export function createGameplay({
 
 export function useGameplayMutation() {
   const { selectedLocation } = useContext(LocationContext);
-
-  const tablesQuery = `/tables/all?location=${selectedLocation?._id}`;
+  const { selectedDate } = useContext(SelectedDateContext);
+  const tablesQuery = `/tables/all?location=${
+    selectedLocation?._id
+  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
   const queryClient = useQueryClient();
   return useMutation(createGameplay, {
     // We are updating tables query data with new gameplay
@@ -40,10 +44,10 @@ export function useGameplayMutation() {
 
       // Optimistically update to the new value
       queryClient.setQueryData(tablesQuery, [
-        ...(previousTables as Table[]),
+        ...previousTables!.filter((table) => table._id !== previousTable._id),
         {
           ...previousTable,
-          gameplay: [...previousTable!.gameplays, newGameplay],
+          gameplays: [...previousTable!.gameplays, newGameplay.payload],
         },
       ]);
 
