@@ -15,6 +15,16 @@ import { SelectedDateContext } from "../../context/SelectedDateContext";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);
+
+  if (!location) {
+    return {
+      redirect: {
+        statusCode: 301,
+        destination: "/home/1",
+      },
+    };
+  }
+
   const initialTables = await getTables({ context });
   const initialGames = await getGames({ context });
   const mentors = await getUsers({ context });
@@ -41,7 +51,6 @@ const TablesPage = ({
 }) => {
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
   const { setSelectedDate, selectedDate } = useContext(SelectedDateContext);
-
   let { tables } = useGetTables(initialTables);
   tables = tables || initialTables;
   let { games } = useGetGames(initialGames);

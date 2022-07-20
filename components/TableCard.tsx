@@ -98,7 +98,10 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
         <div className="flex flex-col space-y-2 mt-2">
           {table.gameplays?.reverse().map((gameplay) => {
             return (
-              <div key={gameplay._id} className="flex justify-between text-xs">
+              <div
+                key={gameplay._id || gameplay.startHour}
+                className="flex justify-between text-xs"
+              >
                 <h1 className="text-xs">
                   {getGameName(gameplay.game as number)}
                 </h1>
