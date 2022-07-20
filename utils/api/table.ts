@@ -67,8 +67,11 @@ export function updateTable({
 
 export function useCreateTableMutation() {
   const { selectedLocation } = useContext(LocationContext);
+  const { selectedDate } = useContext(SelectedDateContext);
   const queryClient = useQueryClient();
-  const tablesQuery = `/tables/all?location=${selectedLocation?._id}`;
+  const tablesQuery = `/tables/all?location=${
+    selectedLocation?._id
+  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
   return useMutation(createTable, {
     // We are updating tables query data with new table
     onMutate: async (newTable) => {
@@ -104,7 +107,10 @@ export function useCreateTableMutation() {
 
 export function useUpdateTableMutation() {
   const { selectedLocation } = useContext(LocationContext);
-  const tablesQuery = `/tables/all?location=${selectedLocation?._id}`;
+  const { selectedDate } = useContext(SelectedDateContext);
+  const tablesQuery = `/tables/all?location=${
+    selectedLocation?._id
+  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
   const queryClient = useQueryClient();
   return useMutation(updateTable, {
     // We are updating tables query data with new table

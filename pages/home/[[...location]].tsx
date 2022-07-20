@@ -150,7 +150,7 @@ const TablesPage = ({
         <div className="h-full columns-4 gap-8 mt-4">
           {(showAllTables ? tables : activeTables).map((table) => (
             <TableCard
-              key={table._id}
+              key={table._id || table.startHour}
               table={table}
               mentors={mentors}
               games={games as Game[]}
