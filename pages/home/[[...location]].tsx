@@ -51,8 +51,19 @@ const TablesPage = ({
 }) => {
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
   const { setSelectedDate, selectedDate } = useContext(SelectedDateContext);
+  const [showAllTables, setShowAllTables] = useState(true);
+
   let { tables } = useGetTables(initialTables);
   tables = tables || initialTables;
+  tables.sort((a, b) => {
+    if (a.finishHour && !b.finishHour) {
+      return 1;
+    } else if (!a.finishHour && b.finishHour) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
   let { games } = useGetGames(initialGames);
   games = games || initialGames;
 
@@ -92,7 +103,7 @@ const TablesPage = ({
             <div className="flex flex-col md:flex-row md:gap-16 w-full">
               <InputWithLabel
                 name="activeTable"
-                label="Active Table"
+                label="Open Table"
                 type="number"
                 readOnly
                 className="w-full"
@@ -131,8 +142,13 @@ const TablesPage = ({
             label="Who's at cafe?"
           />
         </div>
+        <div className="flex justify-end">
+          <button onClick={() => setShowAllTables((value) => !value)}>
+            {showAllTables ? "Show open tables" : "Show all tables"}
+          </button>
+        </div>
         <div className="h-full columns-4 gap-8 mt-4">
-          {tables.map((table) => (
+          {(showAllTables ? tables : activeTables).map((table) => (
             <TableCard
               key={table._id}
               table={table}

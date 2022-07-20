@@ -12,6 +12,7 @@ export interface InputWithLabelProps {
   min?: number;
   value?: string | number;
   defaultValue?: string | number;
+  bgColor?: string;
   onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
@@ -21,6 +22,7 @@ export function InputWithLabel({
   id = label.toLowerCase(),
   onChange,
   min = 1,
+  bgColor = "bg-white",
   ...props
 }: InputWithLabelProps) {
   return (
@@ -30,7 +32,7 @@ export function InputWithLabel({
         min={min}
         {...props}
         type={type}
-        className="w-full text-gray-600 border-0 border-b-[1px] dark:text-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 bg-white font-normal h-10 text-base border-gray-300"
+        className={`${bgColor} w-full text-gray-600 border-0 border-b-[1px] dark:text-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 font-normal h-10 text-base border-gray-300`}
         placeholder=""
         onChange={onChange}
       />

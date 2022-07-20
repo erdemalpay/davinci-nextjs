@@ -19,6 +19,8 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   const [isGameplayDialogOpen, setIsGameplayDialogOpen] = useState(false);
   const [selectedGameplay, setSelectedGameplay] = useState<Gameplay>();
 
+  const bgColor = table.finishHour ? "bg-gray-100" : "bg-white";
+
   function createGameplay() {
     setSelectedGameplay(undefined);
     setIsGameplayDialogOpen(true);
@@ -61,7 +63,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
 
   return (
     <div className="bg-white rounded-md shadow overflow-y-auto sm:h-auto break-inside-avoid mb-4">
-      <div className="bg-gray-100 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
+      <div className="bg-gray-200 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
         <p className="text-base font-semibold">{table.name}</p>
         <div className="flex justify-end w-2/3 gap-4">
           <CardAction onClick={createGameplay} IconComponent={PlusIcon} />
@@ -69,7 +71,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
           <CardAction onClick={finishTable} IconComponent={FlagIcon} />
         </div>
       </div>
-      <div className="px-4 md:px-10 md:pt-4 md:pb-4 pb-8">
+      <div className={`px-4 md:px-10 md:pt-4 md:pb-4 pb-8 ${bgColor}`}>
         <div className="mt-2 flex gap-4	 flex-row">
           <InputWithLabel
             name="startTime"
@@ -77,6 +79,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
             type="time"
             value={table.startHour}
             readOnly
+            bgColor={bgColor}
           />
           <InputWithLabel
             name="endTime"
@@ -84,6 +87,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
             type="time"
             value={table.finishHour}
             readOnly
+            bgColor={bgColor}
           />
         </div>
         <div className="flex flex-col gap-4">
@@ -93,6 +97,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
             type="number"
             defaultValue={table.playerCount}
             onChange={updateTableHandler}
+            bgColor={bgColor}
           />
         </div>
         <div className="flex flex-col space-y-2 mt-2">
