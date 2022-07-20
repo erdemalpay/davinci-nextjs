@@ -2,14 +2,13 @@ import DatePicker from "react-datepicker";
 import { useState } from "react";
 
 export function DateInput({ ...props }) {
-  const [date, setDate] = useState(new Date());
   return (
     <div className="relative mt-10 h-full">
       <DatePicker
         {...props}
         className="border-0 border-b-2 text-2xl peer placeholder-transparent"
-        selected={date}
-        onChange={(date) => setDate(date as Date)}
+        selected={props.date}
+        onChange={(date) => props.setDate(date as Date)}
         nextMonthButtonLabel=">"
         previousMonthButtonLabel="<"
         popperClassName="react-datepicker-left"

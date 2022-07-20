@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { DateInput } from "../../components/DateInput";
 import { Header } from "../../components/Header";
 import { InputWithLabel } from "../../components/InputWithLabel";
@@ -11,6 +11,7 @@ import { getUsers } from "../../utils/api/user";
 import { TagListWithAutocomplete } from "../../components/TagListWithAutocomplete";
 import { TagType } from "../../types/index";
 import { getGames, useGetGames } from "../../utils/api/game";
+import { SelectedDateContext } from "../../context/SelectedDateContext";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);
@@ -39,10 +40,13 @@ const TablesPage = ({
   initialGames: Game[];
 }) => {
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
+  const { setSelectedDate, selectedDate } = useContext(SelectedDateContext);
+
   let { tables } = useGetTables(initialTables);
   tables = tables || initialTables;
   let { games } = useGetGames(initialGames);
   games = games || initialGames;
+
   const activeTables = tables.filter((table) => !table.finishHour);
   const activeTableCount = activeTables.length;
   const totalTableCount = tables.length;
@@ -62,7 +66,11 @@ const TablesPage = ({
         <div className="h-full flex w-full flex-wrap flex-col">
           <div className="flex justify-between">
             <div className="flex items-center text-3xl">
-              <DateInput id="date" />
+              <DateInput
+                id="date"
+                date={selectedDate}
+                setDate={setSelectedDate}
+              />
             </div>
             <button
               onClick={() => setIsCreateTableDialogOpen(true)}

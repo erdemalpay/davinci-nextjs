@@ -4,7 +4,7 @@ import { XIcon } from "@heroicons/react/solid";
 import { InputWithLabel } from "./InputWithLabel";
 import { Table, Gameplay, User, Game } from "../types";
 import { useForm } from "../hooks/useForm";
-import { createGameplay, useGameplayMutation } from "../utils/api/gameplay";
+import { useGameplayMutation } from "../utils/api/gameplay";
 import { Autocomplete } from "./Autocomplete";
 
 export function GameplayDialog({

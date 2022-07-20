@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { ReactNode } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import TablesPage from "../../../pages/home/[location]";

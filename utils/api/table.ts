@@ -1,9 +1,11 @@
+import { format } from "date-fns";
 import { get, patch, post, put } from "./index";
 import { Table } from "../../types/index";
 import { PossibleContext } from "../token";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
+import { SelectedDateContext } from "../../context/SelectedDateContext";
 
 interface UpdateTablePayload {
   id: number;
@@ -13,13 +15,23 @@ interface UpdateTablePayload {
 // This is only called on server side in ServerSideProps
 export function getTables({ context }: PossibleContext): Promise<Table[]> {
   const location = Number(context?.params?.location);
-  return get<Table[]>({ path: `/tables/all?location=${location}`, context });
+  return get<Table[]>({
+    path: `/tables/all?location=${location}&date=${format(
+      new Date(),
+      "yyyy-MM-dd"
+    )}`,
+    context,
+  });
 }
 
 // Client side access tables using this helper method
 export function useGetTables(initialTables: Table[]) {
   const { selectedLocation } = useContext(LocationContext);
-  const query = `/tables/all?location=${selectedLocation?._id}`;
+  const { selectedDate } = useContext(SelectedDateContext);
+  const query = `/tables/all?location=${selectedLocation?._id}&date=${format(
+    selectedDate!,
+    "yyyy-MM-dd"
+  )}`;
 
   const { isLoading, error, data, isFetching } = useQuery(
     query,
