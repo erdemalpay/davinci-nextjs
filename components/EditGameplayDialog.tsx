@@ -3,21 +3,32 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
 import { InputWithLabel } from "./InputWithLabel";
 import { format } from "date-fns";
-import { Gameplay } from "../types";
+import { Game, Gameplay, Table, User } from "../types";
 import { useForm } from "../hooks/useForm";
-import { useUpdateTableMutation as useUpdateGameplayMutation } from "../utils/api/table";
+import {
+  useCreateGameplayMutation,
+  useUpdateGameplayMutation,
+} from "../utils/api/gameplay";
 import { TimeInputWithLabel } from "./TimeInputWithLabel";
+import { Autocomplete } from "./Autocomplete";
 
 export function EditGameplayDialog({
   isOpen,
   close,
+  table,
   gameplay,
+  mentors,
+  games,
 }: {
   isOpen: boolean;
   close: () => void;
+  table: Table;
   gameplay: Gameplay;
+  mentors: User[];
+  games: Game[];
 }) {
-  const { data, handleUpdate } = useForm(gameplay);
+  const { data, setData, handleUpdate } = useForm(gameplay);
+
   const { mutate: updateGameplay } = useUpdateGameplayMutation();
 
   function updateGameplayHandler(event: FormEvent<HTMLInputElement>) {
@@ -25,8 +36,18 @@ export function EditGameplayDialog({
     const target = event.target as HTMLInputElement;
 
     updateGameplay({
+      tableId: table._id!,
       id: gameplay._id!,
       updates: { [target.name]: target.value },
+    });
+  }
+
+  function handleGameSelection(game: Game) {
+    // setData({ ...data, game: game._id });
+    updateGameplay({
+      tableId: table._id!,
+      id: gameplay._id!,
+      updates: { game: game._id },
     });
   }
 
@@ -61,13 +82,24 @@ export function EditGameplayDialog({
                 </div>
                 <div className="px-4 md:px-10 md:pt-4 md:pb-4 pb-8">
                   <div className="flex flex-col gap-4">
-                    <InputWithLabel
-                      name="name"
-                      label="Table Name"
-                      type="text"
-                      defaultValue={data.name}
-                      onChange={updateGameplayHandler}
-                    />
+                    <div>
+                      <InputWithLabel
+                        name="name"
+                        label="Table Name"
+                        type="text"
+                        value={table.name}
+                        readOnly
+                      />
+                    </div>
+                    <div>
+                      <Autocomplete
+                        name="game"
+                        label="Game"
+                        suggestions={games}
+                        handleSelection={handleGameSelection}
+                        showSelected
+                      />
+                    </div>
                     <InputWithLabel
                       name="playerCount"
                       label="Player Count"

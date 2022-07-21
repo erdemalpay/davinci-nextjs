@@ -1,4 +1,4 @@
-import { post } from "./index";
+import { patch, post } from "./index";
 import { Gameplay, Table } from "../../types/index";
 import { PossibleContext } from "../token";
 import { useMutation, useQueryClient } from "react-query";
@@ -12,6 +12,12 @@ interface GameplayCreateRequest extends PossibleContext {
   payload: Gameplay;
 }
 
+interface UpdateGameplayPayload {
+  tableId: number;
+  id: number;
+  updates: Partial<Gameplay>;
+}
+
 export function createGameplay({
   table,
   payload,
@@ -22,7 +28,18 @@ export function createGameplay({
   });
 }
 
-export function useGameplayMutation() {
+export function updateGameplay({
+  tableId,
+  id,
+  updates,
+}: UpdateGameplayPayload): Promise<Gameplay> {
+  return patch<Partial<Gameplay>, Gameplay>({
+    path: `/gameplays/${id}`,
+    payload: updates,
+  });
+}
+
+export function useCreateGameplayMutation() {
   const { selectedLocation } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
   const tablesQuery = `/tables/all?location=${
@@ -48,6 +65,64 @@ export function useGameplayMutation() {
         {
           ...previousTable,
           gameplays: [...previousTable!.gameplays, newGameplay.payload],
+        },
+      ]);
+
+      // Return a context object with the snapshotted value
+      return { previousTables };
+    },
+    // If the mutation fails, use the context returned from onMutate to roll back
+    onError: (_err, _newGameplay, context) => {
+      const previousTableContext = context as { previousTables: Table[] };
+      if (previousTableContext?.previousTables) {
+        const { previousTables } = previousTableContext;
+        queryClient.setQueryData<Table[]>(tablesQuery, previousTables);
+      }
+    },
+    // Always refetch after error or success:
+    onSettled: () => {
+      queryClient.invalidateQueries(tablesQuery);
+    },
+  });
+}
+
+export function useUpdateGameplayMutation() {
+  const { selectedLocation } = useContext(LocationContext);
+  const { selectedDate } = useContext(SelectedDateContext);
+  const tablesQuery = `/tables/all?location=${
+    selectedLocation?._id
+  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
+  const queryClient = useQueryClient();
+  return useMutation(updateGameplay, {
+    // We are updating tables query data with new gameplay
+    onMutate: async ({ tableId, id, updates }) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries(tablesQuery);
+
+      // Snapshot the previous value
+      const previousTables = queryClient.getQueryData<Table[]>(tablesQuery);
+      const gameplaysTable = previousTables?.find(
+        (table) => table._id === tableId
+      );
+      if (!gameplaysTable) return { previousTables };
+      const updatedGameplay = gameplaysTable.gameplays.find(
+        (gameplay) => gameplay._id === id
+      );
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(tablesQuery, [
+        ...previousTables!.filter((table) => table._id !== gameplaysTable._id),
+        {
+          ...gameplaysTable,
+          gameplays: [
+            ...gameplaysTable!.gameplays!.filter(
+              (gameplay) => gameplay._id !== id
+            ),
+            {
+              ...updatedGameplay,
+              ...updates,
+            },
+          ],
         },
       ]);
 

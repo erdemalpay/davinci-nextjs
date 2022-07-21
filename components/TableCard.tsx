@@ -8,6 +8,7 @@ import { format } from "date-fns";
 import { getDuration } from "../utils/time";
 import { useUpdateTableMutation } from "../utils/api/table";
 import { useForm } from "../hooks/useForm";
+import { EditGameplayDialog } from "./EditGameplayDialog";
 
 export interface TableCardProps {
   table: Table;
@@ -17,6 +18,8 @@ export interface TableCardProps {
 
 export function TableCard({ table, mentors, games }: TableCardProps) {
   const [isGameplayDialogOpen, setIsGameplayDialogOpen] = useState(false);
+  const [isEditGameplayDialogOpen, setIsEditGameplayDialogOpen] =
+    useState(false);
   const [isEditTableNameActive, setIsEditTableNameActive] = useState(false);
   const [selectedGameplay, setSelectedGameplay] = useState<Gameplay>();
 
@@ -62,6 +65,11 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
       id: table._id!,
       updates: { [target.name]: target.value },
     });
+  }
+
+  function editGameplay(gameplay: Gameplay) {
+    setSelectedGameplay(gameplay);
+    setIsEditGameplayDialogOpen(true);
   }
 
   const nameInput = useRef(null);
@@ -138,7 +146,8 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
             return (
               <div
                 key={gameplay._id || gameplay.startHour}
-                className="flex justify-between text-xs"
+                className="flex justify-between text-xs cursor-pointer"
+                onClick={() => editGameplay(gameplay)}
               >
                 <h1 className="text-xs">
                   {getGameName(gameplay.game as number)}
@@ -159,6 +168,16 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
         mentors={mentors}
         games={games}
       />
+      {selectedGameplay && (
+        <EditGameplayDialog
+          isOpen={isEditGameplayDialogOpen}
+          close={() => setIsEditGameplayDialogOpen(false)}
+          gameplay={selectedGameplay}
+          table={table}
+          mentors={mentors}
+          games={games}
+        />
+      )}
     </div>
   );
 }

@@ -4,7 +4,7 @@ import { XIcon } from "@heroicons/react/solid";
 import { InputWithLabel } from "./InputWithLabel";
 import { Table, Gameplay, User, Game } from "../types";
 import { useForm } from "../hooks/useForm";
-import { useGameplayMutation } from "../utils/api/gameplay";
+import { useCreateGameplayMutation } from "../utils/api/gameplay";
 import { Autocomplete } from "./Autocomplete";
 
 export function GameplayDialog({
@@ -26,7 +26,7 @@ export function GameplayDialog({
 }) {
   const { data, setData, handleUpdate } = useForm(gameplay as Gameplay);
 
-  const { isLoading, mutateAsync } = useGameplayMutation();
+  const { isLoading, mutateAsync } = useCreateGameplayMutation();
 
   async function handleCreate() {
     await mutateAsync({ table: table._id as number, payload: data });
