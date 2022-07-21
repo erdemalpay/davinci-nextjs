@@ -7,14 +7,13 @@ import { useForm } from "../hooks/useForm";
 import { useCreateGameplayMutation } from "../utils/api/gameplay";
 import { Autocomplete } from "./Autocomplete";
 
-export function GameplayDialog({
+export function CreateGameplayDialog({
   isOpen,
   close,
   gameplay,
   table,
   mentors,
   games,
-  isUpdate = false,
 }: {
   isOpen: boolean;
   close: () => void;
@@ -22,14 +21,16 @@ export function GameplayDialog({
   table: Table;
   mentors: User[];
   games: Game[];
-  isUpdate?: boolean;
 }) {
   const { data, setData, handleUpdate } = useForm(gameplay as Gameplay);
 
-  const { isLoading, mutateAsync } = useCreateGameplayMutation();
+  const { mutate: createGameplay } = useCreateGameplayMutation();
 
   async function handleCreate() {
-    await mutateAsync({ table: table._id as number, payload: data });
+    // We were using async version to wait for response before closing
+    // But since we are optimistically update data, that seemed redundant to me so I removed
+    // May revert back later if needed
+    createGameplay({ table: table._id as number, payload: data });
     close();
   }
 
@@ -59,13 +60,13 @@ export function GameplayDialog({
         >
           <div
             onClick={close}
-            className="w-full h-full bg-gray-900 z-0 absolute inset-0"
+            className="w-full h-full bg-gray-500 bg-opacity-50 z-0 absolute inset-0"
           />
           <div className="mx-auto container">
             <div className="flex items-center justify-center h-full w-full">
               <div className="bg-white rounded-md shadow fixed overflow-y-auto sm:h-auto w-10/12 md:w-8/12 lg:w-1/2 2xl:w-2/5">
                 <div className="bg-gray-100 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
-                  <p className="text-base font-semibold">Gameplay</p>
+                  <p className="text-base font-semibold">Create Gameplay</p>
                   <button onClick={close} className="focus:outline-none">
                     <XIcon className="h-6 w-6" />
                   </button>
@@ -80,7 +81,7 @@ export function GameplayDialog({
                       readOnly
                     />
                   </div>
-                  <div className="flex gap-4">
+                  <div>
                     <InputWithLabel
                       name="playerCount"
                       label="Player Count"
@@ -88,11 +89,16 @@ export function GameplayDialog({
                       value={data.playerCount}
                       onChange={handleUpdate}
                     />
+                  </div>
+                  <div>
                     <Autocomplete
                       name="mentor"
                       label="Mentor"
                       suggestions={mentors}
                       handleSelection={handleMentorSelection}
+                      initialValue={mentors.find(
+                        (mentor) => mentor._id === "dv"
+                      )}
                       showSelected
                     />
                   </div>
@@ -129,10 +135,11 @@ export function GameplayDialog({
                       Cancel
                     </button>
                     <button
-                      className="px-6 py-3 bg-gray-800 hover:bg-opacity-80 shadow rounded text-sm text-white"
+                      className="px-6 py-3 bg-gray-800 hover:bg-opacity-80 shadow rounded text-sm text-white disabled:bg-gray-300"
                       onClick={handleCreate}
+                      disabled={!(data.mentor && data.game && data.playerCount)}
                     >
-                      {isUpdate ? "Update" : "Create"}
+                      Create
                     </button>
                   </div>
                 </div>

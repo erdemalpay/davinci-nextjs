@@ -1,7 +1,7 @@
 import { PlusIcon, PencilIcon, FlagIcon } from "@heroicons/react/solid";
 import { FormEvent, useRef, useState } from "react";
 import { Gameplay, Table, User, Game } from "../types";
-import { GameplayDialog } from "./GameplayDialog";
+import { CreateGameplayDialog } from "./CreateGameplayDialog";
 import { InputWithLabel } from "./InputWithLabel";
 import { CardAction } from "./CardAction";
 import { format } from "date-fns";
@@ -160,7 +160,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
           })}
         </div>
       </div>
-      <GameplayDialog
+      <CreateGameplayDialog
         isOpen={isGameplayDialogOpen}
         close={() => setIsGameplayDialogOpen(false)}
         gameplay={selectedGameplay || gameplayTemplate}

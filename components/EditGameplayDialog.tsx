@@ -4,7 +4,10 @@ import { XIcon } from "@heroicons/react/solid";
 import { InputWithLabel } from "./InputWithLabel";
 import { Game, Gameplay, Table, User } from "../types";
 import { useForm } from "../hooks/useForm";
-import { useUpdateGameplayMutation } from "../utils/api/gameplay";
+import {
+  useDeleteGameplayMutation,
+  useUpdateGameplayMutation,
+} from "../utils/api/gameplay";
 import { TimeInputWithLabel } from "./TimeInputWithLabel";
 import { Autocomplete } from "./Autocomplete";
 
@@ -26,6 +29,7 @@ export function EditGameplayDialog({
   const { data, handleUpdate } = useForm(gameplay);
 
   const { mutate: updateGameplay } = useUpdateGameplayMutation();
+  const { mutate: deleteGameplay } = useDeleteGameplayMutation();
 
   function updateGameplayHandler(event: FormEvent<HTMLInputElement>) {
     handleUpdate(event);
@@ -47,7 +51,27 @@ export function EditGameplayDialog({
     });
   }
 
+  function handleMentorSelection(mentor: User) {
+    if (!mentor) return;
+    updateGameplay({
+      tableId: table._id!,
+      id: gameplay._id!,
+      updates: { mentor: mentor._id },
+    });
+  }
+
+  function removeGameplay() {
+    deleteGameplay({
+      tableId: table._id!,
+      id: gameplay._id!,
+    });
+    close();
+  }
+
   const selectedGame = games.find((game) => game._id === gameplay.game!);
+  const selectedMentor =
+    mentors.find((mentor) => mentor._id === gameplay.mentor!) ||
+    mentors.find((mentor) => mentor._id === "dv");
 
   return (
     <Transition
@@ -90,16 +114,24 @@ export function EditGameplayDialog({
                       />
                     </div>
                     <div>
-                      <form autoComplete="off">
-                        <Autocomplete
-                          name="game"
-                          label="Game"
-                          suggestions={games}
-                          handleSelection={handleGameSelection}
-                          initialValue={selectedGame}
-                          showSelected
-                        />
-                      </form>
+                      <Autocomplete
+                        name="game"
+                        label="Game"
+                        suggestions={games}
+                        handleSelection={handleGameSelection}
+                        initialValue={selectedGame}
+                        showSelected
+                      />
+                    </div>
+                    <div>
+                      <Autocomplete
+                        name="mentor"
+                        label="Mentor"
+                        suggestions={mentors}
+                        handleSelection={handleMentorSelection}
+                        initialValue={selectedMentor}
+                        showSelected
+                      />
                     </div>
                     <InputWithLabel
                       name="playerCount"
@@ -122,6 +154,15 @@ export function EditGameplayDialog({
                       defaultValue={data.finishHour}
                       onChange={updateGameplayHandler}
                     />
+                  </div>
+                  <div className="flex items-center justify-end mt-9">
+                    <button
+                      className="px-6 py-3 bg-red-500 hover:bg-opacity-80 shadow rounded text-sm text-white"
+                      onClick={removeGameplay}
+                      disabled={!(data.mentor && data.game && data.playerCount)}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               </div>

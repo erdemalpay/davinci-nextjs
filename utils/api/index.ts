@@ -71,3 +71,15 @@ export async function patch<P, R>({
     headers,
   });
 }
+
+// P = payload, R = ResponseType
+export async function remove<R>({ path }: BaseRequest): Promise<R> {
+  const headers: HeadersInit = {};
+  const token = getToken();
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+  return axios.delete(`${baseURL}${path}`, {
+    headers,
+  });
+}

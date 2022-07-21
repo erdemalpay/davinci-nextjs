@@ -64,6 +64,15 @@ const TablesPage = ({
       return 0;
     }
   });
+  mentors.sort((a, b) => {
+    if (a.name > b.name) {
+      return 1;
+    } else if (a.name < b.name) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
   let { games } = useGetGames(initialGames);
   games = games || initialGames;
 
