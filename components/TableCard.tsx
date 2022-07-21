@@ -1,5 +1,5 @@
 import { PlusIcon, PencilIcon, FlagIcon } from "@heroicons/react/solid";
-import { FormEvent, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 import { Gameplay, Table, User, Game } from "../types";
 import { GameplayDialog } from "./GameplayDialog";
 import { InputWithLabel } from "./InputWithLabel";
@@ -17,6 +17,7 @@ export interface TableCardProps {
 
 export function TableCard({ table, mentors, games }: TableCardProps) {
   const [isGameplayDialogOpen, setIsGameplayDialogOpen] = useState(false);
+  const [isEditTableNameActive, setIsEditTableNameActive] = useState(false);
   const [selectedGameplay, setSelectedGameplay] = useState<Gameplay>();
 
   const bgColor = table.finishHour ? "bg-gray-100" : "bg-white";
@@ -36,8 +37,10 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   }
 
   function finishTable() {
-    // setSelectedGameplay(undefined);
-    // setIsGameplayDialogOpen(true);
+    updateTable({
+      id: table._id!,
+      updates: { finishHour: format(new Date(), "HH:mm") },
+    });
   }
 
   const date = format(new Date(), "yyyy-MM-dd");
@@ -54,39 +57,69 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   function updateTableHandler(event: FormEvent<HTMLInputElement>) {
     handleUpdate(event);
     const target = event.target as HTMLInputElement;
-
+    if (!target.value) return;
     updateTable({
       id: table._id!,
-      updates: { [target.name]: target.valueAsNumber },
+      updates: { [target.name]: target.value },
     });
   }
+
+  const nameInput = useRef(null);
 
   return (
     <div className="bg-white rounded-md shadow overflow-y-auto sm:h-auto break-inside-avoid mb-4">
       <div className="bg-gray-200 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
-        <p className="text-base font-semibold">{table.name}</p>
+        <p className="text-base font-semibold cursor-pointer">
+          {!isEditTableNameActive ? (
+            <span
+              onClick={() => {
+                setIsEditTableNameActive(true);
+              }}
+            >
+              {table.name}
+            </span>
+          ) : (
+            <input
+              name="name"
+              className={`${bgColor} w-full text-gray-600 border-0 border-b-[1px] dark:text-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 font-normal text-base border-gray-300`}
+              placeholder={table.name}
+              onChange={updateTableHandler}
+              value={table.name}
+              onBlur={() => setIsEditTableNameActive(false)}
+              onKeyPress={(event) => {
+                if (event.key === "Enter") {
+                  setIsEditTableNameActive(false);
+                }
+              }}
+              autoFocus
+            />
+          )}
+        </p>
         <div className="flex justify-end w-2/3 gap-4">
-          <CardAction onClick={createGameplay} IconComponent={PlusIcon} />
-          <CardAction onClick={createGameplay} IconComponent={PencilIcon} />
-          <CardAction onClick={finishTable} IconComponent={FlagIcon} />
+          {!table.finishHour && (
+            <CardAction onClick={createGameplay} IconComponent={PlusIcon} />
+          )}
+          {!table.finishHour && (
+            <CardAction onClick={finishTable} IconComponent={FlagIcon} />
+          )}
         </div>
       </div>
       <div className={`px-4 md:px-10 md:pt-4 md:pb-4 pb-8 ${bgColor}`}>
         <div className="mt-2 flex gap-4	 flex-row">
           <InputWithLabel
-            name="startTime"
+            name="startHour"
             label="Start Time"
             type="time"
             value={table.startHour}
-            readOnly
+            onChange={updateTableHandler}
             bgColor={bgColor}
           />
           <InputWithLabel
-            name="endTime"
+            name="finishHour"
             label="End Time"
             type="time"
             value={table.finishHour}
-            readOnly
+            onChange={updateTableHandler}
             bgColor={bgColor}
           />
         </div>

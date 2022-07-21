@@ -81,14 +81,14 @@ export function CreateTableDialog({
                   </div>
                   <div className="mt-2 flex gap-2">
                     <InputWithLabel
-                      name="startTime"
+                      name="startHour"
                       label="Start Time"
                       type="time"
                       value={data.startHour}
                       onChange={handleUpdate}
                     />
                     <InputWithLabel
-                      name="endTime"
+                      name="finishHour"
                       label="End Time"
                       type="time"
                       onChange={handleUpdate}

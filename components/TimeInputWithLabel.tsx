@@ -5,20 +5,18 @@ export type InputType = "date" | "autocomplete" | "text" | "number" | "time";
 export interface InputWithLabelProps {
   name: string;
   label: string;
-  type?: InputType;
   id?: string;
   readOnly?: boolean;
   className?: string;
   min?: number;
-  value?: string | number;
+  value?: string;
   defaultValue?: string | number;
   bgColor?: string;
   onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
-export function InputWithLabel({
+export function TimeInputWithLabel({
   label,
-  type = "text",
   id = label.toLowerCase(),
   onChange,
   min = 1,
@@ -31,7 +29,7 @@ export function InputWithLabel({
         id={id}
         min={min}
         {...props}
-        type={type}
+        type="time"
         className={`${bgColor} w-full text-gray-600 border-0 border-b-[1px] dark:text-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 font-normal h-10 text-base border-gray-300`}
         placeholder=""
         onChange={onChange}

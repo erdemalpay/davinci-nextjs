@@ -1,44 +1,33 @@
-import React from "react";
+import React, { FormEvent } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
 import { InputWithLabel } from "./InputWithLabel";
-import { Table, Gameplay, User, Game } from "../types";
+import { format } from "date-fns";
+import { Gameplay } from "../types";
 import { useForm } from "../hooks/useForm";
-import { useGameplayMutation } from "../utils/api/gameplay";
-import { Autocomplete } from "./Autocomplete";
+import { useUpdateTableMutation as useUpdateGameplayMutation } from "../utils/api/table";
+import { TimeInputWithLabel } from "./TimeInputWithLabel";
 
-export function GameplayDialog({
+export function EditGameplayDialog({
   isOpen,
   close,
   gameplay,
-  table,
-  mentors,
-  games,
-  isUpdate = false,
 }: {
   isOpen: boolean;
   close: () => void;
-  gameplay?: Gameplay;
-  table: Table;
-  mentors: User[];
-  games: Game[];
-  isUpdate?: boolean;
+  gameplay: Gameplay;
 }) {
-  const { data, setData, handleUpdate } = useForm(gameplay as Gameplay);
+  const { data, handleUpdate } = useForm(gameplay);
+  const { mutate: updateGameplay } = useUpdateGameplayMutation();
 
-  const { isLoading, mutateAsync } = useGameplayMutation();
+  function updateGameplayHandler(event: FormEvent<HTMLInputElement>) {
+    handleUpdate(event);
+    const target = event.target as HTMLInputElement;
 
-  async function handleCreate() {
-    await mutateAsync({ table: table._id as number, payload: data });
-    close();
-  }
-
-  function handleMentorSelection(mentor: User) {
-    setData({ ...data, mentor: mentor._id });
-  }
-
-  function handleGameSelection(game: Game) {
-    setData({ ...data, game: game._id });
+    updateGameplay({
+      id: gameplay._id!,
+      updates: { [target.name]: target.value },
+    });
   }
 
   return (
@@ -55,7 +44,7 @@ export function GameplayDialog({
         <Dialog.Overlay />
         <div
           id="popup"
-          className="z-20 fixed w-full flex justify-center inset-0"
+          className="z-50 fixed w-full flex justify-center inset-0"
         >
           <div
             onClick={close}
@@ -65,60 +54,40 @@ export function GameplayDialog({
             <div className="flex items-center justify-center h-full w-full">
               <div className="bg-white rounded-md shadow fixed overflow-y-auto sm:h-auto w-10/12 md:w-8/12 lg:w-1/2 2xl:w-2/5">
                 <div className="bg-gray-100 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
-                  <p className="text-base font-semibold">Gameplay</p>
+                  <p className="text-base font-semibold">Update Gameplay</p>
                   <button onClick={close} className="focus:outline-none">
                     <XIcon className="h-6 w-6" />
                   </button>
                 </div>
                 <div className="px-4 md:px-10 md:pt-4 md:pb-4 pb-8">
-                  <div>
+                  <div className="flex flex-col gap-4">
                     <InputWithLabel
                       name="name"
                       label="Table Name"
                       type="text"
-                      value={table.name}
-                      readOnly
+                      defaultValue={data.name}
+                      onChange={updateGameplayHandler}
                     />
-                  </div>
-                  <div className="flex gap-4">
                     <InputWithLabel
                       name="playerCount"
                       label="Player Count"
                       type="number"
-                      value={data.playerCount}
-                      onChange={handleUpdate}
-                    />
-                    <Autocomplete
-                      name="mentor"
-                      label="Mentor"
-                      suggestions={mentors}
-                      handleSelection={handleMentorSelection}
-                      showSelected
-                    />
-                  </div>
-                  <div>
-                    <Autocomplete
-                      name="game"
-                      label="Game"
-                      suggestions={games}
-                      handleSelection={handleGameSelection}
-                      showSelected
+                      defaultValue={data.playerCount}
+                      onChange={updateGameplayHandler}
                     />
                   </div>
                   <div className="mt-2 flex gap-2">
-                    <InputWithLabel
+                    <TimeInputWithLabel
                       name="startHour"
                       label="Start Time"
-                      type="time"
                       defaultValue={data.startHour}
-                      onChange={handleUpdate}
+                      onChange={updateGameplayHandler}
                     />
-                    <InputWithLabel
+                    <TimeInputWithLabel
                       name="finishHour"
                       label="End Time"
-                      type="time"
                       defaultValue={data.finishHour}
-                      onChange={handleUpdate}
+                      onChange={updateGameplayHandler}
                     />
                   </div>
                   <div className="flex items-center justify-between mt-9">
@@ -126,13 +95,7 @@ export function GameplayDialog({
                       onClick={close}
                       className="px-6 py-3 bg-gray-400 hover:bg-gray-500 shadow rounded text-sm text-white"
                     >
-                      Cancel
-                    </button>
-                    <button
-                      className="px-6 py-3 bg-gray-800 hover:bg-opacity-80 shadow rounded text-sm text-white"
-                      onClick={handleCreate}
-                    >
-                      {isUpdate ? "Update" : "Create"}
+                      Close
                     </button>
                   </div>
                 </div>
