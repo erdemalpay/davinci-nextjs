@@ -18,10 +18,11 @@ export function Autocomplete<T>({
   name,
   label,
   handleSelection,
+  initialValue,
   showSelected = false,
 }: AutocompleteProps<TagType<T>>) {
   const [selected, setSelected] = useState<TagType<T>>();
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialValue ? initialValue.name : "");
 
   const filteredSuggestions =
     query === ""
@@ -47,7 +48,12 @@ export function Autocomplete<T>({
             <Combobox.Input
               as={Fragment}
               displayValue={(suggestion: TagType<T>) => suggestion.name}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={(event) => {
+                setQuery(event.target.value);
+                // We are unsetting selected on input change othwerwise it keeps showing
+                // selected value all the time ie. we cannot delete query
+                setSelected(undefined);
+              }}
             >
               <ForwardedInputWithLabel
                 className="w-full focus:border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 outline-0"

@@ -1,14 +1,10 @@
-import React, { FormEvent } from "react";
+import { FormEvent } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
 import { InputWithLabel } from "./InputWithLabel";
-import { format } from "date-fns";
 import { Game, Gameplay, Table, User } from "../types";
 import { useForm } from "../hooks/useForm";
-import {
-  useCreateGameplayMutation,
-  useUpdateGameplayMutation,
-} from "../utils/api/gameplay";
+import { useUpdateGameplayMutation } from "../utils/api/gameplay";
 import { TimeInputWithLabel } from "./TimeInputWithLabel";
 import { Autocomplete } from "./Autocomplete";
 
@@ -27,7 +23,7 @@ export function EditGameplayDialog({
   mentors: User[];
   games: Game[];
 }) {
-  const { data, setData, handleUpdate } = useForm(gameplay);
+  const { data, handleUpdate } = useForm(gameplay);
 
   const { mutate: updateGameplay } = useUpdateGameplayMutation();
 
@@ -43,13 +39,15 @@ export function EditGameplayDialog({
   }
 
   function handleGameSelection(game: Game) {
-    // setData({ ...data, game: game._id });
+    if (!game) return;
     updateGameplay({
       tableId: table._id!,
       id: gameplay._id!,
       updates: { game: game._id },
     });
   }
+
+  const selectedGame = games.find((game) => game._id === gameplay.game!);
 
   return (
     <Transition
@@ -69,7 +67,7 @@ export function EditGameplayDialog({
         >
           <div
             onClick={close}
-            className="w-full h-full bg-gray-900 z-0 absolute inset-0"
+            className="w-full h-full bg-gray-900 bg-opacity-50 z-0 absolute inset-0"
           />
           <div className="mx-auto container">
             <div className="flex items-center justify-center h-full w-full">
@@ -92,13 +90,16 @@ export function EditGameplayDialog({
                       />
                     </div>
                     <div>
-                      <Autocomplete
-                        name="game"
-                        label="Game"
-                        suggestions={games}
-                        handleSelection={handleGameSelection}
-                        showSelected
-                      />
+                      <form autoComplete="off">
+                        <Autocomplete
+                          name="game"
+                          label="Game"
+                          suggestions={games}
+                          handleSelection={handleGameSelection}
+                          initialValue={selectedGame}
+                          showSelected
+                        />
+                      </form>
                     </div>
                     <InputWithLabel
                       name="playerCount"
@@ -121,14 +122,6 @@ export function EditGameplayDialog({
                       defaultValue={data.finishHour}
                       onChange={updateGameplayHandler}
                     />
-                  </div>
-                  <div className="flex items-center justify-between mt-9">
-                    <button
-                      onClick={close}
-                      className="px-6 py-3 bg-gray-400 hover:bg-gray-500 shadow rounded text-sm text-white"
-                    >
-                      Close
-                    </button>
                   </div>
                 </div>
               </div>
