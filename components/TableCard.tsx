@@ -23,7 +23,9 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   const [isGameplayDialogOpen, setIsGameplayDialogOpen] = useState(false);
   const [isEditGameplayDialogOpen, setIsEditGameplayDialogOpen] =
     useState(false);
-  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
+  const [isDeleteConfirmationDialogOpen, setIsDeleteConfirmationDialogOpen] =
+    useState(false);
+  const [isCloseConfirmationDialogOpen, setIsCloseConfirmationDialogOpen] =
     useState(false);
   const [isEditTableNameActive, setIsEditTableNameActive] = useState(false);
   const [selectedGameplay, setSelectedGameplay] = useState<Gameplay>();
@@ -48,6 +50,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
       id: table._id!,
       updates: { finishHour: format(new Date(), "HH:mm") },
     });
+    setIsCloseConfirmationDialogOpen(false);
   }
 
   const date = format(new Date(), "yyyy-MM-dd");
@@ -78,7 +81,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   function handleTableDelete() {
     if (!table._id) return;
     deleteTable({ id: table._id });
-    setIsConfirmationDialogOpen(false);
+    setIsDeleteConfirmationDialogOpen(false);
   }
 
   const nameInput = useRef(null);
@@ -117,10 +120,13 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
             <CardAction onClick={createGameplay} IconComponent={PlusIcon} />
           )}
           {!table.finishHour && (
-            <CardAction onClick={finishTable} IconComponent={FlagIcon} />
+            <CardAction
+              onClick={() => setIsCloseConfirmationDialogOpen(true)}
+              IconComponent={FlagIcon}
+            />
           )}
           <CardAction
-            onClick={() => setIsConfirmationDialogOpen(true)}
+            onClick={() => setIsDeleteConfirmationDialogOpen(true)}
             IconComponent={TrashIcon}
           />
         </div>
@@ -196,11 +202,18 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
         />
       )}
       <ConfirmationDialog
-        isOpen={isConfirmationDialogOpen}
-        close={() => setIsConfirmationDialogOpen(false)}
+        isOpen={isDeleteConfirmationDialogOpen}
+        close={() => setIsDeleteConfirmationDialogOpen(false)}
         confirm={handleTableDelete}
         title="Delete Table"
-        text=""
+        text="This table and all gameplays in it will be deleted. Are you sure to continue?"
+      />
+      <ConfirmationDialog
+        isOpen={isCloseConfirmationDialogOpen}
+        close={() => setIsCloseConfirmationDialogOpen(false)}
+        confirm={finishTable}
+        title="Close Table"
+        text="Table is being closed. Are you sure?"
       />
     </div>
   );
