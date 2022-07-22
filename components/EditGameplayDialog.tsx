@@ -1,4 +1,4 @@
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { TrashIcon, XIcon } from "@heroicons/react/solid";
 import { InputWithLabel } from "./InputWithLabel";
@@ -9,6 +9,7 @@ import {
 } from "../utils/api/gameplay";
 import { TimeInputWithLabel } from "./TimeInputWithLabel";
 import { Autocomplete } from "./Autocomplete";
+import { ConfirmationDialog } from "./ConfirmationDialog";
 
 export function EditGameplayDialog({
   isOpen,
@@ -27,6 +28,9 @@ export function EditGameplayDialog({
 }) {
   const { mutate: updateGameplay } = useUpdateGameplayMutation();
   const { mutate: deleteGameplay } = useDeleteGameplayMutation();
+
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
+    useState(false);
 
   function updateGameplayHandler(event: FormEvent<HTMLInputElement>) {
     const target = event.target as HTMLInputElement;
@@ -96,8 +100,8 @@ export function EditGameplayDialog({
                   <p className="text-base font-semibold">Update Gameplay</p>
                   <div className="flex flex-row justify-end gap-4">
                     <button
-                      onClick={removeGameplay}
-                      className="focus:outline-none text-red-500"
+                      onClick={() => setIsConfirmationDialogOpen(true)}
+                      className="focus:outline-none "
                     >
                       <TrashIcon className="h-6 w-6" />
                     </button>
@@ -165,6 +169,13 @@ export function EditGameplayDialog({
           </div>
         </div>
       </Dialog>
+      <ConfirmationDialog
+        confirm={removeGameplay}
+        close={() => setIsConfirmationDialogOpen(false)}
+        isOpen={isConfirmationDialogOpen}
+        title="Delete Gameplay"
+        text={"Are you sure to delete this gameplay?"}
+      />
     </Transition>
   );
 }

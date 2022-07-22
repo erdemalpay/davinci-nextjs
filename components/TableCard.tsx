@@ -1,4 +1,4 @@
-import { PlusIcon, FlagIcon } from "@heroicons/react/solid";
+import { PlusIcon, FlagIcon, TrashIcon } from "@heroicons/react/solid";
 import { FormEvent, useRef, useState } from "react";
 import { Gameplay, Table, User, Game } from "../types";
 import { CreateGameplayDialog } from "./CreateGameplayDialog";
@@ -6,8 +6,12 @@ import { InputWithLabel } from "./InputWithLabel";
 import { CardAction } from "./CardAction";
 import { format } from "date-fns";
 import { getDuration } from "../utils/time";
-import { useUpdateTableMutation } from "../utils/api/table";
+import {
+  useDeleteTableMutation,
+  useUpdateTableMutation,
+} from "../utils/api/table";
 import { EditGameplayDialog } from "./EditGameplayDialog";
+import { ConfirmationDialog } from "./ConfirmationDialog";
 
 export interface TableCardProps {
   table: Table;
@@ -19,8 +23,11 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   const [isGameplayDialogOpen, setIsGameplayDialogOpen] = useState(false);
   const [isEditGameplayDialogOpen, setIsEditGameplayDialogOpen] =
     useState(false);
+  const [isConfirmationDialogOpen, setIsConfirmationDialogOpen] =
+    useState(false);
   const [isEditTableNameActive, setIsEditTableNameActive] = useState(false);
   const [selectedGameplay, setSelectedGameplay] = useState<Gameplay>();
+  const { mutate: deleteTable } = useDeleteTableMutation();
 
   const bgColor = table.finishHour ? "bg-gray-100" : "bg-white";
 
@@ -68,6 +75,12 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     setIsEditGameplayDialogOpen(true);
   }
 
+  function handleTableDelete() {
+    if (!table._id) return;
+    deleteTable({ id: table._id });
+    setIsConfirmationDialogOpen(false);
+  }
+
   const nameInput = useRef(null);
 
   return (
@@ -106,6 +119,10 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
           {!table.finishHour && (
             <CardAction onClick={finishTable} IconComponent={FlagIcon} />
           )}
+          <CardAction
+            onClick={() => setIsConfirmationDialogOpen(true)}
+            IconComponent={TrashIcon}
+          />
         </div>
       </div>
       <div className={`px-4 md:px-10 md:pt-4 md:pb-4 pb-8 ${bgColor}`}>
@@ -178,6 +195,13 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
           games={games}
         />
       )}
+      <ConfirmationDialog
+        isOpen={isConfirmationDialogOpen}
+        close={() => setIsConfirmationDialogOpen(false)}
+        confirm={handleTableDelete}
+        title="Delete Table"
+        text=""
+      />
     </div>
   );
 }

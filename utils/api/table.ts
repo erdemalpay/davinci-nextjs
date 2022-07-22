@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { get, patch, post, put } from "./index";
+import { get, patch, post, put, remove } from "./index";
 import { Table } from "../../types/index";
 import { PossibleContext } from "../token";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -10,6 +10,10 @@ import { SelectedDateContext } from "../../context/SelectedDateContext";
 interface UpdateTablePayload {
   id: number;
   updates: Partial<Table>;
+}
+
+interface DeleteTablePayload {
+  id: number;
 }
 
 // This is only called on server side in ServerSideProps
@@ -62,6 +66,12 @@ export function updateTable({
   return patch<Partial<Table>, Table>({
     path: `/tables/${id}`,
     payload: updates,
+  });
+}
+
+export function deleteTable({ id }: DeleteTablePayload): Promise<Table> {
+  return remove<Table>({
+    path: `/tables/${id}`,
   });
 }
 
@@ -128,6 +138,45 @@ export function useUpdateTableMutation() {
           updatedTables[i] = { ...updatedTables[i], ...updates };
         }
       }
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(tablesQuery, updatedTables);
+
+      // Return a context object with the snapshotted value
+      return { previousTables };
+    },
+    // If the mutation fails, use the context returned from onMutate to roll back
+    onError: (_err, _newTable, context) => {
+      const previousTableContext = context as { previousTables: Table[] };
+      if (previousTableContext?.previousTables) {
+        const { previousTables } = previousTableContext;
+        queryClient.setQueryData<Table[]>(tablesQuery, previousTables);
+      }
+    },
+    // Always refetch after error or success:
+    onSettled: () => {
+      queryClient.invalidateQueries(tablesQuery);
+    },
+  });
+}
+
+export function useDeleteTableMutation() {
+  const { selectedLocation } = useContext(LocationContext);
+  const { selectedDate } = useContext(SelectedDateContext);
+  const tablesQuery = `/tables/all?location=${
+    selectedLocation?._id
+  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
+  const queryClient = useQueryClient();
+  return useMutation(deleteTable, {
+    // We are updating tables query data with new table
+    onMutate: async ({ id }: DeleteTablePayload) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries(tablesQuery);
+
+      // Snapshot the previous value
+      const previousTables =
+        queryClient.getQueryData<Table[]>(tablesQuery) || [];
+      const updatedTables = previousTables.filter((table) => table._id !== id);
 
       // Optimistically update to the new value
       queryClient.setQueryData(tablesQuery, updatedTables);
