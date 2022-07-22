@@ -55,15 +55,23 @@ const TablesPage = ({
 
   let { tables } = useGetTables(initialTables);
   tables = tables || initialTables;
+  // Sort tables first active tables, then closed ones.
+  // if both active then sort by name
   tables.sort((a, b) => {
     if (a.finishHour && !b.finishHour) {
       return 1;
     } else if (!a.finishHour && b.finishHour) {
       return -1;
+    } else if (a.name > b.name) {
+      return 1;
+    } else if (a.name < b.name) {
+      return -1;
     } else {
       return 0;
     }
   });
+
+  // Sort users by name
   mentors.sort((a, b) => {
     if (a.name > b.name) {
       return 1;
@@ -86,7 +94,10 @@ const TablesPage = ({
   const totalCustomerCount = activeTables.reduce((prev, curr) => {
     return prev + curr.playerCount;
   }, 0);
-
+  const tableColumns: Table[][] = [[], [], [], []];
+  (showAllTables ? tables : activeTables).forEach((table, index) => {
+    tableColumns[index % 4].push(table);
+  });
   return (
     <>
       <Header />
@@ -156,14 +167,18 @@ const TablesPage = ({
             {showAllTables ? "Show open tables" : "Show all tables"}
           </button>
         </div>
-        <div className="h-full columns-4 gap-8 mt-4">
-          {(showAllTables ? tables : activeTables).map((table) => (
-            <TableCard
-              key={table._id || table.startHour}
-              table={table}
-              mentors={mentors}
-              games={games as Game[]}
-            />
+        <div className="h-full grid grid-cols-4 mt-4 gap-x-8">
+          {tableColumns.map((tables, idx) => (
+            <div key={idx}>
+              {tables.map((table) => (
+                <TableCard
+                  key={table._id || table.startHour}
+                  table={table}
+                  mentors={mentors}
+                  games={games as Game[]}
+                />
+              ))}
+            </div>
           ))}
         </div>
       </div>
