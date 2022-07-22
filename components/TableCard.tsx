@@ -149,7 +149,11 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
                   {getGameName(gameplay.game as number)}
                 </h1>
                 <h5 className="text-xs">
-                  {getDuration(gameplay.startHour, gameplay.finishHour)}
+                  {getDuration(
+                    gameplay.startHour,
+                    gameplay.finishHour,
+                    new Date(gameplay.date)
+                  )}
                 </h5>
               </div>
             );
