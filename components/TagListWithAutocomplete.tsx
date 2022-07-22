@@ -6,37 +6,39 @@ import { TagType } from "../types";
 
 interface TagListWithAutocompleteProps<T> extends InputWithLabelProps {
   suggestions: T[];
+  items: T[];
+  setItems: (items: T[]) => void;
 }
 
 export function TagListWithAutocomplete<T>({
   name,
   label,
   suggestions,
+  items,
+  setItems,
 }: TagListWithAutocompleteProps<TagType<T>>) {
-  const [tags, setTags] = useState<TagType<T>[]>([]);
-
   const [filteredSuggestions, setFilteredSuggestions] = useState<TagType<T>[]>(
     []
   );
 
   function handleChipClose(tag: TagType<T>) {
-    setTags(tags.filter((t) => t._id !== tag._id));
+    setItems(items.filter((t) => t._id !== tag._id));
   }
 
   function handleSelection(item: TagType<T>) {
-    setTags([...tags, item]);
+    setItems([...items, item]);
   }
 
   useEffect(() => {
     setFilteredSuggestions(
       suggestions.filter(
-        (s) => !tags.map((t) => t._id).includes(s._id) && s.name !== "-"
+        (s) => !items.map((t) => t._id).includes(s._id) && s.name !== "-"
       )
     );
-  }, [suggestions, tags]);
+  }, [suggestions, items]);
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <div className="flex w-full">
         <Autocomplete
           handleSelection={handleSelection}
@@ -46,7 +48,7 @@ export function TagListWithAutocomplete<T>({
         />
       </div>
       <div className="flex gap-4 mt-2">
-        {tags.map((tag) => (
+        {items.map((tag) => (
           <Chip key={tag._id} item={tag} close={handleChipClose} />
         ))}
       </div>

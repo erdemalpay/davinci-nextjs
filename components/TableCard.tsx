@@ -1,4 +1,4 @@
-import { PlusIcon, PencilIcon, FlagIcon } from "@heroicons/react/solid";
+import { PlusIcon, FlagIcon } from "@heroicons/react/solid";
 import { FormEvent, useRef, useState } from "react";
 import { Gameplay, Table, User, Game } from "../types";
 import { CreateGameplayDialog } from "./CreateGameplayDialog";
@@ -7,7 +7,6 @@ import { CardAction } from "./CardAction";
 import { format } from "date-fns";
 import { getDuration } from "../utils/time";
 import { useUpdateTableMutation } from "../utils/api/table";
-import { useForm } from "../hooks/useForm";
 import { EditGameplayDialog } from "./EditGameplayDialog";
 
 export interface TableCardProps {
@@ -29,8 +28,6 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     setSelectedGameplay(undefined);
     setIsGameplayDialogOpen(true);
   }
-
-  const { data, handleUpdate } = useForm(table);
 
   const { mutate: updateTable } = useUpdateTableMutation();
 
@@ -58,7 +55,6 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   };
 
   function updateTableHandler(event: FormEvent<HTMLInputElement>) {
-    handleUpdate(event);
     const target = event.target as HTMLInputElement;
     if (!target.value) return;
     updateTable({

@@ -36,8 +36,8 @@ export function Autocomplete<T>({
 
   /* We are wrapping Autocomplete component with <form autocomplete /> to prevent second autocomplete coming from browser */
   return (
-    <form autoComplete="off">
-      <div className="w-full flex">
+    <div className="w-full flex">
+      <form className="w-full flex" autoComplete="off">
         <Combobox
           value={selected}
           onChange={(e) => {
@@ -108,7 +108,7 @@ export function Autocomplete<T>({
             </Transition>
           </div>
         </Combobox>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 }

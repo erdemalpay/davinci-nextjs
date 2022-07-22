@@ -27,25 +27,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const initialTables = await getTables({ context });
   const initialGames = await getGames({ context });
-  const mentors = await getUsers({ context });
+  const users = await getUsers({ context });
   return {
     props: {
       location,
       initialTables,
       initialGames,
-      mentors,
+      users,
     },
   };
 };
 
 const TablesPage = ({
   initialTables,
-  mentors,
+  users,
   location,
   initialGames,
 }: {
   initialTables: Table[];
-  mentors: User[];
+  users: User[];
   location: number;
   initialGames: Game[];
 }) => {
@@ -72,7 +72,7 @@ const TablesPage = ({
   });
 
   // Sort users by name
-  mentors.sort((a, b) => {
+  users.sort((a, b) => {
     if (a.name > b.name) {
       return 1;
     } else if (a.name < b.name) {
@@ -81,6 +81,11 @@ const TablesPage = ({
       return 0;
     }
   });
+
+  const defaultUser: User = users.find((user) => user._id === "dv") as User;
+
+  const [mentors, setMentors] = useState<User[]>([defaultUser]);
+
   let { games } = useGetGames(initialGames);
   games = games || initialGames;
 
@@ -88,12 +93,18 @@ const TablesPage = ({
   const activeTableCount = activeTables.length;
   const totalTableCount = tables.length;
 
-  const activeCustomerCount = activeTables.reduce((prev, curr) => {
-    return prev + curr.playerCount;
-  }, 0);
-  const totalCustomerCount = activeTables.reduce((prev, curr) => {
-    return prev + curr.playerCount;
-  }, 0);
+  const activeCustomerCount = activeTables.reduce(
+    (prev: number, curr: Table) => {
+      return Number(prev) + Number(curr.playerCount);
+    },
+    0
+  );
+  const totalCustomerCount = activeTables.reduce(
+    (prev: number, curr: Table) => {
+      return Number(prev) + Number(curr.playerCount);
+    },
+    0
+  );
   const tableColumns: Table[][] = [[], [], [], []];
   (showAllTables ? tables : activeTables).forEach((table, index) => {
     tableColumns[index % 4].push(table);
@@ -157,9 +168,11 @@ const TablesPage = ({
             </div>
           </div>
           <TagListWithAutocomplete
-            suggestions={mentors as TagType<User>[]}
+            suggestions={users as TagType<User>[]}
             name="employees"
             label="Who's at cafe?"
+            items={mentors.filter((user) => user._id !== "dv")}
+            setItems={setMentors}
           />
         </div>
         <div className="flex justify-end">

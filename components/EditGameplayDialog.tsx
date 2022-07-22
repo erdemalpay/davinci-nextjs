@@ -1,9 +1,8 @@
 import { FormEvent } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/solid";
+import { TrashIcon, XIcon } from "@heroicons/react/solid";
 import { InputWithLabel } from "./InputWithLabel";
 import { Game, Gameplay, Table, User } from "../types";
-import { useForm } from "../hooks/useForm";
 import {
   useDeleteGameplayMutation,
   useUpdateGameplayMutation,
@@ -26,13 +25,10 @@ export function EditGameplayDialog({
   mentors: User[];
   games: Game[];
 }) {
-  const { data, handleUpdate } = useForm(gameplay);
-
   const { mutate: updateGameplay } = useUpdateGameplayMutation();
   const { mutate: deleteGameplay } = useDeleteGameplayMutation();
 
   function updateGameplayHandler(event: FormEvent<HTMLInputElement>) {
-    handleUpdate(event);
     const target = event.target as HTMLInputElement;
 
     updateGameplay({
@@ -98,9 +94,17 @@ export function EditGameplayDialog({
               <div className="bg-white rounded-md shadow fixed overflow-y-auto sm:h-auto w-10/12 md:w-8/12 lg:w-1/2 2xl:w-2/5">
                 <div className="bg-gray-100 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
                   <p className="text-base font-semibold">Update Gameplay</p>
-                  <button onClick={close} className="focus:outline-none">
-                    <XIcon className="h-6 w-6" />
-                  </button>
+                  <div className="flex flex-row justify-end gap-4">
+                    <button
+                      onClick={removeGameplay}
+                      className="focus:outline-none text-red-500"
+                    >
+                      <TrashIcon className="h-6 w-6" />
+                    </button>
+                    <button onClick={close} className="focus:outline-none">
+                      <XIcon className="h-6 w-6" />
+                    </button>
+                  </div>
                 </div>
                 <div className="px-4 md:px-10 md:pt-4 md:pb-4 pb-8">
                   <div className="flex flex-col gap-4">
@@ -137,7 +141,7 @@ export function EditGameplayDialog({
                       name="playerCount"
                       label="Player Count"
                       type="number"
-                      defaultValue={data.playerCount}
+                      defaultValue={gameplay.playerCount}
                       onChange={updateGameplayHandler}
                     />
                   </div>
@@ -145,24 +149,15 @@ export function EditGameplayDialog({
                     <TimeInputWithLabel
                       name="startHour"
                       label="Start Time"
-                      defaultValue={data.startHour}
+                      defaultValue={gameplay.startHour}
                       onChange={updateGameplayHandler}
                     />
                     <TimeInputWithLabel
                       name="finishHour"
                       label="End Time"
-                      defaultValue={data.finishHour}
+                      defaultValue={gameplay.finishHour}
                       onChange={updateGameplayHandler}
                     />
-                  </div>
-                  <div className="flex items-center justify-end mt-9">
-                    <button
-                      className="px-6 py-3 bg-red-500 hover:bg-opacity-80 shadow rounded text-sm text-white"
-                      onClick={removeGameplay}
-                      disabled={!(data.mentor && data.game && data.playerCount)}
-                    >
-                      Delete
-                    </button>
                   </div>
                 </div>
               </div>
