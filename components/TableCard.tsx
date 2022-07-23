@@ -206,7 +206,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
         close={() => setIsDeleteConfirmationDialogOpen(false)}
         confirm={handleTableDelete}
         title="Delete Table"
-        text="This table and all gameplays in it will be deleted. Are you sure to continue?"
+        text="This table and gameplays in it will be deleted. Are you sure to continue?"
       />
       <ConfirmationDialog
         isOpen={isCloseConfirmationDialogOpen}

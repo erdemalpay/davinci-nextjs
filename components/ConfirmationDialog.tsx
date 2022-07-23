@@ -39,7 +39,7 @@ export function ConfirmationDialog({
                 <div className="bg-gray-100 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
                   <p className="text-base font-semibold">{title}</p>
                 </div>
-                <div className="px-4 md:px-10 md:pt-4 md:pb-4 pb-8">
+                <div className="px-4 md:px-10 md:pt-4 md:pb-4 pb-8 text-center">
                   {text}
                   <div className="flex items-center justify-between mt-9">
                     <button
