@@ -175,11 +175,10 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
                 className="flex justify-between text-xs cursor-pointer"
                 onClick={() => editGameplay(gameplay)}
               >
-                <div className="flex">
-                  <h1 className="text-xs mr-1">
+                <div className="flex w-4/5">
+                  <div className="overflow-hidden whitespace-nowrap text-ellipsis text-xs mr-1">
                     {getGameName(gameplay.game as number)}
-                  </h1>
-                  {"   "}
+                  </div>
                   <h1 className="text-xs">({gameplay.playerCount})</h1>
                 </div>
                 <div className="flex">
