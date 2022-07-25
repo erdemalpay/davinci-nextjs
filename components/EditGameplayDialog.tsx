@@ -56,7 +56,7 @@ export function EditGameplayDialog({
     updateGameplay({
       tableId: table._id!,
       id: gameplay._id!,
-      updates: { mentor: mentor._id },
+      updates: { mentor },
     });
   }
 
@@ -70,7 +70,7 @@ export function EditGameplayDialog({
 
   const selectedGame = games.find((game) => game._id === gameplay.game!);
   const selectedMentor =
-    mentors.find((mentor) => mentor._id === gameplay.mentor!) ||
+    mentors.find((mentor) => mentor._id === gameplay.mentor?._id) ||
     mentors.find((mentor) => mentor._id === "dv");
 
   return (

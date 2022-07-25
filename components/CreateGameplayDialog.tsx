@@ -35,7 +35,7 @@ export function CreateGameplayDialog({
   }
 
   function handleMentorSelection(mentor: User) {
-    setData({ ...data, mentor: mentor._id });
+    setData({ ...data, mentor });
   }
 
   function handleGameSelection(game: Game) {

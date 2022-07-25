@@ -61,7 +61,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     location: table.location as number,
     playerCount: table.playerCount,
     startHour,
-    mentor: "-",
+    mentor: mentors[0],
   };
 
   function updateTableHandler(event: FormEvent<HTMLInputElement>) {
@@ -168,16 +168,27 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
                 className="flex justify-between text-xs cursor-pointer"
                 onClick={() => editGameplay(gameplay)}
               >
-                <h1 className="text-xs">
-                  {getGameName(gameplay.game as number)}
-                </h1>
-                <h5 className="text-xs">
-                  {getDuration(
-                    gameplay.startHour,
-                    gameplay.finishHour,
-                    new Date(gameplay.date)
+                <div className="flex">
+                  <h1 className="text-xs mr-1">
+                    {getGameName(gameplay.game as number)}
+                  </h1>
+                  {"   "}
+                  <h1 className="text-xs">({gameplay.playerCount})</h1>
+                </div>
+                <div className="flex">
+                  {gameplay.mentor._id !== "dv" && (
+                    <div className="bg-gray-300 rounded-full px-2 uppercase mr-1">
+                      {gameplay.mentor?.name}
+                    </div>
                   )}
-                </h5>
+                  <h5 className="text-xs">
+                    {getDuration(
+                      gameplay.startHour,
+                      gameplay.finishHour,
+                      new Date(gameplay.date)
+                    )}
+                  </h5>
+                </div>
               </div>
             );
           })}
