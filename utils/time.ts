@@ -1,7 +1,7 @@
 export function getDuration(
+  date: Date,
   startTime: string,
-  finishTime?: string,
-  date: Date
+  finishTime?: string
 ) {
   const start = new Date();
   const finish = new Date();
