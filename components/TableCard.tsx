@@ -12,6 +12,7 @@ import {
 } from "../utils/api/table";
 import { EditGameplayDialog } from "./EditGameplayDialog";
 import { ConfirmationDialog } from "./ConfirmationDialog";
+import { Tooltip } from "./Tooltip";
 
 export interface TableCardProps {
   table: Table;
@@ -87,7 +88,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   const nameInput = useRef(null);
 
   return (
-    <div className="bg-white rounded-md shadow overflow-y-auto sm:h-auto break-inside-avoid mb-4">
+    <div className="bg-white rounded-md shadow sm:h-auto break-inside-avoid mb-4">
       <div className="bg-gray-200 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
         <p className="text-base font-semibold cursor-pointer">
           {!isEditTableNameActive ? (
@@ -117,18 +118,24 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
         </p>
         <div className="flex justify-end w-2/3 gap-4">
           {!table.finishHour && (
-            <CardAction onClick={createGameplay} IconComponent={PlusIcon} />
+            <Tooltip message="Add gameplay">
+              <CardAction onClick={createGameplay} IconComponent={PlusIcon} />
+            </Tooltip>
           )}
           {!table.finishHour && (
-            <CardAction
-              onClick={() => setIsCloseConfirmationDialogOpen(true)}
-              IconComponent={FlagIcon}
-            />
+            <Tooltip message="Close">
+              <CardAction
+                onClick={() => setIsCloseConfirmationDialogOpen(true)}
+                IconComponent={FlagIcon}
+              />
+            </Tooltip>
           )}
-          <CardAction
-            onClick={() => setIsDeleteConfirmationDialogOpen(true)}
-            IconComponent={TrashIcon}
-          />
+          <Tooltip message="Delete">
+            <CardAction
+              onClick={() => setIsDeleteConfirmationDialogOpen(true)}
+              IconComponent={TrashIcon}
+            />
+          </Tooltip>
         </div>
       </div>
       <div className={`px-4 md:px-10 md:pt-4 md:pb-4 pb-8 ${bgColor}`}>
@@ -176,11 +183,13 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
                   <h1 className="text-xs">({gameplay.playerCount})</h1>
                 </div>
                 <div className="flex">
-                  {gameplay.mentor._id !== "dv" && (
-                    <div className="bg-gray-300 rounded-full px-2 uppercase mr-1">
-                      {gameplay.mentor?.name}
-                    </div>
-                  )}
+                  <Tooltip message={gameplay.mentor?.name}>
+                    {gameplay.mentor._id !== "dv" && (
+                      <div className="bg-gray-300 rounded-full px-2 uppercase mr-1">
+                        {gameplay.mentor?.name[0]}
+                      </div>
+                    )}
+                  </Tooltip>
                   <h5 className="text-xs">
                     {getDuration(
                       new Date(gameplay.date),
