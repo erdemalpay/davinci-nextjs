@@ -1,5 +1,4 @@
 import DatePicker from "react-datepicker";
-import { useState } from "react";
 
 export function DateInput({ ...props }) {
   return (
@@ -12,6 +11,7 @@ export function DateInput({ ...props }) {
         nextMonthButtonLabel=">"
         previousMonthButtonLabel="<"
         popperClassName="react-datepicker-left"
+        calendarStartDay={1}
       />
       <label
         htmlFor="date"
