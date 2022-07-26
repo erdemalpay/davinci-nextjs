@@ -5,7 +5,7 @@ import { getLocations } from "../utils/api/location";
 import { useState } from "react";
 import { Location } from "../types";
 import App from "next/app";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import {
@@ -75,7 +75,11 @@ function MyApp({ Component, pageProps }: AppProps) {
               </div>
             ) : null}
             <Component {...pageProps} />
-            <ToastContainer />
+            <ToastContainer
+              autoClose={2000}
+              hideProgressBar={true}
+              transition={Slide}
+            />
           </LocationContext.Provider>
         </SelectedDateContext.Provider>
       </Hydrate>

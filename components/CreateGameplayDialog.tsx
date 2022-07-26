@@ -6,6 +6,7 @@ import { Table, Gameplay, User, Game } from "../types";
 import { useForm } from "../hooks/useForm";
 import { useCreateGameplayMutation } from "../utils/api/gameplay";
 import { Autocomplete } from "./Autocomplete";
+import { toast } from "react-toastify";
 
 export function CreateGameplayDialog({
   isOpen,
@@ -31,6 +32,7 @@ export function CreateGameplayDialog({
     // But since we are optimistically update data, that seemed redundant to me so I removed
     // May revert back later if needed
     createGameplay({ table: table._id as number, payload: data });
+    toast.success(`New gameplay added to table ${table.name}`);
     close();
   }
 

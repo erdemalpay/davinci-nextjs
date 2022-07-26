@@ -53,9 +53,10 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
       updates: { finishHour: format(new Date(), "HH:mm") },
     });
     setIsCloseConfirmationDialogOpen(false);
+    toast.success(`Table ${table.name} closed`);
   }
 
-  const date = format(new Date(), "yyyy-MM-dd");
+  const date = table.date;
   const startHour = format(new Date(), "HH:mm");
 
   const gameplayTemplate: Gameplay = {
@@ -73,6 +74,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
       id: table._id!,
       updates: { [target.name]: target.value },
     });
+    toast.success(`Table ${table.name} updated`);
   }
 
   function editGameplay(gameplay: Gameplay) {
@@ -84,7 +86,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     if (!table._id) return;
     deleteTable({ id: table._id });
     setIsDeleteConfirmationDialogOpen(false);
-    toast("Table Deleted");
+    toast.success(`Table ${table.name} deleted`);
   }
 
   const nameInput = useRef(null);
