@@ -5,6 +5,8 @@ import { getLocations } from "../utils/api/location";
 import { useState } from "react";
 import { Location } from "../types";
 import App from "next/app";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   Hydrate,
@@ -73,6 +75,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               </div>
             ) : null}
             <Component {...pageProps} />
+            <ToastContainer />
           </LocationContext.Provider>
         </SelectedDateContext.Provider>
       </Hydrate>

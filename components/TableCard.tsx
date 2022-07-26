@@ -13,6 +13,7 @@ import {
 import { EditGameplayDialog } from "./EditGameplayDialog";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { Tooltip } from "./Tooltip";
+import { toast } from "react-toastify";
 
 export interface TableCardProps {
   table: Table;
@@ -83,6 +84,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     if (!table._id) return;
     deleteTable({ id: table._id });
     setIsDeleteConfirmationDialogOpen(false);
+    toast("Table Deleted");
   }
 
   const nameInput = useRef(null);
