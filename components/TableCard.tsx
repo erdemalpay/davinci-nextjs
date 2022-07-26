@@ -32,6 +32,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   const [isEditTableNameActive, setIsEditTableNameActive] = useState(false);
   const [selectedGameplay, setSelectedGameplay] = useState<Gameplay>();
   const { mutate: deleteTable } = useDeleteTableMutation();
+  const { mutate: updateTable } = useUpdateTableMutation();
 
   const bgColor = table.finishHour ? "bg-gray-100" : "bg-white";
 
@@ -39,8 +40,6 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     setSelectedGameplay(undefined);
     setIsGameplayDialogOpen(true);
   }
-
-  const { mutate: updateTable } = useUpdateTableMutation();
 
   function getGameName(id: number) {
     const game = games.find((game) => game._id === id);

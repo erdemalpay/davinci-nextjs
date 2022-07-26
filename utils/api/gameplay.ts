@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { format } from "date-fns";
+import { sortTable } from "../sort";
 
 interface GameplayCreateRequest extends PossibleContext {
   table: number;
@@ -73,14 +74,17 @@ export function useCreateGameplayMutation() {
       );
       if (!previousTable) return { previousTables };
 
-      // Optimistically update to the new value
-      queryClient.setQueryData(tablesQuery, [
+      const updatedTables = [
         ...previousTables!.filter((table) => table._id !== previousTable._id),
         {
           ...previousTable,
           gameplays: [...previousTable!.gameplays, newGameplay.payload],
         },
-      ]);
+      ];
+      updatedTables.sort(sortTable);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(tablesQuery, updatedTables);
 
       // Return a context object with the snapshotted value
       return { previousTables };
@@ -122,9 +126,7 @@ export function useUpdateGameplayMutation() {
       const updatedGameplay = gameplaysTable.gameplays.find(
         (gameplay) => gameplay._id === id
       );
-
-      // Optimistically update to the new value
-      queryClient.setQueryData(tablesQuery, [
+      const updatedTables: Table[] = [
         ...previousTables!.filter((table) => table._id !== gameplaysTable._id),
         {
           ...gameplaysTable,
@@ -133,12 +135,16 @@ export function useUpdateGameplayMutation() {
               (gameplay) => gameplay._id !== id
             ),
             {
-              ...updatedGameplay,
+              ...updatedGameplay!,
               ...updates,
             },
           ],
         },
-      ]);
+      ];
+      updatedTables.sort(sortTable);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(tablesQuery, updatedTables);
 
       // Return a context object with the snapshotted value
       return { previousTables };
@@ -178,8 +184,7 @@ export function useDeleteGameplayMutation() {
       );
       if (!gameplaysTable) return { previousTables };
 
-      // Optimistically update to the new value
-      queryClient.setQueryData(tablesQuery, [
+      const updatedTables = [
         ...previousTables!.filter((table) => table._id !== gameplaysTable._id),
         {
           ...gameplaysTable,
@@ -189,7 +194,12 @@ export function useDeleteGameplayMutation() {
             ),
           ],
         },
-      ]);
+      ];
+
+      updatedTables.sort(sortTable);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(tablesQuery, updatedTables);
 
       // Return a context object with the snapshotted value
       return { previousTables };

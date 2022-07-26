@@ -12,6 +12,7 @@ import { TagListWithAutocomplete } from "../../components/TagListWithAutocomplet
 import { TagType } from "../../types/index";
 import { getGames, useGetGames } from "../../utils/api/game";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
+import { sortTable } from "../../utils/sort";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);
@@ -57,19 +58,7 @@ const TablesPage = ({
   tables = tables || initialTables;
   // Sort tables first active tables, then closed ones.
   // if both active then sort by name
-  tables.sort((a, b) => {
-    if (a.finishHour && !b.finishHour) {
-      return 1;
-    } else if (!a.finishHour && b.finishHour) {
-      return -1;
-    } else if (a.name > b.name) {
-      return 1;
-    } else if (a.name < b.name) {
-      return -1;
-    } else {
-      return 0;
-    }
-  });
+  tables.sort(sortTable);
 
   // Sort users by name
   users.sort((a, b) => {

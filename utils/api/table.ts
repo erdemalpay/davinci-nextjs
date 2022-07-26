@@ -6,6 +6,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
+import { sortTable } from "../sort";
 
 interface UpdateTablePayload {
   id: number;
@@ -91,11 +92,11 @@ export function useCreateTableMutation() {
       // Snapshot the previous value
       const previousTables = queryClient.getQueryData<Table[]>(tablesQuery);
 
+      const updatedTables = [...(previousTables as Table[]), newTable];
+      updatedTables.sort(sortTable);
+
       // Optimistically update to the new value
-      queryClient.setQueryData(tablesQuery, [
-        ...(previousTables as Table[]),
-        newTable,
-      ]);
+      queryClient.setQueryData(tablesQuery, updatedTables);
 
       // Return a context object with the snapshotted value
       return { previousTables };
@@ -138,6 +139,7 @@ export function useUpdateTableMutation() {
           updatedTables[i] = { ...updatedTables[i], ...updates };
         }
       }
+      updatedTables.sort(sortTable);
 
       // Optimistically update to the new value
       queryClient.setQueryData(tablesQuery, updatedTables);
@@ -177,6 +179,8 @@ export function useDeleteTableMutation() {
       const previousTables =
         queryClient.getQueryData<Table[]>(tablesQuery) || [];
       const updatedTables = previousTables.filter((table) => table._id !== id);
+
+      updatedTables.sort(sortTable);
 
       // Optimistically update to the new value
       queryClient.setQueryData(tablesQuery, updatedTables);
