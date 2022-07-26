@@ -32,6 +32,7 @@ const LoginPage: NextPage = () => {
       router.push("/home");
     } catch (error) {
       setError(true);
+
       console.log({ error });
     }
   };

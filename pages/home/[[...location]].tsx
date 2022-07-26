@@ -12,6 +12,7 @@ import { TagListWithAutocomplete } from "../../components/TagListWithAutocomplet
 import { TagType } from "../../types/index";
 import { getGames, useGetGames } from "../../utils/api/game";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
+import { getToken } from "../../utils/token";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);

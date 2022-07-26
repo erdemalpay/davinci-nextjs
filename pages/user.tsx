@@ -1,10 +1,7 @@
 import { GetServerSideProps } from "next";
 import Cookies from "js-cookie";
-
-import { get } from "../utils/api";
 import type { User } from "../types";
 import { useQuery } from "react-query";
-import { getToken } from "../utils/token";
 import { getCurrentUser } from "../utils/api/user";
 
 const path = "/user/profile";
