@@ -98,7 +98,7 @@ const TablesPage = ({
   return (
     <>
       <Header />
-      <div className="container h-full py-4 px-12">
+      <div className="container relative h-full py-4 px-12">
         {/* Remove class [ h-64 ] when adding a card block */}
         <div className="h-full flex w-full flex-wrap flex-col">
           <div className="flex justify-between">

@@ -15,7 +15,7 @@ export function Header() {
   }
 
   return (
-    <div>
+    <div className="sticky top-0 z-50">
       <nav className="w-full bg-gray-800 shadow">
         <div className="container px-6 h-16 flex justify-between items-stretch mx-auto">
           <div className="flex items-center">
