@@ -89,8 +89,6 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     toast.success(`Table ${table.name} deleted`);
   }
 
-  const nameInput = useRef(null);
-
   return (
     <div className="bg-white rounded-md shadow sm:h-auto break-inside-avoid mb-4">
       <div className="bg-gray-200 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
@@ -172,7 +170,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
           />
         </div>
         <div className="flex flex-col space-y-2 mt-2">
-          {table.gameplays?.reverse().map((gameplay) => {
+          {table.gameplays?.map((gameplay) => {
             return (
               <div
                 key={gameplay._id || gameplay.startHour}
