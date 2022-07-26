@@ -35,11 +35,11 @@ export function ConfirmationDialog({
           />
           <div className="mx-auto container">
             <div className="flex items-center justify-center h-full w-full">
-              <div className="bg-white rounded-md shadow fixed overflow-y-auto sm:h-auto w-10/12 md:w-8/12 lg:w-1/2 2xl:w-1/5">
-                <div className="bg-gray-100 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
+              <div className="bg-white rounded-md shadow fixed overflow-y-auto sm:h-auto w-10/12 lg:w-1/5">
+                <div className="bg-gray-100 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-center lg:justify-start">
                   <p className="text-base font-semibold">{title}</p>
                 </div>
-                <div className="px-4 md:px-10 md:pt-4 md:pb-4 pb-8 text-center">
+                <div className="p-4 text-center">
                   {text}
                   <div className="flex items-center justify-between mt-9">
                     <button

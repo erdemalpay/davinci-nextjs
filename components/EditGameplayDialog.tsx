@@ -10,6 +10,7 @@ import {
 import { TimeInputWithLabel } from "./TimeInputWithLabel";
 import { Autocomplete } from "./Autocomplete";
 import { ConfirmationDialog } from "./ConfirmationDialog";
+import { toast } from "react-toastify";
 
 export function EditGameplayDialog({
   isOpen,
@@ -34,12 +35,14 @@ export function EditGameplayDialog({
 
   function updateGameplayHandler(event: FormEvent<HTMLInputElement>) {
     const target = event.target as HTMLInputElement;
+    if (!target.value) return;
 
     updateGameplay({
       tableId: table._id!,
       id: gameplay._id!,
       updates: { [target.name]: target.value },
     });
+    toast.success("Gameplay updated");
   }
 
   function handleGameSelection(game: Game) {
@@ -49,6 +52,7 @@ export function EditGameplayDialog({
       id: gameplay._id!,
       updates: { game: game._id },
     });
+    toast.success("Gameplay updated");
   }
 
   function handleMentorSelection(mentor: User) {
@@ -58,6 +62,7 @@ export function EditGameplayDialog({
       id: gameplay._id!,
       updates: { mentor },
     });
+    toast.success("Gameplay updated");
   }
 
   function removeGameplay() {
@@ -65,6 +70,7 @@ export function EditGameplayDialog({
       tableId: table._id!,
       id: gameplay._id!,
     });
+    toast.success("Gameplay deleted");
     close();
   }
 

@@ -81,6 +81,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               autoClose={2000}
               hideProgressBar={true}
               transition={Slide}
+              closeButton={false}
             />
           </LocationContext.Provider>
         </SelectedDateContext.Provider>

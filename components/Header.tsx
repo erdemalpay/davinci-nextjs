@@ -140,7 +140,7 @@ export function Header() {
                 Da Vinci Panel
               </h3>
             </div>
-            <div className="w-full xl:w-auto h-full flex items-center justify-end gap-x-4">
+            <div className="w-auto h-full flex items-center justify-end gap-x-4">
               <LocationSelector />
               <button
                 onClick={logout}
@@ -149,7 +149,7 @@ export function Header() {
                 Logout
               </button>
             </div>
-            <div className="visible xl:hidden flex items-center relative">
+            <div className="hidden items-center relative">
               <ul className="p-2 w-64 border-r bg-white absolute top-0 -ml-2 rounded right-0 shadow mt-12 hidden">
                 <li className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal py-2 hover:text-indigo-700 focus:text-indigo-700 focus:outline-none">
                   <div className="flex items-center">
@@ -195,7 +195,7 @@ export function Header() {
                     <span className="ml-2">Dashboard</span>
                   </div>
                 </li>
-                <li className="flex xl:hidden  cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mt-2 py-2 hover:text-indigo-700 focus:text-indigo-700 focus:outline-none flex items-center">
+                <li className="xl:hidden  cursor-pointer text-gray-600 text-sm leading-3 tracking-normal mt-2 py-2 hover:text-indigo-700 focus:text-indigo-700 focus:outline-none flex items-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="icon icon-tabler icon-tabler-help"

@@ -141,7 +141,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
         </div>
       </div>
       <div className={`px-4 md:px-10 md:pt-4 md:pb-4 pb-8 ${bgColor}`}>
-        <div className="mt-2 flex gap-4	 flex-row">
+        <div className="flex gap-4 flex-row">
           <InputWithLabel
             name="startHour"
             label="Start Time"

@@ -12,7 +12,6 @@ import { TagListWithAutocomplete } from "../../components/TagListWithAutocomplet
 import { TagType } from "../../types/index";
 import { getGames, useGetGames } from "../../utils/api/game";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
-import { getToken } from "../../utils/token";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);
@@ -181,7 +180,7 @@ const TablesPage = ({
             {showAllTables ? "Show open tables" : "Show all tables"}
           </button>
         </div>
-        <div className="h-full grid grid-cols-4 mt-4 gap-x-8">
+        <div className="h-full grid grid-cols-1 lg:grid-cols-4 mt-4 gap-x-8">
           {tableColumns.map((tables, idx) => (
             <div key={idx}>
               {tables.map((table) => (
