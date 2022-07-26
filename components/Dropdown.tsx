@@ -30,7 +30,7 @@ export function Dropdown({ text, children }: PropsWithChildren<DropdownProps>) {
         onClick={() => setOpen(!open)}
       >
         {open ? (
-          <ul className="p-2 w-40 border-r bg-white absolute rounded z-40 left-0 shadow mt-20">
+          <ul className="p-2 w-40 border-r bg-white absolute rounded z-40 left-0 shadow mt-16 lg:mt-36">
             {children}
           </ul>
         ) : (
