@@ -99,12 +99,9 @@ const TablesPage = ({
     },
     0
   );
-  const totalCustomerCount = activeTables.reduce(
-    (prev: number, curr: Table) => {
-      return Number(prev) + Number(curr.playerCount);
-    },
-    0
-  );
+  const totalCustomerCount = tables.reduce((prev: number, curr: Table) => {
+    return Number(prev) + Number(curr.playerCount);
+  }, 0);
   const tableColumns: Table[][] = [[], [], [], []];
   (showAllTables ? tables : activeTables).forEach((table, index) => {
     tableColumns[index % 4].push(table);
