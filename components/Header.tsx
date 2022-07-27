@@ -4,6 +4,7 @@ import { LocationSelector } from "./LocationSelector";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { AnnotationIcon } from "@heroicons/react/solid";
+import { LogoutIcon } from "@heroicons/react/outline";
 
 export function Header() {
   const { name } = useProfile();
@@ -30,23 +31,15 @@ export function Header() {
               href="https://feedback.davinciboardgame.com"
               target="_blank"
               rel="noreferrer"
-              className="focus:outline-none text-white text-sm p-2 rounded-sm hidden lg:flex gap-2"
-            >
-              Feedback
-            </a>
-            <a
-              href="https://feedback.davinciboardgame.com"
-              target="_blank"
-              rel="noreferrer"
-              className="focus:outline-none text-white text-sm p-2 rounded-sm flex lg:hidden gap-2"
+              className="focus:outline-none text-white text-sm rounded-sm flex gap-2"
             >
               <AnnotationIcon className="h-4 w-4" />
             </a>
             <button
               onClick={logout}
-              className="focus:outline-none text-white text-sm border p-2 rounded-sm border-neutral-50 flex gap-2"
+              className="focus:outline-none text-white text-sm border-neutral-50 flex gap-2"
             >
-              Logout
+              <LogoutIcon className="h-4 w-4" />
             </button>
           </div>
           <div className="hidden items-center relative">
