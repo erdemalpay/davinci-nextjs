@@ -25,6 +25,14 @@ export function Header() {
           </div>
           <div className="w-auto h-full flex items-center justify-end gap-x-4">
             <LocationSelector />
+            <a
+              href="https://feedback.davinciboardgame.com"
+              target="_blank"
+              rel="noreferrer"
+              className="focus:outline-none text-white text-sm p-2 rounded-sm flex gap-2"
+            >
+              Feedback
+            </a>
             <button
               onClick={logout}
               className="focus:outline-none text-white text-sm border p-2 rounded-sm border-neutral-50 flex gap-2"
