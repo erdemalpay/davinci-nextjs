@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { AnnotationIcon } from "@heroicons/react/solid";
 import { LogoutIcon } from "@heroicons/react/outline";
+import { Tooltip } from "@material-tailwind/react";
 
 export function Header() {
   const { name } = useProfile();
@@ -27,20 +28,21 @@ export function Header() {
           </div>
           <div className="w-auto h-full flex items-center justify-end gap-x-4">
             <LocationSelector />
-            <a
-              href="https://feedback.davinciboardgame.com"
-              target="_blank"
-              rel="noreferrer"
-              className="focus:outline-none text-white text-sm rounded-sm flex gap-2"
-            >
-              <AnnotationIcon className="h-4 w-4" />
-            </a>
-            <button
-              onClick={logout}
-              className="focus:outline-none text-white text-sm border-neutral-50 flex gap-2"
-            >
-              <LogoutIcon className="h-4 w-4" />
-            </button>
+            <Tooltip content="Feedback" placement="bottom">
+              <a
+                href="https://feedback.davinciboardgame.com"
+                target="_blank"
+                rel="noreferrer"
+                className="focus:outline-none text-white text-sm rounded-sm flex gap-2"
+              >
+                {<AnnotationIcon className="h-4 w-4" />}
+              </a>
+            </Tooltip>
+            <Tooltip content="Logout" placement="bottom">
+              <button onClick={logout} className=" text-white">
+                <LogoutIcon className="h-4 w-4" />
+              </button>
+            </Tooltip>
           </div>
           <div className="hidden items-center relative">
             <ul className="p-2 w-64 border-r bg-white absolute top-0 -ml-2 rounded right-0 shadow mt-12 hidden">
