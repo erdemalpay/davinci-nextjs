@@ -89,7 +89,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   }
 
   return (
-    <div className="bg-white rounded-md shadow sm:h-auto break-inside-avoid mb-4">
+    <div className="bg-white rounded-md shadow sm:h-auto break-inside-avoid mb-4 group">
       <div className="bg-gray-200 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
         <p className="text-base font-semibold cursor-pointer">
           {!isEditTableNameActive ? (
@@ -117,7 +117,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
             />
           )}
         </p>
-        <div className="flex justify-end w-2/3 gap-4">
+        <div className="justify-end w-2/3 gap-4 flex lg:hidden lg:group-hover:flex">
           {!table.finishHour && (
             <Tooltip message="Add gameplay">
               <CardAction onClick={createGameplay} IconComponent={PlusIcon} />

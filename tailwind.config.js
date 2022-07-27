@@ -10,6 +10,7 @@ module.exports = {
       center: true,
     },
     extend: {},
+    namedGroups: ["tooltip"],
   },
   plugins: [
     plugin(
@@ -36,5 +37,6 @@ module.exports = {
         },
       }
     ),
+    require("tailwindcss-named-groups"),
   ],
 };
