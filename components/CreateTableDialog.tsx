@@ -107,7 +107,8 @@ export function CreateTableDialog({
                       Cancel
                     </button>
                     <button
-                      className="px-6 py-3 bg-gray-800 hover:bg-opacity-80 shadow rounded text-sm text-white"
+                      disabled={!data.name || !data.playerCount}
+                      className="px-6 py-3 bg-gray-800 hover:bg-opacity-80 shadow rounded text-sm text-white disabled:bg-gray-300"
                       onClick={handleCreate}
                     >
                       Create Table
