@@ -34,6 +34,8 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   const { mutate: deleteTable } = useDeleteTableMutation();
   const { mutate: updateTable } = useUpdateTableMutation();
 
+  console.log("Rendering table Card:", table?.name, isGameplayDialogOpen);
+
   const bgColor = table.finishHour ? "bg-gray-100" : "bg-white";
 
   function createGameplay() {
@@ -225,7 +227,10 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
       {selectedGameplay && (
         <EditGameplayDialog
           isOpen={isEditGameplayDialogOpen}
-          close={() => setIsEditGameplayDialogOpen(false)}
+          close={() => {
+            console.log("DIALOG CLOSED");
+            setIsEditGameplayDialogOpen(false);
+          }}
           gameplay={selectedGameplay}
           table={table}
           mentors={mentors}

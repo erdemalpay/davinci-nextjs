@@ -3,6 +3,7 @@ import { forwardRef, Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
 import { TagType } from "../types";
+import { Input } from "@material-tailwind/react";
 
 interface AutocompleteProps<T> extends InputWithLabelProps {
   suggestions: T[];
@@ -10,8 +11,6 @@ interface AutocompleteProps<T> extends InputWithLabelProps {
   handleSelection: (item: T) => void;
   showSelected?: boolean;
 }
-
-const ForwardedInputWithLabel = forwardRef(InputWithLabel);
 
 export function Autocomplete<T>({
   suggestions,
@@ -28,7 +27,7 @@ export function Autocomplete<T>({
     query === ""
       ? suggestions
       : suggestions.filter((suggestion: TagType<T>) => {
-          return suggestion.name
+          return suggestion?.name
             .toLowerCase()
             .replace(/\s+/g, "")
             .includes(query.toLowerCase().replace(/\s+/g, ""));
@@ -45,11 +44,13 @@ export function Autocomplete<T>({
             handleSelection(e as TagType<T>);
           }}
         >
-          <div className="relative mt-1 w-full">
-            <div className="relative w-full text-left bg-white rounded-lg cursor-default sm:text-sm overflow-hidden">
+          <div className="relative w-full">
+            <div className="relative w-full text-left bg-white rounded-lg cursor-default sm:text-sm">
               <Combobox.Input
                 as={Fragment}
-                displayValue={(suggestion: TagType<T>) => suggestion.name}
+                displayValue={(suggestion: TagType<T>) =>
+                  suggestion?.name || ""
+                }
                 onChange={(event) => {
                   setQuery(event.target.value);
                   // We are unsetting selected on input change othwerwise it keeps showing
@@ -57,8 +58,9 @@ export function Autocomplete<T>({
                   setSelected(undefined);
                 }}
               >
-                <ForwardedInputWithLabel
-                  className="w-full focus:border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 outline-0"
+                <Input
+                  variant="standard"
+                  className="w-full pr-10 text-sm"
                   name={name}
                   label={label}
                   value={showSelected ? selected?.name || query : query}
@@ -78,7 +80,7 @@ export function Autocomplete<T>({
               leaveTo="opacity-0"
               afterLeave={() => setQuery("")}
             >
-              <Combobox.Options className="absolute z-10 w-full py-1 mt-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Combobox.Options className="absolute z-10 w-full py-1 overflow-auto text-base bg-white rounded-md shadow-lg max-h-60 ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {filteredSuggestions.length === 0 && query !== "" ? (
                   <div className="cursor-default select-none relative py-2 px-4 text-gray-700">
                     Nothing found.
@@ -97,7 +99,7 @@ export function Autocomplete<T>({
                       {() => (
                         <>
                           <span className={"block truncate font-normal"}>
-                            {suggestion.name}
+                            {suggestion?.name}
                           </span>
                         </>
                       )}

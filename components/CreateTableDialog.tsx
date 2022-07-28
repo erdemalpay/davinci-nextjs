@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { Table } from "../types";
 import { useForm } from "../hooks/useForm";
 import { useCreateTableMutation } from "../utils/api/table";
+import { Input } from "@material-tailwind/react";
 
 export function CreateTableDialog({
   location,
@@ -65,30 +66,34 @@ export function CreateTableDialog({
                 </div>
                 <div className="px-4 md:px-10 md:pt-4 md:pb-4 pb-8">
                   <div className="flex flex-col gap-4">
-                    <InputWithLabel
+                    <Input
+                      variant="standard"
                       name="name"
                       label="Table Name"
                       type="text"
                       onChange={handleUpdate}
                     />
-                    <InputWithLabel
+                    <Input
                       name="playerCount"
+                      variant="standard"
                       label="Player Count"
                       type="number"
                       value={data.playerCount}
                       onChange={handleUpdate}
                     />
                   </div>
-                  <div className="mt-2 flex gap-2">
-                    <InputWithLabel
+                  <div className="mt-4 flex gap-2">
+                    <Input
                       name="startHour"
+                      variant="standard"
                       label="Start Time"
                       type="time"
                       value={data.startHour}
                       onChange={handleUpdate}
-                    />
-                    <InputWithLabel
+                    ></Input>
+                    <Input
                       name="finishHour"
+                      variant="standard"
                       label="End Time"
                       type="time"
                       onChange={handleUpdate}

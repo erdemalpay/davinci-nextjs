@@ -7,6 +7,7 @@ import { useForm } from "../hooks/useForm";
 import { useCreateGameplayMutation } from "../utils/api/gameplay";
 import { Autocomplete } from "./Autocomplete";
 import { toast } from "react-toastify";
+import { Input } from "@material-tailwind/react";
 
 export function CreateGameplayDialog({
   isOpen,
@@ -73,55 +74,49 @@ export function CreateGameplayDialog({
                     <XIcon className="h-6 w-6" />
                   </button>
                 </div>
-                <div className="px-4 md:px-10 md:pt-4 md:pb-4 pb-8">
-                  <div>
-                    <InputWithLabel
-                      name="name"
-                      label="Table Name"
-                      type="text"
-                      value={table.name}
-                      readOnly
-                    />
-                  </div>
-                  <div>
-                    <InputWithLabel
-                      name="playerCount"
-                      label="Player Count"
-                      type="number"
-                      value={data.playerCount}
-                      onChange={handleUpdate}
-                    />
-                  </div>
-                  <div>
-                    <Autocomplete
-                      name="mentor"
-                      label="Mentor"
-                      suggestions={mentors}
-                      handleSelection={handleMentorSelection}
-                      initialValue={mentors.find(
-                        (mentor) => mentor._id === "dv"
-                      )}
-                      showSelected
-                    />
-                  </div>
-                  <div>
-                    <Autocomplete
-                      name="game"
-                      label="Game"
-                      suggestions={games}
-                      handleSelection={handleGameSelection}
-                      showSelected
-                    />
-                  </div>
-                  <div className="mt-2 flex gap-2">
-                    <InputWithLabel
+                <div className="px-4 lg:px-10 flex flex-col mt-4 gap-2">
+                  <Input
+                    variant="standard"
+                    name="name"
+                    label="Table Name"
+                    type="text"
+                    value={table.name}
+                    readOnly
+                  />
+                  <Input
+                    variant="standard"
+                    name="playerCount"
+                    label="Player Count"
+                    type="number"
+                    value={data.playerCount}
+                    onChange={handleUpdate}
+                  />
+                  <Autocomplete
+                    name="mentor"
+                    label="Mentor"
+                    suggestions={mentors}
+                    handleSelection={handleMentorSelection}
+                    initialValue={mentors.find((mentor) => mentor._id === "dv")}
+                    showSelected
+                  />
+                  <Autocomplete
+                    name="game"
+                    label="Game"
+                    suggestions={games}
+                    handleSelection={handleGameSelection}
+                    showSelected
+                  />
+                  <div className="flex gap-2 mt-4">
+                    <Input
+                      variant="standard"
                       name="startHour"
                       label="Start Time"
                       type="time"
                       defaultValue={data.startHour}
                       onChange={handleUpdate}
                     />
-                    <InputWithLabel
+                    <Input
+                      variant="standard"
                       name="finishHour"
                       label="End Time"
                       type="time"
@@ -129,7 +124,7 @@ export function CreateGameplayDialog({
                       onChange={handleUpdate}
                     />
                   </div>
-                  <div className="flex items-center justify-between mt-9">
+                  <div className="flex items-center justify-between my-4">
                     <button
                       onClick={close}
                       className="px-6 py-3 bg-gray-400 hover:bg-gray-500 shadow rounded text-sm text-white"

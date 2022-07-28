@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Autocomplete } from "./Autocomplete";
 import { InputWithLabelProps } from "./InputWithLabel";
-import { Chip } from "./Chip";
 import { TagType } from "../types";
+import { Chip } from "@material-tailwind/react";
 
 interface TagListWithAutocompleteProps<T> extends InputWithLabelProps {
   suggestions: T[];
@@ -49,7 +49,13 @@ export function TagListWithAutocomplete<T>({
       </div>
       <div className="flex gap-4 mt-2">
         {items.map((tag) => (
-          <Chip key={tag._id} item={tag} close={handleChipClose} />
+          <Chip
+            key={tag._id}
+            value={tag.name}
+            color="blue-grey"
+            className="!text-green"
+            dismissible={{ onClose: () => handleChipClose(tag) }}
+          />
         ))}
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { FormEvent, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { TrashIcon, XIcon } from "@heroicons/react/solid";
-import { InputWithLabel } from "./InputWithLabel";
 import { Game, Gameplay, Table, User } from "../types";
 import {
   useDeleteGameplayMutation,
@@ -11,6 +10,7 @@ import { TimeInputWithLabel } from "./TimeInputWithLabel";
 import { Autocomplete } from "./Autocomplete";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { toast } from "react-toastify";
+import { Input } from "@material-tailwind/react";
 
 export function EditGameplayDialog({
   isOpen,
@@ -119,8 +119,9 @@ export function EditGameplayDialog({
                 <div className="px-4 md:px-10 md:pt-4 md:pb-4 pb-8">
                   <div className="flex flex-col gap-4">
                     <div>
-                      <InputWithLabel
+                      <Input
                         name="name"
+                        variant="standard"
                         label="Table Name"
                         type="text"
                         value={table.name}
@@ -147,8 +148,9 @@ export function EditGameplayDialog({
                         showSelected
                       />
                     </div>
-                    <InputWithLabel
+                    <Input
                       name="playerCount"
+                      variant="standard"
                       label="Player Count"
                       type="number"
                       defaultValue={gameplay.playerCount}
