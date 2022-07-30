@@ -1,7 +1,5 @@
-import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
-import { InputWithLabel } from "./InputWithLabel";
 import { format } from "date-fns";
 import { Table } from "../types";
 import { useForm } from "../hooks/useForm";

@@ -39,6 +39,15 @@ export type Game = {
   expansion: boolean;
 };
 
+export type Visit = {
+  _id: number;
+  location: number;
+  date: string;
+  user: User;
+  startHour: string;
+  finishHour?: string;
+};
+
 export type TagType<T> = {
   _id: string | number;
   name: string;

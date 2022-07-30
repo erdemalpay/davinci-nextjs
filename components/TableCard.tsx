@@ -34,7 +34,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   const { mutate: deleteTable } = useDeleteTableMutation();
   const { mutate: updateTable } = useUpdateTableMutation();
 
-  console.log("Rendering table Card:", table?.name, isGameplayDialogOpen);
+  // console.log("Rendering table Card:", table?.name, isGameplayDialogOpen);
 
   const bgColor = table.finishHour ? "bg-gray-100" : "bg-white";
 
@@ -195,7 +195,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
                 </div>
                 <div className="flex">
                   <Tooltip content={gameplay.mentor?.name}>
-                    {gameplay.mentor._id !== "dv" ? (
+                    {gameplay.mentor?._id !== "dv" ? (
                       <div className="bg-gray-300 rounded-full px-2 uppercase mr-1">
                         {gameplay.mentor?.name[0]}
                       </div>
@@ -228,7 +228,6 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
         <EditGameplayDialog
           isOpen={isEditGameplayDialogOpen}
           close={() => {
-            console.log("DIALOG CLOSED");
             setIsEditGameplayDialogOpen(false);
           }}
           gameplay={selectedGameplay}

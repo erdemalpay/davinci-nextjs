@@ -1,18 +1,20 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { DateInput } from "../../components/DateInput";
 import { Header } from "../../components/Header";
 import { InputWithLabel } from "../../components/InputWithLabel";
 import { CreateTableDialog } from "../../components/CreateTableDialog";
 import { GetServerSideProps } from "next";
 import { getTables, useGetTables } from "../../utils/api/table";
-import { Table, User, Game } from "../../types";
+import { Table, User, Game, Visit } from "../../types";
 import { TableCard } from "../../components/TableCard";
 import { getUsers } from "../../utils/api/user";
-import { TagListWithAutocomplete } from "../../components/TagListWithAutocomplete";
-import { TagType } from "../../types/index";
+import { ActiveVisitList } from "../../components/ActiveVisitList";
 import { getGames, useGetGames } from "../../utils/api/game";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { sortTable } from "../../utils/sort";
+import { getVisits, useGetVisits } from "../../utils/api/visit";
+import { isToday } from "date-fns";
+import { PreviousVisitList } from "../../components/PreviousVisitList";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);
@@ -28,31 +30,41 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   const initialTables = await getTables({ context });
   const initialGames = await getGames({ context });
+  const initialVisits = await getVisits({ context });
   const users = await getUsers({ context });
   return {
     props: {
       location,
+      users,
       initialTables,
       initialGames,
-      users,
+      initialVisits,
     },
   };
 };
 
 const TablesPage = ({
-  initialTables,
   users,
   location,
+  initialTables,
   initialGames,
+  initialVisits,
 }: {
-  initialTables: Table[];
   users: User[];
   location: number;
+  initialTables: Table[];
   initialGames: Game[];
+  initialVisits: Visit[];
 }) => {
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
   const { setSelectedDate, selectedDate } = useContext(SelectedDateContext);
   const [showAllTables, setShowAllTables] = useState(true);
+
+  let { games } = useGetGames(initialGames);
+  games = games || initialGames;
+
+  let { visits } = useGetVisits(initialVisits);
+  visits = visits || initialVisits;
 
   let { tables } = useGetTables(initialTables);
   tables = tables || initialTables;
@@ -75,9 +87,6 @@ const TablesPage = ({
 
   const [mentors, setMentors] = useState<User[]>([defaultUser]);
 
-  let { games } = useGetGames(initialGames);
-  games = games || initialGames;
-
   const activeTables = tables.filter((table) => !table.finishHour);
   const activeTableCount = activeTables.length;
   const totalTableCount = tables.length;
@@ -95,6 +104,17 @@ const TablesPage = ({
   (showAllTables ? tables : activeTables).forEach((table, index) => {
     tableColumns[index % 4].push(table);
   });
+
+  useEffect(() => {
+    const newMentors = [defaultUser];
+
+    if (visits) {
+      visits.forEach(
+        (visit) => !visit.finishHour && newMentors.push(visit.user)
+      );
+    }
+    setMentors(newMentors);
+  }, [defaultUser, visits]);
   return (
     <>
       <Header />
@@ -152,13 +172,16 @@ const TablesPage = ({
               />
             </div>
           </div>
-          <TagListWithAutocomplete
-            suggestions={users as TagType<User>[]}
-            name="employees"
-            label="Who's at cafe?"
-            items={mentors.filter((user) => user._id !== "dv")}
-            setItems={setMentors}
-          />
+          {isToday(selectedDate!) ? (
+            <ActiveVisitList
+              suggestions={users}
+              name="employees"
+              label="Who's at cafe?"
+              visits={visits.filter((visit) => !visit.finishHour)}
+            />
+          ) : (
+            <PreviousVisitList visits={visits} />
+          )}
         </div>
         <div className="flex justify-end">
           <button onClick={() => setShowAllTables((value) => !value)}>
