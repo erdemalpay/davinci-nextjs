@@ -1,12 +1,13 @@
-import { patch, post, remove } from "./index";
-import { Gameplay, Table } from "../../types/index";
+import { get, patch, post, remove } from "./index";
+import { Gameplay, Table, Game } from "../../types/index";
 import { PossibleContext } from "../token";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { format } from "date-fns";
 import { sortTable } from "../sort";
+import { start } from "repl";
 
 interface GameplayCreateRequest extends PossibleContext {
   table: number;
@@ -22,6 +23,11 @@ interface UpdateGameplayPayload {
 interface DeleteGameplayPayload {
   tableId: number;
   id: number;
+}
+
+interface GameplayAnalytic {
+  _id: number | string;
+  playCount: number;
 }
 
 export function createGameplay({
@@ -52,6 +58,31 @@ export function deleteGameplay({
   return remove<void>({
     path: `/tables/${tableId}/gameplay/${id}`,
   });
+}
+
+// Client side access analtyics using this helper method
+export function useGetGameplayAnalytics(
+  field: string,
+  limit: number,
+  startDate: string,
+  endDate?: string
+) {
+  const { selectedLocation } = useContext(LocationContext);
+
+  let query = `/gameplays/query?location=${selectedLocation?._id}&startDate=${startDate}&field=${field}&limit=${limit}`;
+  if (endDate) {
+    query += `&endDate=${endDate}`;
+  }
+
+  const { isLoading, error, data, isFetching } = useQuery(query, () =>
+    get<GameplayAnalytic[]>({ path: query })
+  );
+  return {
+    isLoading,
+    error,
+    data,
+    isFetching,
+  };
 }
 
 export function useCreateGameplayMutation() {

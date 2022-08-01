@@ -11,6 +11,7 @@ interface RequestWithPayload<P> extends BaseRequest {
 
 const baseURL = `${process.env.NEXT_PUBLIC_API_HOST}`;
 
+// T = ResponseType
 export async function get<T>({ path, context }: BaseRequest): Promise<T> {
   const token = getToken({ context });
   const headers: HeadersInit = { "Content-Type": "application/json" };
