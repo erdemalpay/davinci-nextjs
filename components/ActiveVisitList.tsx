@@ -53,7 +53,7 @@ export function ActiveVisitList({
 
   return (
     <div className="flex flex-col w-full">
-      <div className="flex w-full">
+      <div className="flex flex-col lg:flex-row w-full">
         <Autocomplete
           handleSelection={handleSelection}
           suggestions={filteredSuggestions}
@@ -61,7 +61,7 @@ export function ActiveVisitList({
           label={label}
         />
       </div>
-      <div className="flex gap-4 mt-2">
+      <div className="flex flex-wrap gap-4 mt-2">
         {visits.map((visit) => (
           <Chip
             key={visit.user._id}
