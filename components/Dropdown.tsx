@@ -26,7 +26,7 @@ export function Dropdown({ text, children }: PropsWithChildren<DropdownProps>) {
     <div className="h-full flex">
       <div
         aria-haspopup="true"
-        className="cursor-pointer flex items-center relative"
+        className="cursor-pointer flex items-center"
         onClick={() => setOpen(!open)}
       >
         {open ? (

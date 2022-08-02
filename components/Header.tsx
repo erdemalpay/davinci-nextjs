@@ -6,11 +6,19 @@ import Cookies from "js-cookie";
 import { AnnotationIcon } from "@heroicons/react/solid";
 import { LogoutIcon } from "@heroicons/react/outline";
 import { Tooltip } from "@material-tailwind/react";
+import Link from "next/link";
+import { useContext } from "react";
+import { LocationContext } from "../context/LocationContext";
 
-export function Header() {
+interface HeaderProps {
+  showLocationSelector?: boolean;
+}
+
+export function Header({ showLocationSelector = true }: HeaderProps) {
   const { name } = useProfile();
   const [show, setShow] = useState(false);
   const router = useRouter();
+  const { selectedLocation } = useContext(LocationContext);
 
   function logout() {
     Cookies.remove("jwt");
@@ -22,12 +30,24 @@ export function Header() {
       <nav className="w-full bg-gray-800 shadow">
         <div className="container px-6 h-16 flex justify-between items-stretch mx-auto">
           <div className="flex items-center">
-            <h3 className="text-base text-white font-bold tracking-normal leading-tight ml-3">
+            <h3 className="text-base text-white font-bold tracking-normal leading-tight">
               Da Vinci Panel
             </h3>
           </div>
           <div className="w-auto h-full flex items-center justify-end gap-x-4">
-            <LocationSelector />
+            <div className="gap-x-4 hidden lg:flex">
+              <Link href={`/home/${selectedLocation?._id}`}>
+                <a className="text-white text-sm tracking-normal leading-tight">
+                  Tables
+                </a>
+              </Link>
+              <Link href={`/analytics`}>
+                <a className="text-white text-sm tracking-normal leading-tight">
+                  Analytics
+                </a>
+              </Link>
+            </div>
+            {showLocationSelector && <LocationSelector />}
             <Tooltip content="Feedback" placement="bottom">
               <a
                 href="https://feedback.davinciboardgame.com"

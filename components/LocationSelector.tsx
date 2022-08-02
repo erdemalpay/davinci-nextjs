@@ -7,10 +7,12 @@ import {
   MenuItem,
   Button,
 } from "@material-tailwind/react";
+import { useRouter } from "next/router";
 
 export function LocationSelector() {
   const { setSelectedLocation, selectedLocation, locations } =
     useContext(LocationContext);
+  const router = useRouter();
   return (
     <Menu>
       <MenuHandler>
@@ -23,7 +25,10 @@ export function LocationSelector() {
           return (
             <MenuItem
               key={location.name}
-              onClick={() => setSelectedLocation(locations[index])}
+              onClick={() => {
+                setSelectedLocation(locations[index]);
+                router.push(`/home/${location._id}`);
+              }}
             >
               {location.name}
             </MenuItem>

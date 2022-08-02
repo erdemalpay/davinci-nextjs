@@ -35,8 +35,6 @@ export function getStartEndDates(filter: string) {
     startDate = format(startOfMonth(subMonths(new Date(), 1)), DATE_FORMAT);
     endDate = format(endOfMonth(subMonths(new Date(), 1)), DATE_FORMAT);
   } else if (filterType === DateFilter.MANUAL) {
-    startDate = format(new Date(), DATE_FORMAT);
-    endDate = format(new Date(), DATE_FORMAT);
   }
   return { startDate, endDate };
 }

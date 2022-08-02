@@ -65,11 +65,10 @@ export function useGetGameplayAnalytics(
   field: string,
   limit: number,
   startDate: string,
+  location: string,
   endDate?: string
 ) {
-  const { selectedLocation } = useContext(LocationContext);
-
-  let query = `/gameplays/query?location=${selectedLocation?._id}&startDate=${startDate}&field=${field}&limit=${limit}`;
+  let query = `/gameplays/query?location=${location}&startDate=${startDate}&field=${field}&limit=${limit}`;
   if (endDate) {
     query += `&endDate=${endDate}`;
   }

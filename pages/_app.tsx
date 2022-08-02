@@ -16,16 +16,16 @@ import {
 } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { SelectedDateContext } from "../context/SelectedDateContext";
-import { getToken } from "../utils/token";
-import { useRouter } from "next/router";
 
 const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { locations } = pageProps;
-
+  console.log({ pageProps });
   const [selectedLocation, setSelectedLocation] = useState<Location>(
-    locations[0]
+    locations.find(
+      (location: Location) => location._id === pageProps.location
+    ) || locations[0] // set first location if it cannot get it from url props
   );
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());

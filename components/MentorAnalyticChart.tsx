@@ -9,12 +9,12 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { Select, Option, Input } from "@material-tailwind/react";
 import { useGetGameplayAnalytics } from "../utils/api/gameplay";
 import { DateFilter, getStartEndDates } from "../utils/dateFilter";
 import { useQueryClient } from "react-query";
-import { useGetUsers } from "../utils/api/user";
 import { colors } from "../utils/color";
+import { InputWithLabel } from "./InputWithLabel";
+import { useGetUsers } from "../utils/api/user";
 
 export interface GameCount {
   name: string;
@@ -26,92 +26,108 @@ export function MentorAnalyticChart() {
   const [dateFilter, setDateFilter] = useState(DateFilter.LAST_MONTH);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string | undefined>("");
+  const [location, setLocation] = useState<string>("1,2");
   const [itemLimit, setItemLimit] = useState(5);
 
-  const { data: mentorAnalytics } = useGetGameplayAnalytics(
+  const { data: gameAnalytics } = useGetGameplayAnalytics(
     "mentor",
     itemLimit,
     startDate,
+    location,
     endDate
   );
   const { users } = useGetUsers([]);
-  const [mentorData, setGameData] = useState<GameCount[]>([]);
+  const [mentorData, setMentorData] = useState<GameCount[]>([]);
 
   useEffect(() => {
-    if (!mentorAnalytics) return;
+    if (!gameAnalytics) return;
     if (!users?.length) return;
-    const data = mentorAnalytics.map((gameplayAnalytic) => {
-      const user = users.find((user) => user._id === gameplayAnalytic._id);
+    const data = gameAnalytics.map((gameplayAnalytic) => {
+      const game = users.find((user) => user._id === gameplayAnalytic._id);
       return {
-        name: user ? user.name : gameplayAnalytic._id,
+        name: game ? game.name : gameplayAnalytic._id,
         count: gameplayAnalytic.playCount,
       } as GameCount;
     });
-    setGameData(data);
-    console.log({ data });
-  }, [mentorAnalytics, users]);
+    setMentorData(data);
+  }, [gameAnalytics, users]);
 
   useEffect(() => {
+    if (dateFilter === DateFilter.MANUAL) return;
     const { startDate, endDate } = getStartEndDates(dateFilter);
     setStartDate(startDate);
     setEndDate(endDate);
   }, [dateFilter]);
 
   useEffect(() => {
-    console.log({ itemLimit });
     queryClient.invalidateQueries("/gameplays/query");
   }, [startDate, endDate, itemLimit, queryClient]);
 
   return (
     <div className="p-4 w-[600px] border-2 h-[140%]">
       <h1 className="text-xl mb-4">Gameplay By Game Masters</h1>
-      <div className="flex gap-2 w-full mb-4">
-        <Select
-          label="Number of items"
-          variant="standard"
-          value={itemLimit.toString()}
-          onChange={(value) => {
-            console.log({ value });
-            setItemLimit(Number(value));
-          }}
+      <div className="flex flex-col w-1/2 mb-4">
+        <label className="flex items-center text-xs">Date Filter:</label>
+        <select
+          onChange={(value) => setDateFilter(value.target.value as DateFilter)}
+          className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm"
+          value={dateFilter}
         >
-          <Option value="5">5</Option>
-          <Option value="10">10</Option>
-          <Option value="20">20</Option>
-        </Select>
-        <Select
-          label="Date Range"
-          className=""
-          variant="standard"
-          value={dateFilter.toString()}
-          onChange={(value) => {
-            console.log(value);
-            setDateFilter(value as DateFilter);
-          }}
-        >
-          <Option value="1">This Week</Option>
-          <Option value="2">Last Week</Option>
-          <Option value="3">This Month</Option>
-          <Option value="4">Last Month</Option>
-          <Option value="0">Manual</Option>
-        </Select>
+          <option value="1">This Week</option>
+          <option value="2">Last Week</option>
+          <option value="3">This Month</option>
+          <option value="4">Last Month</option>
+          <option value="0">Manual</option>
+        </select>
       </div>
       <div className="flex gap-2 w-full mb-4">
-        <Input
+        <InputWithLabel
           type="date"
+          name="Start Date"
           label="Start Date"
-          variant="standard"
           value={startDate}
-          onChange={(event) => setStartDate(event.target.value)}
+          onChange={(event) => {
+            setStartDate((event.target as HTMLInputElement).value);
+            setDateFilter(DateFilter.MANUAL);
+          }}
         />
-        <Input
+        <InputWithLabel
           type="date"
-          variant="standard"
+          name="End Date"
           label={`${endDate ? "End Date" : ""}`}
           value={endDate}
-          onChange={(event) => setEndDate(event.target.value)}
+          onChange={(event) => {
+            setEndDate((event.target as HTMLInputElement).value);
+            setDateFilter(DateFilter.MANUAL);
+          }}
           className={`${endDate ? "" : "hidden"}`}
         />
+      </div>
+      <div className="flex w-full justify-between gap-2">
+        <div className="flex flex-col w-1/2">
+          <label className="flex items-center text-xs ">Location:</label>
+          <select
+            onChange={(value) => setLocation(value.target.value)}
+            className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm"
+            defaultValue="Canada"
+          >
+            <option value="1,2">All</option>
+            <option value="1">Bahçeli</option>
+            <option value="2">Neorama</option>
+          </select>
+        </div>
+        <div className="flex flex-col w-1/2">
+          <label className="flex items-center text-xs">Number of items:</label>
+          <select
+            onChange={(value) => setItemLimit(Number(value.target.value))}
+            className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm "
+            value={location}
+          >
+            <option>5</option>
+            <option>10</option>
+            <option>20</option>
+          </select>
+        </div>
       </div>
       {mentorData?.length ? (
         <ResponsiveContainer width={600} height={400}>
@@ -125,7 +141,7 @@ export function MentorAnalyticChart() {
             }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" angle={-45} textAnchor="end" interval={0} />
+            <XAxis dataKey="name" angle={-30} textAnchor="end" interval={0} />
             <YAxis />
             <Tooltip />
             <Bar dataKey="count" fill="#8884d8" label={{ position: "top" }}>
@@ -136,7 +152,7 @@ export function MentorAnalyticChart() {
           </BarChart>
         </ResponsiveContainer>
       ) : (
-        <div className="flex w-full h-2/3 justify-center items-center border-2">
+        <div className="flex w-full h-2/3 justify-center items-center border-2 mt-4">
           <h1>No Data Available</h1>
         </div>
       )}
