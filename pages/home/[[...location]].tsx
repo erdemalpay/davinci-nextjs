@@ -15,6 +15,7 @@ import { sortTable } from "../../utils/sort";
 import { getVisits, useGetVisits } from "../../utils/api/visit";
 import { isToday } from "date-fns";
 import { PreviousVisitList } from "../../components/PreviousVisitList";
+import { Switch } from "@headlessui/react";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);
@@ -183,10 +184,20 @@ const TablesPage = ({
             <PreviousVisitList visits={visits} />
           )}
         </div>
-        <div className="flex justify-end">
-          <button onClick={() => setShowAllTables((value) => !value)}>
-            {showAllTables ? "Show open tables" : "Show all tables"}
-          </button>
+        <div className="flex justify-end gap-4 items-center">
+          <h1 className="text-md">Show Closed Tables</h1>
+          <Switch
+            checked={showAllTables}
+            onChange={() => setShowAllTables((value) => !value)}
+            className={`${showAllTables ? "bg-green-500" : "bg-red-500"}
+          relative inline-flex h-[20px] w-[36px] border-[1px] cursor-pointer rounded-full border-transparent transition-colors duration-200 ease-in-out focus:outline-none`}
+          >
+            <span
+              aria-hidden="true"
+              className={`${showAllTables ? "translate-x-4" : "translate-x-0"}
+            pointer-events-none inline-block h-[18px] w-[18px] transform rounded-full bg-white transition duration-200 ease-in-out`}
+            />
+          </Switch>
         </div>
         <div className="h-full grid grid-cols-1 lg:grid-cols-4 mt-4 gap-x-8">
           {tableColumns.map((tables, idx) => (

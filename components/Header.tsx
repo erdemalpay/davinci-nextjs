@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import Cookies from "js-cookie";
+import Link from "next/link";
+import { useState } from "react";
 import { useProfile } from "../hooks/useProfile";
 import { LocationSelector } from "./LocationSelector";
 import { useRouter } from "next/router";
-import Cookies from "js-cookie";
 import { AnnotationIcon } from "@heroicons/react/solid";
 import { LogoutIcon } from "@heroicons/react/outline";
 import { Tooltip } from "@material-tailwind/react";
-import Link from "next/link";
 import { useContext } from "react";
 import { LocationContext } from "../context/LocationContext";
 
