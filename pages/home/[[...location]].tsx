@@ -16,6 +16,7 @@ import { getVisits, useGetVisits } from "../../utils/api/visit";
 import { isToday } from "date-fns";
 import { PreviousVisitList } from "../../components/PreviousVisitList";
 import { Switch } from "@headlessui/react";
+import { LocationContext } from "../../context/LocationContext";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);
@@ -46,6 +47,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       initialTables,
       initialGames,
       initialVisits,
+      location,
     },
   };
 };
@@ -55,15 +57,19 @@ const TablesPage = ({
   initialTables,
   initialGames,
   initialVisits,
+  location,
 }: {
   initialUsers: User[];
   initialTables: Table[];
   initialGames: Game[];
   initialVisits: Visit[];
+  location: number;
 }) => {
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
   const { setSelectedDate, selectedDate } = useContext(SelectedDateContext);
   const [showAllTables, setShowAllTables] = useState(true);
+  const { setSelectedLocationId } = useContext(LocationContext);
+  setSelectedLocationId(location);
 
   let { games } = useGetGames(initialGames);
 
