@@ -23,7 +23,7 @@ export function ActiveVisitList({
   const { mutate: createVisit } = useCreateVisitMutation();
   const { mutate: finishVisit } = useFinishVisitMutation();
 
-  const { selectedLocation } = useContext(LocationContext);
+  const { selectedLocationId } = useContext(LocationContext);
 
   const [filteredSuggestions, setFilteredSuggestions] = useState<User[]>([]);
 
@@ -35,7 +35,7 @@ export function ActiveVisitList({
   function handleSelection(item: User) {
     createVisit({
       user: item,
-      location: selectedLocation!._id,
+      location: selectedLocationId,
     });
     // setItems([...items, item]);
   }

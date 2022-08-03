@@ -5,30 +5,33 @@ import { Table } from "../types";
 import { useForm } from "../hooks/useForm";
 import { useCreateTableMutation } from "../utils/api/table";
 import { Input } from "@material-tailwind/react";
+import { LocationContext } from "../context/LocationContext";
+import { useContext } from "react";
 
 export function CreateTableDialog({
-  location,
   isOpen,
   close,
 }: {
-  location: number;
   isOpen: boolean;
   close: () => void;
 }) {
+  const { selectedLocationId } = useContext(LocationContext);
   const date = format(new Date(), "yyyy-MM-dd");
   const startHour = format(new Date(), "HH:mm");
   const initialTable: Table = {
     name: "",
     date,
-    location,
+    location: selectedLocationId,
     playerCount: 1,
     startHour,
     gameplays: [],
   };
+  console.log({ initialTable });
   const { data, handleUpdate } = useForm(initialTable);
   const { mutate: createTable } = useCreateTableMutation();
 
   async function handleCreate() {
+    console.log({ data });
     createTable(data);
     close();
   }

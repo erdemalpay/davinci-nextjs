@@ -26,12 +26,13 @@ export function LocationSelector() {
         </button>
       </MenuHandler>
       <MenuList>
-        {locations.map((location, index) => {
+        {locations.map((location) => {
           return (
             <MenuItem
               key={location.name}
               onClick={() => {
-                setSelectedLocationId(locations[index]._id);
+                console.log({ location });
+                setSelectedLocationId(location._id);
                 router.push(`/home/${location._id}`);
               }}
             >

@@ -224,7 +224,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
         mentors={mentors}
         games={games}
       />
-      {selectedGameplay && (
+      {selectedGameplay && isEditGameplayDialogOpen && (
         <EditGameplayDialog
           isOpen={isEditGameplayDialogOpen}
           close={() => {

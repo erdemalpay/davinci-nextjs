@@ -16,7 +16,6 @@ import { getVisits, useGetVisits } from "../../utils/api/visit";
 import { isToday } from "date-fns";
 import { PreviousVisitList } from "../../components/PreviousVisitList";
 import { Switch } from "@headlessui/react";
-import { useRouter } from "next/router";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);
@@ -43,7 +42,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
   return {
     props: {
-      location,
       initialUsers,
       initialTables,
       initialGames,
@@ -54,18 +52,15 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const TablesPage = ({
   initialUsers,
-  location,
   initialTables,
   initialGames,
   initialVisits,
 }: {
   initialUsers: User[];
-  location: number;
   initialTables: Table[];
   initialGames: Game[];
   initialVisits: Visit[];
 }) => {
-  const router = useRouter();
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
   const { setSelectedDate, selectedDate } = useContext(SelectedDateContext);
   const [showAllTables, setShowAllTables] = useState(true);
@@ -231,11 +226,12 @@ const TablesPage = ({
           ))}
         </div>
       </div>
-      <CreateTableDialog
-        location={location}
-        isOpen={isCreateTableDialogOpen}
-        close={() => setIsCreateTableDialogOpen(false)}
-      />
+      {isCreateTableDialogOpen && (
+        <CreateTableDialog
+          isOpen={isCreateTableDialogOpen}
+          close={() => setIsCreateTableDialogOpen(false)}
+        />
+      )}
     </>
   );
 };

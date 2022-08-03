@@ -81,6 +81,7 @@ export function useCreateTableMutation() {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
   const queryClient = useQueryClient();
+  console.log({ locationFORCREATE: selectedLocationId });
   const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"

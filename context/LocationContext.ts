@@ -7,5 +7,5 @@ type LocationContextType = {
 
 export const LocationContext = createContext<LocationContextType>({
   setSelectedLocationId: () => {},
-  selectedLocationId: 0,
+  selectedLocationId: 1,
 });
