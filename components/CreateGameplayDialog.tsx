@@ -104,7 +104,7 @@ export function CreateGameplayDialog({
                     handleSelection={handleGameSelection}
                     showSelected
                   />
-                  <div className="flex gap-2 mt-4">
+                  <div className="flex flex-col lg:flex-row gap-2 mt-4">
                     <Input
                       variant="standard"
                       name="startHour"
