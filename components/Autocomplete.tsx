@@ -64,6 +64,7 @@ export function Autocomplete<T>({
                   name={name}
                   label={label}
                   value={showSelected ? selected?.name || query : query}
+                  onFocus={() => setQuery("")}
                 />
               </Combobox.Input>
               <Combobox.Button className="absolute bottom-2 right-0 flex items-center pr-2">
