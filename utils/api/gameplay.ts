@@ -112,6 +112,7 @@ export function useCreateGameplayMutation() {
         },
       ];
       updatedTables.sort(sortTable);
+      console.log({ updatedTables });
 
       // Optimistically update to the new value
       queryClient.setQueryData(tablesQuery, updatedTables);
