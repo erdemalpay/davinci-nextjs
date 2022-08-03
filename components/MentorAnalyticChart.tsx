@@ -121,7 +121,7 @@ export function MentorAnalyticChart() {
           <select
             onChange={(value) => setItemLimit(Number(value.target.value))}
             className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm "
-            value={location}
+            value={itemLimit}
           >
             <option>5</option>
             <option>10</option>
