@@ -20,12 +20,8 @@ import { SelectedDateContext } from "../context/SelectedDateContext";
 const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const { locations } = pageProps;
-  console.log({ pageProps });
-  const [selectedLocation, setSelectedLocation] = useState<Location>(
-    locations.find(
-      (location: Location) => location._id === pageProps.location
-    ) || locations[0] // set first location if it cannot get it from url props
+  const [selectedLocationId, setSelectedLocationId] = useState<number>(
+    pageProps.location || 1
   );
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -33,9 +29,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   const isMutating = false; // useIsMutating();
 
   const initalLocationValue = {
-    locations,
-    selectedLocation,
-    setSelectedLocation,
+    selectedLocationId,
+    setSelectedLocationId,
   };
 
   const initalSelectedDateValue = {
@@ -98,9 +93,8 @@ function Wrapper(appProps: AppProps) {
 }
 
 Wrapper.getInitialProps = async (appContext: AppContext) => {
-  const locations = await getLocations();
   const appProps = await App.getInitialProps(appContext);
-  return { ...appProps, pageProps: { ...appProps.pageProps, locations } };
+  return { ...appProps, pageProps: { ...appProps.pageProps } };
 };
 
 export default Wrapper;

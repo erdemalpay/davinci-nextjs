@@ -1,14 +1,11 @@
 import { createContext } from "react";
-import { Location } from "../types";
 
 type LocationContextType = {
-  locations: Location[];
-  selectedLocation?: Location;
-  setSelectedLocation: (location: Location) => void;
+  selectedLocationId: number;
+  setSelectedLocationId: (locationId: number) => void;
 };
 
 export const LocationContext = createContext<LocationContextType>({
-  locations: [],
-  setSelectedLocation: () => {},
-  selectedLocation: undefined,
+  setSelectedLocationId: () => {},
+  selectedLocationId: 0,
 });

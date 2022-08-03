@@ -11,6 +11,16 @@ interface RequestWithPayload<P> extends BaseRequest {
 
 const baseURL = `${process.env.NEXT_PUBLIC_API_HOST}`;
 
+function printStackTrace() {
+  const error = new Error();
+  const stack = error.stack
+    ?.split("\n")
+    .slice(2)
+    .map((line: string) => line.replace(/\s+at\s+/, ""))
+    .join("\n");
+  console.log(stack);
+}
+
 // T = ResponseType
 export async function get<T>({ path, context }: BaseRequest): Promise<T> {
   const token = getToken({ context });
@@ -18,6 +28,7 @@ export async function get<T>({ path, context }: BaseRequest): Promise<T> {
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
+
   const { data } = await axios.get<T>(
     `${process.env.NEXT_PUBLIC_API_HOST}${path}`,
     {

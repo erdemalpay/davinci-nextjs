@@ -1,5 +1,5 @@
 import { get, patch, post, remove } from "./index";
-import { Gameplay, Table, Game } from "../../types/index";
+import { Gameplay, Table } from "../../types/index";
 import { PossibleContext } from "../token";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useContext } from "react";
@@ -7,7 +7,6 @@ import { LocationContext } from "../../context/LocationContext";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { format } from "date-fns";
 import { sortTable } from "../sort";
-import { start } from "repl";
 
 interface GameplayCreateRequest extends PossibleContext {
   table: number;
@@ -85,11 +84,12 @@ export function useGetGameplayAnalytics(
 }
 
 export function useCreateGameplayMutation() {
-  const { selectedLocation } = useContext(LocationContext);
+  const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const tablesQuery = `/tables/all?location=${
-    selectedLocation?._id
-  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
+  const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
+    selectedDate!,
+    "yyyy-MM-dd"
+  )}`;
   const queryClient = useQueryClient();
   return useMutation(createGameplay, {
     // We are updating tables query data with updated gameplay
@@ -135,11 +135,12 @@ export function useCreateGameplayMutation() {
 }
 
 export function useUpdateGameplayMutation() {
-  const { selectedLocation } = useContext(LocationContext);
+  const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const tablesQuery = `/tables/all?location=${
-    selectedLocation?._id
-  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
+  const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
+    selectedDate!,
+    "yyyy-MM-dd"
+  )}`;
   const queryClient = useQueryClient();
   return useMutation(updateGameplay, {
     // We are updating tables query data with new gameplay
@@ -196,11 +197,12 @@ export function useUpdateGameplayMutation() {
 
 export function useDeleteGameplayMutation() {
   const queryClient = useQueryClient();
-  const { selectedLocation } = useContext(LocationContext);
+  const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const tablesQuery = `/tables/all?location=${
-    selectedLocation?._id
-  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
+  const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
+    selectedDate!,
+    "yyyy-MM-dd"
+  )}`;
   return useMutation(deleteGameplay, {
     // We are updating tables query data with delete gameplay
     onMutate: async ({ tableId, id }) => {

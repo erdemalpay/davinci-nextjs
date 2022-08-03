@@ -1,17 +1,16 @@
 import { useRouter } from "next/router";
-import { getToken } from "../utils/token";
-import { useEffect } from "react";
+import { getUser } from "../utils/api/user";
 
 const Home = () => {
-  const token = getToken();
   const router = useRouter();
-  useEffect(() => {
-    if (!token) {
-      router.push("/login");
-    } else {
+  getUser()
+    .then((user) => {
       router.push("/home");
-    }
-  }, [router, token]);
+    })
+    .catch((err) => {
+      router.push("/login");
+    });
+
   return null;
 };
 

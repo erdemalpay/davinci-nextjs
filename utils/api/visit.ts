@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { format } from "date-fns";
+import { useLocation } from "../../hooks/useLocation";
 
 interface UpdateVisitPayload {
   id: number;
@@ -38,9 +39,9 @@ export function finishVisit({ id }: UpdateVisitPayload): Promise<Visit> {
 }
 
 export function useGetVisits(initialVisits: Visit[]) {
-  const { selectedLocation } = useContext(LocationContext);
+  const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const query = `/visits/all?location=${selectedLocation?._id}&date=${format(
+  const query = `/visits/all?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"
   )}`;
@@ -61,12 +62,13 @@ export function useGetVisits(initialVisits: Visit[]) {
 }
 
 export function useCreateVisitMutation() {
-  const { selectedLocation } = useContext(LocationContext);
+  const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
   const queryClient = useQueryClient();
-  const visitsQuery = `/visits/all?location=${
-    selectedLocation?._id
-  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
+  const visitsQuery = `/visits/all?location=${selectedLocationId}&date=${format(
+    selectedDate!,
+    "yyyy-MM-dd"
+  )}`;
   return useMutation(createVisit, {
     // We are updating visits query data with new visit
     onMutate: async (newVisit) => {
@@ -100,12 +102,13 @@ export function useCreateVisitMutation() {
 }
 
 export function useFinishVisitMutation() {
-  const { selectedLocation } = useContext(LocationContext);
+  const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
   const queryClient = useQueryClient();
-  const visitsQuery = `/visits/all?location=${
-    selectedLocation?._id
-  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
+  const visitsQuery = `/visits/all?location=${selectedLocationId}&date=${format(
+    selectedDate!,
+    "yyyy-MM-dd"
+  )}`;
   return useMutation(finishVisit, {
     // We are updating visits query data with new visit
     onMutate: async ({ id }) => {

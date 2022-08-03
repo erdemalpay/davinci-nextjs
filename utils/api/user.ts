@@ -11,6 +11,10 @@ export function getCurrentUser({
 
 const getAllUsersQuery = "/users/all";
 
+export function getUser(params?: PossibleContext): Promise<User> {
+  return get<User>({ path: "/users/me", context: params?.context });
+}
+
 export function getUsers(params?: PossibleContext): Promise<User[]> {
   return get<User[]>({ path: getAllUsersQuery, context: params?.context });
 }

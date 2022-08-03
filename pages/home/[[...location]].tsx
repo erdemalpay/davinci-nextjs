@@ -7,7 +7,7 @@ import { GetServerSideProps } from "next";
 import { getTables, useGetTables } from "../../utils/api/table";
 import { Table, User, Game, Visit } from "../../types";
 import { TableCard } from "../../components/TableCard";
-import { getUsers } from "../../utils/api/user";
+import { getUsers, useGetUsers } from "../../utils/api/user";
 import { ActiveVisitList } from "../../components/ActiveVisitList";
 import { getGames, useGetGames } from "../../utils/api/game";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
@@ -16,6 +16,7 @@ import { getVisits, useGetVisits } from "../../utils/api/visit";
 import { isToday } from "date-fns";
 import { PreviousVisitList } from "../../components/PreviousVisitList";
 import { Switch } from "@headlessui/react";
+import { useRouter } from "next/router";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);
@@ -28,15 +29,22 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-
-  const initialTables = await getTables({ context });
-  const initialGames = await getGames({ context });
-  const initialVisits = await getVisits({ context });
-  const users = await getUsers({ context });
+  let initialTables: Table[] = [];
+  let initialGames: Game[] = [];
+  let initialVisits: Visit[] = [];
+  let initialUsers: User[] = [];
+  try {
+    initialTables = await getTables({ context });
+    initialGames = await getGames({ context });
+    initialVisits = await getVisits({ context });
+    initialUsers = await getUsers({ context });
+  } catch (err) {
+    console.error(err);
+  }
   return {
     props: {
       location,
-      users,
+      initialUsers,
       initialTables,
       initialGames,
       initialVisits,
@@ -45,23 +53,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 const TablesPage = ({
-  users,
+  initialUsers,
   location,
   initialTables,
   initialGames,
   initialVisits,
 }: {
-  users: User[];
+  initialUsers: User[];
   location: number;
   initialTables: Table[];
   initialGames: Game[];
   initialVisits: Visit[];
 }) => {
+  const router = useRouter();
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
   const { setSelectedDate, selectedDate } = useContext(SelectedDateContext);
   const [showAllTables, setShowAllTables] = useState(true);
 
   let { games } = useGetGames(initialGames);
+
   games = games || initialGames;
 
   let { visits } = useGetVisits(initialVisits);
@@ -69,6 +79,10 @@ const TablesPage = ({
 
   let { tables } = useGetTables(initialTables);
   tables = tables || initialTables;
+
+  let { users } = useGetUsers(initialUsers);
+  users = users || initialUsers;
+
   // Sort tables first active tables, then closed ones.
   // if both active then sort by name
   tables.sort(sortTable);
@@ -86,7 +100,9 @@ const TablesPage = ({
 
   const defaultUser: User = users.find((user) => user._id === "dv") as User;
 
-  const [mentors, setMentors] = useState<User[]>([defaultUser]);
+  const [mentors, setMentors] = useState<User[]>(
+    defaultUser ? [defaultUser] : []
+  );
 
   const activeTables = tables.filter((table) => !table.finishHour);
   const activeTableCount = activeTables.length;
@@ -107,7 +123,7 @@ const TablesPage = ({
   });
 
   useEffect(() => {
-    const newMentors = [defaultUser];
+    const newMentors = defaultUser ? [defaultUser] : [];
 
     if (visits) {
       visits.forEach(
@@ -116,6 +132,7 @@ const TablesPage = ({
     }
     setMentors(newMentors);
   }, [defaultUser, visits]);
+
   return (
     <>
       <Header />

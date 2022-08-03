@@ -5,14 +5,19 @@ import {
   MenuHandler,
   MenuList,
   MenuItem,
-  Button,
 } from "@material-tailwind/react";
 import { useRouter } from "next/router";
+import { useGetLocations } from "../utils/api/location";
 
 export function LocationSelector() {
-  const { setSelectedLocation, selectedLocation, locations } =
+  const { setSelectedLocationId, selectedLocationId } =
     useContext(LocationContext);
+  const { locations } = useGetLocations();
   const router = useRouter();
+  if (!locations) return null;
+  const selectedLocation = locations?.find(
+    (location) => location._id === selectedLocationId
+  );
   return (
     <Menu>
       <MenuHandler>
@@ -26,7 +31,7 @@ export function LocationSelector() {
             <MenuItem
               key={location.name}
               onClick={() => {
-                setSelectedLocation(locations[index]);
+                setSelectedLocationId(locations[index]._id);
                 router.push(`/home/${location._id}`);
               }}
             >

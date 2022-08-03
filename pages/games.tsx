@@ -1,8 +1,9 @@
 import { GetServerSideProps } from "next";
 import Cookies from "js-cookie";
 import type { Game } from "../types";
-import { useQuery } from "react-query";
+
 import { getGames } from "../utils/api/game";
+import { useQuery } from "react-query";
 
 const path = "/user/profile";
 

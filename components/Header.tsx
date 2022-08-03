@@ -1,7 +1,6 @@
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { useState } from "react";
-import { useProfile } from "../hooks/useProfile";
 import { LocationSelector } from "./LocationSelector";
 import { useRouter } from "next/router";
 import { AnnotationIcon } from "@heroicons/react/solid";
@@ -9,16 +8,16 @@ import { LogoutIcon } from "@heroicons/react/outline";
 import { Tooltip } from "@material-tailwind/react";
 import { useContext } from "react";
 import { LocationContext } from "../context/LocationContext";
+import { useLocation } from "../hooks/useLocation";
 
 interface HeaderProps {
   showLocationSelector?: boolean;
 }
 
 export function Header({ showLocationSelector = true }: HeaderProps) {
-  const { name } = useProfile();
   const [show, setShow] = useState(false);
   const router = useRouter();
-  const { selectedLocation } = useContext(LocationContext);
+  const { selectedLocation } = useLocation();
 
   function logout() {
     Cookies.remove("jwt");

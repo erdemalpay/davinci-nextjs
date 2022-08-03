@@ -1,12 +1,13 @@
 import { format } from "date-fns";
-import { get, patch, post, put, remove } from "./index";
+import { get, patch, post, remove } from "./index";
 import { Table } from "../../types/index";
 import { PossibleContext } from "../token";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useContext } from "react";
-import { LocationContext } from "../../context/LocationContext";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { sortTable } from "../sort";
+import { useLocation } from "../../hooks/useLocation";
+import { LocationContext } from "../../context/LocationContext";
 
 interface UpdateTablePayload {
   id: number;
@@ -31,9 +32,9 @@ export function getTables({ context }: PossibleContext): Promise<Table[]> {
 
 // Client side access tables using this helper method
 export function useGetTables(initialTables: Table[]) {
-  const { selectedLocation } = useContext(LocationContext);
+  const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const query = `/tables/all?location=${selectedLocation?._id}&date=${format(
+  const query = `/tables/all?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"
   )}`;
@@ -77,12 +78,13 @@ export function deleteTable({ id }: DeleteTablePayload): Promise<Table> {
 }
 
 export function useCreateTableMutation() {
-  const { selectedLocation } = useContext(LocationContext);
+  const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
   const queryClient = useQueryClient();
-  const tablesQuery = `/tables/all?location=${
-    selectedLocation?._id
-  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
+  const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
+    selectedDate!,
+    "yyyy-MM-dd"
+  )}`;
   return useMutation(createTable, {
     // We are updating tables query data with new table
     onMutate: async (newTable) => {
@@ -117,11 +119,12 @@ export function useCreateTableMutation() {
 }
 
 export function useUpdateTableMutation() {
-  const { selectedLocation } = useContext(LocationContext);
+  const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const tablesQuery = `/tables/all?location=${
-    selectedLocation?._id
-  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
+  const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
+    selectedDate!,
+    "yyyy-MM-dd"
+  )}`;
   const queryClient = useQueryClient();
   return useMutation(updateTable, {
     // We are updating tables query data with new table
@@ -163,11 +166,12 @@ export function useUpdateTableMutation() {
 }
 
 export function useDeleteTableMutation() {
-  const { selectedLocation } = useContext(LocationContext);
+  const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const tablesQuery = `/tables/all?location=${
-    selectedLocation?._id
-  }&date=${format(selectedDate!, "yyyy-MM-dd")}`;
+  const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
+    selectedDate!,
+    "yyyy-MM-dd"
+  )}`;
   const queryClient = useQueryClient();
   return useMutation(deleteTable, {
     // We are updating tables query data with new table
