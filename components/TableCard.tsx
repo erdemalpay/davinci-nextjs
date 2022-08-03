@@ -216,14 +216,16 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
           })}
         </div>
       </div>
-      <CreateGameplayDialog
-        isOpen={isGameplayDialogOpen}
-        close={() => setIsGameplayDialogOpen(false)}
-        gameplay={selectedGameplay || gameplayTemplate}
-        table={table}
-        mentors={mentors}
-        games={games}
-      />
+      {isGameplayDialogOpen && (
+        <CreateGameplayDialog
+          isOpen={isGameplayDialogOpen}
+          close={() => setIsGameplayDialogOpen(false)}
+          gameplay={selectedGameplay || gameplayTemplate}
+          table={table}
+          mentors={mentors}
+          games={games}
+        />
+      )}
       {selectedGameplay && isEditGameplayDialogOpen && (
         <EditGameplayDialog
           isOpen={isEditGameplayDialogOpen}

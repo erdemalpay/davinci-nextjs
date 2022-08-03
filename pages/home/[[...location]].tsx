@@ -131,6 +131,7 @@ const TablesPage = ({
         (visit) => !visit.finishHour && newMentors.push(visit.user)
       );
     }
+
     setMentors(newMentors);
   }, [defaultUser, visits]);
 
