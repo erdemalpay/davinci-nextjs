@@ -86,7 +86,7 @@ export function useGetGameplayAnalytics(
 export function useCreateGameplayMutation() {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
+  const tablesQuery = `/tables?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"
   )}`;
@@ -138,7 +138,7 @@ export function useCreateGameplayMutation() {
 export function useUpdateGameplayMutation() {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
+  const tablesQuery = `/tables?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"
   )}`;
@@ -200,7 +200,7 @@ export function useDeleteGameplayMutation() {
   const queryClient = useQueryClient();
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
+  const tablesQuery = `/tables?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"
   )}`;

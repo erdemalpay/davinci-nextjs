@@ -22,7 +22,7 @@ interface DeleteTablePayload {
 export function getTables({ context }: PossibleContext): Promise<Table[]> {
   const location = Number(context?.params?.location);
   return get<Table[]>({
-    path: `/tables/all?location=${location}&date=${format(
+    path: `/tables?location=${location}&date=${format(
       new Date(),
       "yyyy-MM-dd"
     )}`,
@@ -34,7 +34,7 @@ export function getTables({ context }: PossibleContext): Promise<Table[]> {
 export function useGetTables(initialTables: Table[]) {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const query = `/tables/all?location=${selectedLocationId}&date=${format(
+  const query = `/tables?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"
   )}`;
@@ -56,7 +56,7 @@ export function useGetTables(initialTables: Table[]) {
 
 export function createTable(table: Table): Promise<Table> {
   return post<Table, Table>({
-    path: `/tables/new`,
+    path: `/tables`,
     payload: table,
   });
 }
@@ -82,7 +82,7 @@ export function useCreateTableMutation() {
   const { selectedDate } = useContext(SelectedDateContext);
   const queryClient = useQueryClient();
   console.log({ locationFORCREATE: selectedLocationId });
-  const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
+  const tablesQuery = `/tables?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"
   )}`;
@@ -122,7 +122,7 @@ export function useCreateTableMutation() {
 export function useUpdateTableMutation() {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
+  const tablesQuery = `/tables?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"
   )}`;
@@ -169,7 +169,7 @@ export function useUpdateTableMutation() {
 export function useDeleteTableMutation() {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const tablesQuery = `/tables/all?location=${selectedLocationId}&date=${format(
+  const tablesQuery = `/tables?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"
   )}`;

@@ -16,7 +16,7 @@ interface UpdateVisitPayload {
 export function getVisits({ context }: PossibleContext): Promise<Visit[]> {
   const location = Number(context?.params?.location);
   return get<Visit[]>({
-    path: `/visits/all?location=${location}&date=${format(
+    path: `/visits?location=${location}&date=${format(
       new Date(),
       "yyyy-MM-dd"
     )}`,
@@ -26,7 +26,7 @@ export function getVisits({ context }: PossibleContext): Promise<Visit[]> {
 
 export function createVisit(visit: Partial<Visit>): Promise<Visit> {
   return post<Partial<Visit>, Visit>({
-    path: `/visits/new`,
+    path: `/visits`,
     payload: visit,
   });
 }
@@ -41,7 +41,7 @@ export function finishVisit({ id }: UpdateVisitPayload): Promise<Visit> {
 export function useGetVisits(initialVisits: Visit[]) {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const query = `/visits/all?location=${selectedLocationId}&date=${format(
+  const query = `/visits?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"
   )}`;
@@ -65,7 +65,7 @@ export function useCreateVisitMutation() {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
   const queryClient = useQueryClient();
-  const visitsQuery = `/visits/all?location=${selectedLocationId}&date=${format(
+  const visitsQuery = `/visits?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"
   )}`;
@@ -105,7 +105,7 @@ export function useFinishVisitMutation() {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
   const queryClient = useQueryClient();
-  const visitsQuery = `/visits/all?location=${selectedLocationId}&date=${format(
+  const visitsQuery = `/visits?location=${selectedLocationId}&date=${format(
     selectedDate!,
     "yyyy-MM-dd"
   )}`;

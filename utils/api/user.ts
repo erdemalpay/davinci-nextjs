@@ -9,7 +9,7 @@ export function getCurrentUser({
   return get<User>({ path: "/users/me", context });
 }
 
-const getAllUsersQuery = "/users/all";
+const getAllUsersQuery = "/users";
 
 export function getUser(params?: PossibleContext): Promise<User> {
   return get<User>({ path: "/users/me", context: params?.context });

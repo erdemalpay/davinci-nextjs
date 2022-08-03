@@ -3,7 +3,7 @@ import { get } from ".";
 import { PossibleContext } from "../token";
 import { useQuery } from "react-query";
 
-const getAllGamesQuery = "/games/all";
+const getAllGamesQuery = "/games";
 
 export function getGames(params?: PossibleContext): Promise<Game[]> {
   return get<Game[]>({ path: getAllGamesQuery, context: params?.context });

@@ -31,8 +31,7 @@ export function LocationSelector() {
             <MenuItem
               key={location.name}
               onClick={() => {
-                console.log({ location });
-                setSelectedLocationId(location._id);
+                // setSelectedLocationId(location._id);
                 router.push(`/home/${location._id}`);
               }}
             >
