@@ -10,8 +10,7 @@ import { useRouter } from "next/router";
 import { useGetLocations } from "../utils/api/location";
 
 export function LocationSelector() {
-  const { setSelectedLocationId, selectedLocationId } =
-    useContext(LocationContext);
+  const { selectedLocationId } = useContext(LocationContext);
   const { locations } = useGetLocations();
   const router = useRouter();
   if (!locations) return null;
@@ -31,7 +30,6 @@ export function LocationSelector() {
             <MenuItem
               key={location.name}
               onClick={() => {
-                // setSelectedLocationId(location._id);
                 router.push(`/home/${location._id}`);
               }}
             >

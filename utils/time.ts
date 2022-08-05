@@ -18,7 +18,11 @@ export function getDuration(
   } else {
     finish.setHours(24, 0, 0, 0);
   }
-  const duration = finish.getTime() - start.getTime();
+  let duration = finish.getTime() - start.getTime();
+  if (duration < 0) {
+    console.log({ duration });
+    duration += 24 * 60 * 60 * 1000;
+  }
   const durationMinute = Math.floor(duration / (60 * 1000));
   const hours = Math.floor(durationMinute / 60);
   let minutes = `${durationMinute % 60}`;
