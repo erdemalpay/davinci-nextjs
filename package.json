@@ -24,7 +24,8 @@
     "react-query": "^3.34.16",
     "react-tag-autocomplete": "^6.3.0",
     "react-toastify": "^9.0.7",
-    "recharts": "2.1.12"
+    "recharts": "2.1.12",
+    "resize-observer": "^1.0.4"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.3",

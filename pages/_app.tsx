@@ -1,12 +1,19 @@
 import "../styles/globals.css";
 import type { AppProps, AppContext } from "next/app";
 import { LocationContext } from "../context/LocationContext";
-import { getLocations } from "../utils/api/location";
 import { useState } from "react";
-import { Location } from "../types";
+
 import App from "next/app";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+import { install } from "resize-observer";
+
+// if you use next.js, use this
+
+if (typeof window !== "undefined") {
+  install();
+}
 
 import {
   Hydrate,
