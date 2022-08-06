@@ -1,3 +1,4 @@
+import { isToday } from "date-fns";
 export function getDuration(
   date: Date,
   startTime: string,
@@ -16,7 +17,9 @@ export function getDuration(
     const [finishHour, finishMinute] = finishTime.split(":");
     finish.setHours(Number(finishHour), Number(finishMinute), 0, 0);
   } else {
-    finish.setHours(24, 0, 0, 0);
+    if (!isToday(date)) {
+      finish.setHours(24, 0, 0, 0);
+    }
   }
   let duration = finish.getTime() - start.getTime();
   if (duration < 0) {
