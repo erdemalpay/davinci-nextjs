@@ -20,7 +20,6 @@ export function getDuration(
   }
   let duration = finish.getTime() - start.getTime();
   if (duration < 0) {
-    console.log({ duration });
     duration += 24 * 60 * 60 * 1000;
   }
   const durationMinute = Math.floor(duration / (60 * 1000));

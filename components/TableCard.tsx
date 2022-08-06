@@ -8,6 +8,7 @@ import { CardAction } from "./CardAction";
 import { format } from "date-fns";
 import { getDuration } from "../utils/time";
 import {
+  useCloseTableMutation,
   useDeleteTableMutation,
   useUpdateTableMutation,
 } from "../utils/api/table";
@@ -33,6 +34,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   const [selectedGameplay, setSelectedGameplay] = useState<Gameplay>();
   const { mutate: deleteTable } = useDeleteTableMutation();
   const { mutate: updateTable } = useUpdateTableMutation();
+  const { mutate: closeTable } = useCloseTableMutation();
 
   // console.log("Rendering table Card:", table?.name, isGameplayDialogOpen);
 
@@ -49,7 +51,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   }
 
   function finishTable() {
-    updateTable({
+    closeTable({
       id: table._id!,
       updates: { finishHour: format(new Date(), "HH:mm") },
     });

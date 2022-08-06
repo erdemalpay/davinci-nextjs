@@ -45,6 +45,11 @@ export function Header({ showLocationSelector = true }: HeaderProps) {
                   Analytics
                 </a>
               </Link>
+              <Link href={`/visits`}>
+                <a className="hidden text-white text-sm tracking-normal leading-tight">
+                  Visits
+                </a>
+              </Link>
             </div>
             {showLocationSelector && <LocationSelector />}
             <Tooltip content="Feedback" placement="bottom">

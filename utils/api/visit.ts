@@ -61,6 +61,20 @@ export function useGetVisits(initialVisits: Visit[]) {
   };
 }
 
+export function useGetMonthlyVisits(location: number, date: string) {
+  const query = `/visits/monthly?location=${location}&date=${date}`;
+
+  const { isLoading, error, data, isFetching } = useQuery(query, () =>
+    get<Visit[]>({ path: query })
+  );
+  return {
+    isLoading,
+    error,
+    visits: data,
+    isFetching,
+  };
+}
+
 export function useCreateVisitMutation() {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
