@@ -6,8 +6,6 @@ import { useRouter } from "next/router";
 import { AnnotationIcon } from "@heroicons/react/solid";
 import { LogoutIcon } from "@heroicons/react/outline";
 import { Tooltip } from "@material-tailwind/react";
-import { useContext } from "react";
-import { LocationContext } from "../context/LocationContext";
 import { useLocation } from "../hooks/useLocation";
 
 interface HeaderProps {
@@ -29,9 +27,11 @@ export function Header({ showLocationSelector = true }: HeaderProps) {
       <nav className="w-full bg-gray-800 shadow">
         <div className="container px-6 h-16 flex justify-between items-stretch mx-auto">
           <div className="flex items-center">
-            <h3 className="text-base text-white font-bold tracking-normal leading-tight">
-              Da Vinci Panel
-            </h3>
+            <Link href={`/home/${selectedLocation?._id}`}>
+              <a className="text-base text-white font-bold tracking-normal leading-tight">
+                Da Vinci Panel
+              </a>
+            </Link>
           </div>
           <div className="w-auto h-full flex items-center justify-end gap-x-4">
             <div className="gap-x-4 hidden lg:flex">
