@@ -23,10 +23,6 @@ export function AddGameDialog({
     }
   }
 
-  async function handleGameId(event) {
-    console.log({ event });
-  }
-
   return (
     <Transition
       show={isOpen}
