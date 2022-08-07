@@ -1,4 +1,9 @@
-import { PlusIcon, FlagIcon, TrashIcon } from "@heroicons/react/solid";
+import {
+  PlusIcon,
+  FlagIcon,
+  TrashIcon,
+  LockOpenIcon,
+} from "@heroicons/react/solid";
 import { FormEvent, useState } from "react";
 import { Tooltip } from "@material-tailwind/react";
 import { Gameplay, Table, User, Game } from "../types";
@@ -10,6 +15,7 @@ import { getDuration } from "../utils/time";
 import {
   useCloseTableMutation,
   useDeleteTableMutation,
+  useReopenTableMutation,
   useUpdateTableMutation,
 } from "../utils/api/table";
 import { EditGameplayDialog } from "./EditGameplayDialog";
@@ -35,6 +41,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   const { mutate: deleteTable } = useDeleteTableMutation();
   const { mutate: updateTable } = useUpdateTableMutation();
   const { mutate: closeTable } = useCloseTableMutation();
+  const { mutate: reopenTable } = useReopenTableMutation();
 
   // console.log("Rendering table Card:", table?.name, isGameplayDialogOpen);
 
@@ -57,6 +64,13 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     });
     setIsCloseConfirmationDialogOpen(false);
     toast.success(`Table ${table.name} closed`);
+  }
+
+  function reopenTableBack() {
+    reopenTable({
+      id: table._id!,
+    });
+    toast.success(`Table ${table.name} reopened`);
   }
 
   const date = table.date;
@@ -138,6 +152,16 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
                 <CardAction
                   onClick={() => setIsCloseConfirmationDialogOpen(true)}
                   IconComponent={FlagIcon}
+                />
+              </span>
+            </Tooltip>
+          )}
+          {table.finishHour && (
+            <Tooltip content="Reopen">
+              <span className="text-{8px}">
+                <CardAction
+                  onClick={() => reopenTableBack()}
+                  IconComponent={LockOpenIcon}
                 />
               </span>
             </Tooltip>

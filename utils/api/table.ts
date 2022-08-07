@@ -14,7 +14,7 @@ interface UpdateTablePayload {
   updates: Partial<Table>;
 }
 
-interface DeleteTablePayload {
+interface TablePayloadWithId {
   id: number;
 }
 
@@ -81,7 +81,14 @@ export function closeTable({
   });
 }
 
-export function deleteTable({ id }: DeleteTablePayload): Promise<Table> {
+export function reopenTable({ id }: TablePayloadWithId): Promise<Table> {
+  return patch<Partial<Table>, Table>({
+    path: `/tables/reopen/${id}`,
+    payload: {},
+  });
+}
+
+export function deleteTable({ id }: TablePayloadWithId): Promise<Table> {
   return remove<Table>({
     path: `/tables/${id}`,
   });
@@ -222,6 +229,53 @@ export function useCloseTableMutation() {
   });
 }
 
+export function useReopenTableMutation() {
+  const { selectedLocationId } = useContext(LocationContext);
+  const { selectedDate } = useContext(SelectedDateContext);
+  const tablesQuery = `/tables?location=${selectedLocationId}&date=${format(
+    selectedDate!,
+    "yyyy-MM-dd"
+  )}`;
+  const queryClient = useQueryClient();
+  return useMutation(reopenTable, {
+    // We are updating tables query data with new table
+    onMutate: async ({ id }: TablePayloadWithId) => {
+      // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+      await queryClient.cancelQueries(tablesQuery);
+
+      // Snapshot the previous value
+      const previousTables =
+        queryClient.getQueryData<Table[]>(tablesQuery) || [];
+      const updatedTables = [...previousTables];
+
+      for (let i = 0; i < updatedTables.length; i++) {
+        if (updatedTables[i]._id === id) {
+          updatedTables[i] = { ...updatedTables[i], finishHour: undefined };
+        }
+      }
+      updatedTables.sort(sortTable);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(tablesQuery, updatedTables);
+
+      // Return a context object with the snapshotted value
+      return { previousTables };
+    },
+    // If the mutation fails, use the context returned from onMutate to roll back
+    onError: (_err, _newTable, context) => {
+      const previousTableContext = context as { previousTables: Table[] };
+      if (previousTableContext?.previousTables) {
+        const { previousTables } = previousTableContext;
+        queryClient.setQueryData<Table[]>(tablesQuery, previousTables);
+      }
+    },
+    // Always refetch after error or success:
+    onSettled: () => {
+      queryClient.invalidateQueries(tablesQuery);
+    },
+  });
+}
+
 export function useDeleteTableMutation() {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
@@ -232,7 +286,7 @@ export function useDeleteTableMutation() {
   const queryClient = useQueryClient();
   return useMutation(deleteTable, {
     // We are updating tables query data with new table
-    onMutate: async ({ id }: DeleteTablePayload) => {
+    onMutate: async ({ id }: TablePayloadWithId) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries(tablesQuery);
 
