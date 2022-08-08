@@ -1,5 +1,4 @@
 import { GetServerSideProps } from "next";
-import Cookies from "js-cookie";
 import type { Game } from "../types";
 
 import { getGames } from "../utils/api/game";

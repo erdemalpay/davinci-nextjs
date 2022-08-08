@@ -14,12 +14,15 @@ export interface LoginResponse {
 const baseURL = `${process.env.NEXT_PUBLIC_API_HOST}/auth/login`;
 
 export async function login(payload: LoginCredentials) {
+  console.log("TEST1");
   const response = await post<LoginCredentials, AxiosResponse<LoginResponse>>({
     path: "/auth/login",
     payload,
   });
   const { token } = response.data;
-
+  console.log("TEST3");
   Cookies.set("jwt", token);
-  localStorage.set("jwt", token);
+  console.log("TEST4");
+  localStorage.setItem("jwt", token);
+  console.log("TEST5");
 }
