@@ -22,12 +22,12 @@ export function Autocomplete<T>({
 }: AutocompleteProps<TagType<T>>) {
   const [selected, setSelected] = useState<TagType<T>>();
   const [query, setQuery] = useState(initialValue ? initialValue.name : "");
-
   const filteredSuggestions =
     query === ""
       ? suggestions
       : suggestions.filter((suggestion: TagType<T>) => {
           return suggestion?.name
+            .replace("İ", "I")
             .toLowerCase()
             .replace(/\s+/g, "")
             .includes(query.toLowerCase().replace(/\s+/g, ""));
