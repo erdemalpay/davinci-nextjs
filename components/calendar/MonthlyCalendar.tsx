@@ -62,7 +62,6 @@ export const MonthlyNav = () => {
     <div className="flex justify-end mb-4">
       <button
         onClick={() => {
-          console.log({ currentMonth });
           onCurrentMonthChange(subMonths(currentMonth, 1));
         }}
         className="cursor-pointer"
