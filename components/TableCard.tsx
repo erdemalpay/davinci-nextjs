@@ -43,7 +43,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   const { mutate: closeTable } = useCloseTableMutation();
   const { mutate: reopenTable } = useReopenTableMutation();
 
-  const bgColor = table.finishHour ? "bg-gray-100" : "bg-white";
+  const bgColor = table.finishHour ? "bg-grey-300" : "bg-white";
 
   function createGameplay() {
     setSelectedGameplay(undefined);
