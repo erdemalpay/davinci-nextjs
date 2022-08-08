@@ -25,6 +25,7 @@ export function useAuthedQuery<
   const router = useRouter();
   if (query?.error) {
     Cookies.remove("jwt");
+    localStorage.remove("jwt");
     router.push("/login");
     window.location.reload();
   }

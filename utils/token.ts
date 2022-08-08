@@ -13,6 +13,6 @@ export function getToken({ context }: PossibleContext = {}) {
     const { cookies } = req;
     return cookies?.jwt;
   } else {
-    return Cookies.get("jwt");
+    return Cookies.get("jwt") || localStorage.get("jwt");
   }
 }

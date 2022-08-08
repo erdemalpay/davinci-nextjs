@@ -12,8 +12,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default function UserComponent({ user: initialUser }: { user: User }) {
-  const token = Cookies.get("jwt");
-
   const { data, error } = useQuery(path, () => getCurrentUser(), {
     initialData: initialUser,
   });

@@ -21,4 +21,5 @@ export async function login(payload: LoginCredentials) {
   const { token } = response.data;
 
   Cookies.set("jwt", token);
+  localStorage.set("jwt", token);
 }

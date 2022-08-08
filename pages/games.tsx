@@ -13,8 +13,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default function Games({ games: initialGames }: { games: Game[] }) {
-  const token = Cookies.get("jwt");
-
   const { data, error } = useQuery(path, () => getGames(), {
     initialData: initialGames,
   });

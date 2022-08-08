@@ -18,6 +18,7 @@ export function Header({ showLocationSelector = true }: HeaderProps) {
   const { selectedLocation } = useLocation();
 
   function logout() {
+    localStorage.removeItem("jwt");
     Cookies.remove("jwt");
     router.push("/login");
   }
