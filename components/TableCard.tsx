@@ -43,7 +43,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
   const { mutate: closeTable } = useCloseTableMutation();
   const { mutate: reopenTable } = useReopenTableMutation();
 
-  const bgColor = table.finishHour ? "bg-grey-300" : "bg-white";
+  const bgColor = table.finishHour ? "bg-gray-500" : "bg-gray-200";
 
   function createGameplay() {
     setSelectedGameplay(undefined);
@@ -109,7 +109,9 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
       className="bg-white rounded-md shadow sm:h-auto break-inside-avoid mb-4 group"
       style={{ lineHeight: "8px" }}
     >
-      <div className="bg-gray-200 rounded-tl-md rounded-tr-md px-4 lg:px-8 lg:py-4 py-8 flex items-center justify-between">
+      <div
+        className={`${bgColor} rounded-tl-md rounded-tr-md px-4 lg:px-8 lg:py-4 py-8 flex items-center justify-between`}
+      >
         <p className="text-base font-semibold cursor-pointer">
           {!isEditTableNameActive ? (
             <span
@@ -122,7 +124,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
           ) : (
             <input
               name="name"
-              className={`${bgColor} w-full text-gray-600 border-0 border-b-[1px] dark:text-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 font-normal text-base border-gray-300`}
+              className="bg-white w-full text-gray-600 border-0 border-b-[1px] dark:text-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 font-normal text-base border-gray-300"
               placeholder={table.name}
               onChange={updateTableHandler}
               value={table.name}
@@ -174,7 +176,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
           </Tooltip>
         </div>
       </div>
-      <div className={`px-4 md:px-10 md:pt-4 md:pb-4 pb-8 ${bgColor}`}>
+      <div className={`px-4 md:px-10 md:pt-4 md:pb-4 pb-8`}>
         <div className="flex gap-4 flex-row">
           <InputWithLabel
             name="startHour"
@@ -182,7 +184,6 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
             type="time"
             value={table.startHour}
             onChange={updateTableHandler}
-            bgColor={bgColor}
           />
           <InputWithLabel
             name="finishHour"
@@ -190,7 +191,6 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
             type="time"
             value={table.finishHour}
             onChange={updateTableHandler}
-            bgColor={bgColor}
           />
         </div>
         <div className="flex flex-col gap-4">
@@ -200,7 +200,6 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
             type="number"
             defaultValue={table.playerCount}
             onChange={updateTableHandler}
-            bgColor={bgColor}
           />
         </div>
         <div className="flex flex-col space-y-2 mt-2">
