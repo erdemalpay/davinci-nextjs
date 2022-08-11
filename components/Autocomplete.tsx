@@ -39,6 +39,7 @@ export function Autocomplete<T>({
       <form className="w-full flex" autoComplete="off">
         <Combobox
           value={selected}
+          nullable
           onChange={(e) => {
             setSelected(e as TagType<T>);
             handleSelection(e as TagType<T>);

@@ -65,7 +65,7 @@ export function MentorAnalyticChart() {
 
   return (
     <div className="p-4 w-[600px] border-2 h-[140%]">
-      <h1 className="text-xl mb-4">Gameplay By Game Masters</h1>
+      <h1 className="text-xl mb-4">Gameplay By Game Mentors</h1>
       <div className="flex flex-col w-1/2 mb-4">
         <label className="flex items-center text-xs">Date Filter:</label>
         <select

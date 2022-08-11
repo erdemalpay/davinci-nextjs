@@ -29,6 +29,22 @@ interface GameplayAnalytic {
   playCount: number;
 }
 
+interface GameplayQueryResult {
+  totalCount: number;
+  items: Gameplay[];
+}
+
+export interface GameplayFilter {
+  game?: number;
+  mentor?: string;
+  startDate?: string;
+  endDate?: string;
+  page: number;
+  limit: number;
+  sort?: string;
+  asc?: number;
+}
+
 export function createGameplay({
   table,
   payload,
@@ -67,13 +83,45 @@ export function useGetGameplayAnalytics(
   location: string,
   endDate?: string
 ) {
-  let query = `/gameplays/query?location=${location}&startDate=${startDate}&field=${field}&limit=${limit}`;
+  let query = `/gameplays/group?location=${location}&startDate=${startDate}&field=${field}&limit=${limit}`;
   if (endDate) {
     query += `&endDate=${endDate}`;
   }
 
   const { isLoading, error, data, isFetching } = useQuery(query, () =>
     get<GameplayAnalytic[]>({ path: query })
+  );
+  return {
+    isLoading,
+    error,
+    data,
+    isFetching,
+  };
+}
+export function useGetGameplays(filter: GameplayFilter) {
+  const { startDate, endDate, game, mentor, limit, page, sort, asc } = filter;
+  let query = `/gameplays/query?page=${page}&limit=${limit}`;
+  if (startDate) {
+    query += `&startDate=${startDate}`;
+  }
+  if (endDate) {
+    query += `&endDate=${endDate}`;
+  }
+  if (game) {
+    query += `&game=${game}`;
+  }
+  if (mentor) {
+    query += `&mentor=${mentor}`;
+  }
+  if (sort) {
+    query += `&sort=${sort}`;
+  }
+  if (asc) {
+    query += `&asc=${asc}`;
+  }
+
+  const { isLoading, error, data, isFetching } = useQuery(query, () =>
+    get<GameplayQueryResult>({ path: query })
   );
   return {
     isLoading,

@@ -7,6 +7,7 @@ import { AnnotationIcon } from "@heroicons/react/solid";
 import { LogoutIcon } from "@heroicons/react/outline";
 import { Tooltip } from "@material-tailwind/react";
 import { useLocation } from "../hooks/useLocation";
+import { PageSelector } from "./PageSelector";
 
 interface HeaderProps {
   showLocationSelector?: boolean;
@@ -35,23 +36,6 @@ export function Header({ showLocationSelector = true }: HeaderProps) {
             </Link>
           </div>
           <div className="w-auto h-full flex items-center justify-end gap-x-4">
-            <div className="gap-x-4 hidden lg:flex">
-              <Link href={`/home/${selectedLocation?._id}`}>
-                <a className="text-white text-sm tracking-normal leading-tight">
-                  Tables
-                </a>
-              </Link>
-              <Link href={`/analytics`}>
-                <a className="text-white text-sm tracking-normal leading-tight">
-                  Analytics
-                </a>
-              </Link>
-              <Link href={`/visits`}>
-                <a className="hidden text-white text-sm tracking-normal leading-tight">
-                  Visits
-                </a>
-              </Link>
-            </div>
             {showLocationSelector && <LocationSelector />}
             <Tooltip content="Feedback" placement="bottom">
               <a
@@ -60,12 +44,13 @@ export function Header({ showLocationSelector = true }: HeaderProps) {
                 rel="noreferrer"
                 className="focus:outline-none text-white text-sm rounded-sm flex gap-2"
               >
-                {<AnnotationIcon className="h-4 w-4" />}
+                {<AnnotationIcon className="h-5 w-5" />}
               </a>
             </Tooltip>
+            <PageSelector />
             <Tooltip content="Logout" placement="bottom">
               <button onClick={logout} className=" text-white">
-                <LogoutIcon className="h-4 w-4" />
+                <LogoutIcon className="h-5 w-5" />
               </button>
             </Tooltip>
           </div>

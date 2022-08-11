@@ -12,6 +12,7 @@
     "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^1.0.5",
     "@material-tailwind/react": "^1.0.8",
+    "@tanstack/react-table": "^8.5.11",
     "axios": "^0.26.0",
     "d3-scale": "^4.0.2",
     "d3-scale-chromatic": "^3.0.0",
