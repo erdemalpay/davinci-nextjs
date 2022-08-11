@@ -96,36 +96,12 @@ export default function Memberships({
       ),
     },
   ];
-  /* 
-  function handleStartDateSelection(event: React.FormEvent<HTMLInputElement>) {
-    setFilterData({
-      ...filterData,
-      startDate: (event.target as HTMLInputElement).value,
-      page: 1,
-    });
-  }
 
-  function handleEndDateSelection(event: React.FormEvent<HTMLInputElement>) {
-    setFilterData({
-      ...filterData,
-      startDate: (event.target as HTMLInputElement).value,
-      page: 1,
-    });
-  }
-
-  function handleLimitSelection(value: number) {
-    setFilterData({
-      ...filterData,
-      limit: value,
-    });
-  }
- */
   return (
     <>
       <Header showLocationSelector={false} />
 
-      <div className="flex flex-col gap-4 mx-20">
-        {/* Query part */}
+      <div className="flex flex-col gap-4 mx-0 lg:mx-20">
         <div className="bg-white shadow w-full px-6 py-5 mt-4">
           <div className="mb-5 rounded-tl-lg rounded-tr-lg">
             <div className="flex items-center justify-between mb-4">
