@@ -160,7 +160,7 @@ export default function Gameplays({
     <>
       <Header showLocationSelector={false} />
 
-      <div className="flex flex-col gap-4 mx-20">
+      <div className="flex flex-col gap-4 mx-0 lg:mx-20">
         {/* Query part */}
         <div className="bg-white shadow w-full px-6 py-5 mt-4">
           <div className="mb-5 rounded-tl-lg rounded-tr-lg">
