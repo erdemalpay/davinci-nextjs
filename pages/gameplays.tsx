@@ -171,7 +171,7 @@ export default function Gameplays({
             </div>
             <div className="flex items-center mt-4 sm:mt-0">
               <div className="flex flex-col w-full">
-                <div className="flex justify-between w-full gap-x-4">
+                <div className="flex flex-col lg:flex-row justify-between w-full gap-x-4">
                   <Autocomplete
                     name="mentor"
                     label="Game Mentor"
@@ -208,6 +208,50 @@ export default function Gameplays({
           </div>
           <div className="">
             <div className="w-full overflow-x-auto">
+              <div className="flex flex-row justify-between w-full mt-2 gap-4">
+                <span className="flex items-center justify-end">
+                  {"Rows per page:"}
+                  <select
+                    onChange={(value) =>
+                      handleLimitSelection(
+                        value.target.value as unknown as number
+                      )
+                    }
+                    className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm"
+                    value={filterData?.limit}
+                  >
+                    <option value={10}>10</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
+                  </select>
+                </span>
+                <span className="flex justify-end text-base items-center">
+                  <button className="focus:outline-none">
+                    <ChevronLeftIcon
+                      className="h-6 w-6"
+                      onClick={() => handlePageChange(-1)}
+                    />
+                  </button>
+
+                  {`Page: ${filterData.page} of ${Math.ceil(
+                    totalItems / filterData.limit
+                  )}`}
+                  <button className="focus:outline-none">
+                    <ChevronRightIcon
+                      className="h-6 w-6"
+                      onClick={() => handlePageChange(1)}
+                    />
+                  </button>
+                </span>
+                <span className="hidden lg:flex items-center">
+                  Showing: {((filterData.page || 1) - 1) * filterData.limit + 1}{" "}
+                  -{" "}
+                  {((filterData.page || 1) - 1) * filterData.limit +
+                    gameplays.length}
+                  {" of "}
+                  {totalItems}
+                </span>
+              </div>
               <table className="w-full whitespace-nowrap">
                 <thead>
                   <tr className="h-10 w-full text-sm leading-none text-gray-600">
@@ -247,44 +291,6 @@ export default function Gameplays({
                   ))}
                 </tbody>
               </table>
-              <div className="flex justify-end w-full mt-2 gap-x-4">
-                <span className="flex items-center">{"Rows per page:"}</span>
-                <select
-                  onChange={(value) =>
-                    handleLimitSelection(
-                      value.target.value as unknown as number
-                    )
-                  }
-                  className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm"
-                  value={filterData?.limit}
-                >
-                  <option value={10}>10</option>
-                  <option value={50}>50</option>
-                  <option value={100}>100</option>
-                </select>
-                <span className="flex items-center">
-                  Showing: {((filterData.page || 1) - 1) * filterData.limit + 1}{" "}
-                  -{" "}
-                  {((filterData.page || 1) - 1) * filterData.limit +
-                    gameplays.length}
-                  {" of "}
-                  {totalItems}
-                </span>
-                <span className="flex justify-between">
-                  <button className="focus:outline-none">
-                    <ChevronLeftIcon
-                      className="h-6 w-6"
-                      onClick={() => handlePageChange(-1)}
-                    />
-                  </button>
-                  <button className="focus:outline-none">
-                    <ChevronRightIcon
-                      className="h-6 w-6"
-                      onClick={() => handlePageChange(1)}
-                    />
-                  </button>
-                </span>
-              </div>
             </div>
           </div>
         </div>
