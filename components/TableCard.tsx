@@ -21,6 +21,7 @@ import {
 import { EditGameplayDialog } from "./EditGameplayDialog";
 import { ConfirmationDialog } from "./ConfirmationDialog";
 import { toast } from "react-toastify";
+import { EditableText } from "./EditableText";
 
 export interface TableCardProps {
   table: Table;
@@ -113,30 +114,11 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
         className={`${bgColor} rounded-tl-md rounded-tr-md px-4 lg:px-8 lg:py-4 py-8 flex items-center justify-between`}
       >
         <p className="text-base font-semibold cursor-pointer">
-          {!isEditTableNameActive ? (
-            <span
-              onClick={() => {
-                setIsEditTableNameActive(true);
-              }}
-            >
-              {table.name}
-            </span>
-          ) : (
-            <input
-              name="name"
-              className="bg-white w-full text-gray-600 border-0 border-b-[1px] dark:text-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 font-normal text-base border-gray-300"
-              placeholder={table.name}
-              onChange={updateTableHandler}
-              value={table.name}
-              onBlur={() => setIsEditTableNameActive(false)}
-              onKeyPress={(event) => {
-                if (event.key === "Enter") {
-                  setIsEditTableNameActive(false);
-                }
-              }}
-              autoFocus
-            />
-          )}
+          <EditableText
+            name="name"
+            text={table.name}
+            onUpdate={updateTableHandler}
+          />
         </p>
         <div className="justify-end w-2/3 gap-4 flex lg:hidden lg:group-hover:flex">
           {!table.finishHour && (

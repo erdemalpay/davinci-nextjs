@@ -48,6 +48,13 @@ export type Visit = {
   finishHour?: string;
 };
 
+export type Membership = {
+  _id: number;
+  name: string;
+  startDate: string;
+  endDate: string;
+};
+
 export type TagType<T> = {
   _id: string | number;
   name: string;

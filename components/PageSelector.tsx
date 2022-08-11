@@ -22,6 +22,10 @@ export function PageSelector() {
       path: "/gameplays",
     },
     {
+      name: "Memberships",
+      path: "/memberships",
+    },
+    {
       name: "Analytics",
       path: "/analytics",
     },
@@ -37,27 +41,16 @@ export function PageSelector() {
         </button>
       </MenuHandler>
       <MenuList>
-        <MenuItem
-          onClick={() => {
-            router.push(`/home/${selectedLocationId}`);
-          }}
-        >
-          Tables
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            router.push(`/gameplays`);
-          }}
-        >
-          Gameplays
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            router.push(`/analytics`);
-          }}
-        >
-          Analytics
-        </MenuItem>
+        {routes.map((route) => (
+          <MenuItem
+            key={route.name}
+            onClick={() => {
+              router.push(route.path);
+            }}
+          >
+            {route.name}
+          </MenuItem>
+        ))}
       </MenuList>
     </Menu>
   );

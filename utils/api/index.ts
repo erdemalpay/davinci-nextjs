@@ -84,7 +84,7 @@ export async function patch<P, R>({
   });
 }
 
-// P = payload, R = ResponseType
+// R = ResponseType
 export async function remove<R>({ path }: BaseRequest): Promise<R> {
   const headers: HeadersInit = {};
   const token = getToken();
