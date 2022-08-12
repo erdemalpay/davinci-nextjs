@@ -64,7 +64,7 @@ export function GameAnalyticChart() {
   }, [startDate, endDate, itemLimit, queryClient]);
 
   return (
-    <div className="p-4 w-[600px] border-2 h-[140%]">
+    <div className="p-4 pb-[200px] w-auto lg:w-1/2 border-2 h-[140%]">
       <h1 className="text-xl mb-4">Gameplay By Games</h1>
       <div className="flex flex-col w-1/2 mb-4">
         <label className="flex items-center text-xs">Date Filter:</label>
@@ -130,7 +130,7 @@ export function GameAnalyticChart() {
         </div>
       </div>
       {gameData?.length ? (
-        <ResponsiveContainer width={600} height={400}>
+        <ResponsiveContainer className={"w-[600px] h-[400px]"}>
           <BarChart
             data={gameData}
             margin={{

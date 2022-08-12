@@ -140,7 +140,7 @@ const TablesPage = ({
   return (
     <>
       <Header />
-      <div className="container relative h-full py-4 px-12">
+      <div className="container relative h-full py-4 px-2 lg:px-12">
         <div className="h-full flex w-full flex-wrap flex-col">
           <div className="flex justify-between">
             <div className="flex items-center text-3xl">

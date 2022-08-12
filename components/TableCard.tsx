@@ -111,7 +111,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
       style={{ lineHeight: "8px" }}
     >
       <div
-        className={`${bgColor} rounded-tl-md rounded-tr-md px-4 lg:px-8 lg:py-4 py-8 flex items-center justify-between`}
+        className={`${bgColor} rounded-tl-md rounded-tr-md px-4 lg:px-6 lg:py-4 py-6 flex items-center justify-between mb-2`}
       >
         <p className="text-base font-semibold cursor-pointer">
           <EditableText
@@ -158,7 +158,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
           </Tooltip>
         </div>
       </div>
-      <div className={`px-4 md:px-10 md:pt-4 md:pb-4 pb-8`}>
+      <div className={`px-4 lg:px-6 md:pb-4 pb-8`}>
         <div className="flex gap-4 flex-row">
           <InputWithLabel
             name="startHour"

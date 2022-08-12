@@ -6,7 +6,7 @@ export default function Analytics() {
   return (
     <>
       <Header showLocationSelector={false} />
-      <div className="flex w-full gap-10 p-10 h-[500px] px-40">
+      <div className="flex flex-col lg:flex-row justify-between w-full gap-4 py-2 h-[500px] px-2 lg:px-40">
         <GameAnalyticChart />
         <MentorAnalyticChart />
       </div>
