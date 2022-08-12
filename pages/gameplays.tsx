@@ -107,7 +107,7 @@ export default function Gameplays({
   function handleEndDateSelection(event: React.FormEvent<HTMLInputElement>) {
     setFilterData({
       ...filterData,
-      startDate: (event.target as HTMLInputElement).value,
+      endDate: (event.target as HTMLInputElement).value,
       page: 1,
     });
   }
