@@ -13,7 +13,6 @@ import { CreateMembershipDialog } from "../components/CreateMembershipDialog";
 import { TrashIcon } from "@heroicons/react/outline";
 import { toast } from "react-toastify";
 import { EditableText } from "../components/EditableText";
-import { InputWithLabel } from "../components/InputWithLabel";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const initialMemberships = await getMemberships({ context });

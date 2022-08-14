@@ -9,6 +9,11 @@ interface RequestWithPayload<P> extends BaseRequest {
   payload: P;
 }
 
+export interface UpdatePayload<P> {
+  id: number;
+  updates: Partial<P>;
+}
+
 const baseURL = `${process.env.NEXT_PUBLIC_API_HOST}`;
 
 function printStackTrace() {

@@ -16,6 +16,8 @@ export function EditableText<T>({
   type = "text",
 }: Props<T>) {
   const [isEditActive, setIsEditActive] = useState(false);
+  const [value, setValue] = useState(text);
+
   return !isEditActive ? (
     <span
       className="cursor-pointer"
@@ -28,9 +30,11 @@ export function EditableText<T>({
   ) : (
     <input
       name={name}
-      className="bg-white w-full text-gray-600 border-0 border-b-[1px] focus:outline-none font-normal text-base border-gray-300"
+      className="bg-white text-gray-600 border-0 border-b-[1px] focus:outline-none font-normal text-base border-gray-300"
       placeholder={text}
       type={type}
+      value={value}
+      onChange={(event) => setValue(event.target.value)}
       onBlur={(event) => {
         onUpdate(event, item);
         setIsEditActive(false);

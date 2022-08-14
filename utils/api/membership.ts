@@ -1,14 +1,9 @@
 import { Membership } from "../../types";
-import { get, patch, post, remove } from ".";
+import { get, patch, post, remove, UpdatePayload } from ".";
 import { PossibleContext } from "../token";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 
 const getAllMembershipsQuery = "/memberships";
-
-interface UpdateMembershipPayload {
-  id: number;
-  updates: Partial<Membership>;
-}
 
 export function getMemberships(
   params?: PossibleContext
@@ -37,7 +32,7 @@ export function deleteMembership(id: number): Promise<Membership> {
 export function updateMembership({
   id,
   updates,
-}: UpdateMembershipPayload): Promise<Membership> {
+}: UpdatePayload<Membership>): Promise<Membership> {
   return patch<Partial<Membership>, Membership>({
     path: `/memberships/${id}`,
     payload: updates,
@@ -153,7 +148,7 @@ export function useUpdateMembershipMutation() {
   const membershipsQuery = "/memberships";
   return useMutation(updateMembership, {
     // We are updating tables query data with new Membership
-    onMutate: async ({ id, updates }: UpdateMembershipPayload) => {
+    onMutate: async ({ id, updates }: UpdatePayload<Membership>) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries(membershipsQuery);
 
