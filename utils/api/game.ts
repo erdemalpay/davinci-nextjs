@@ -26,7 +26,7 @@ export function updateGame({
   });
 }
 
-export function deleteGame({ id }: { id: number }): Promise<Game> {
+export function deleteGame(id: number): Promise<Game> {
   return remove<Game>({
     path: `/games/${id}`,
   });
@@ -150,7 +150,7 @@ export function useDeleteGameMutation() {
   const gamesQuery = "/games";
   return useMutation(deleteGame, {
     // We are updating tables query data with new Game
-    onMutate: async ({ id }: { id: number }) => {
+    onMutate: async (id: number) => {
       // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
       await queryClient.cancelQueries(gamesQuery);
 

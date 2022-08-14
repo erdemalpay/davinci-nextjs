@@ -4,7 +4,7 @@ import { GetServerSideProps } from "next";
 import type { Game } from "../types";
 import {
   getGames,
-  // useDeleteGameMutation,
+  useDeleteGameMutation,
   useGetGames,
   useUpdateGameMutation,
 } from "../utils/api/game";
@@ -15,6 +15,7 @@ import { toast } from "react-toastify";
 import { EditableText } from "../components/EditableText";
 import { CheckSwitch } from "../components/CheckSwitch";
 import { AddGameDialog } from "../components/AddGameDialog";
+import { TrashIcon } from "@heroicons/react/solid";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const games = await getGames({ context });
@@ -32,7 +33,7 @@ export default function Games({ games: initialGames }: { games: Game[] }) {
   const [gamePerPage, setGamePerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
   const { isLoading, error, games } = useGetGames(initialGames);
-  // const { mutate: deleteGame } = useDeleteGameMutation();
+  const { mutate: deleteGame } = useDeleteGameMutation();
   const { mutate: updateGame } = useUpdateGameMutation();
   const [gamesCount, setGamesCount] = useState(0);
   const [showGameImages, setShowGameImages] = useState(false);
@@ -175,6 +176,9 @@ export default function Games({ games: initialGames }: { games: Game[] }) {
                 <th scope="col" className="py-3 px-6">
                   Neorama
                 </th>
+                <th scope="col" className="py-3 px-6">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -218,6 +222,11 @@ export default function Games({ games: initialGames }: { games: Game[] }) {
                       checked={game.locations?.includes(2)}
                       onChange={() => handleLocationUpdate(game, 2)}
                     ></CheckSwitch>
+                  </td>
+                  <td className="py-2 px-2 lg:px-6">
+                    <button onClick={() => deleteGame(game._id)}>
+                      <TrashIcon className="text-red-500 w-6 h-6" />
+                    </button>
                   </td>
                 </tr>
               ))}
