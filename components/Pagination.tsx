@@ -2,77 +2,79 @@ import React from "react";
 
 export function Pagination({
   page,
-  startIndex,
-  gameLimitPerPage,
-  gamesCount,
+  limitPerPage,
+  itemsCount,
   totalPages,
   handleClick,
+  handleLimitSelection,
 }: {
   page: number;
-  startIndex: number;
-  gameLimitPerPage: number;
-  gamesCount: number;
+  limitPerPage: number;
+  itemsCount: number;
   totalPages: number;
   handleClick: (num: number) => void;
+  handleLimitSelection: (num: number) => void;
 }) {
   return (
-    <nav
-      className="flex justify-between items-center p-4"
-      aria-label="Table navigation"
-    >
-      <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
+    <nav className="flex flex-col lg:flex-row justify-between items-center p-4 gap-4">
+      <div className="text-sm font-normal text-gray-500">
         Showing{" "}
-        <span className="font-semibold text-gray-900 dark:text-white">
-          {startIndex + 1}-{startIndex + gameLimitPerPage}
+        <span className="font-semibold text-gray-900">
+          {`${(page - 1) * limitPerPage + 1} - ${Math.min(
+            page * limitPerPage,
+            itemsCount
+          )}`}
         </span>{" "}
-        of{" "}
-        <span className="font-semibold text-gray-900 dark:text-white">
-          {gamesCount}
-        </span>
-      </span>
-      <ul className="inline-flex items-center -space-x-px">
-        <li>
+        of <span className="font-semibold text-gray-900">{itemsCount}</span>
+      </div>
+      <span className="flex items-center justify-end gap-x-4">
+        {"Items:"}
+        <select
+          onChange={(value) =>
+            handleLimitSelection(value.target.value as unknown as number)
+          }
+          className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm"
+          value={limitPerPage}
+        >
+          <option value={10}>10</option>
+          <option value={20}>20</option>
+          <option value={50}>50</option>
+        </select>
+
+        <div className="inline-flex items-center -space-x-px text-sm leading-tight">
           <button
-            className="block py-2 px-3 ml-0 leading-tight text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            onClick={() => handleClick(page - 2)}
+            className="block py-2 px-3 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+            onClick={() => handleClick(page - 5)}
           >
-            Previous
+            {"<<"}
           </button>
-        </li>
-        <li>
           <button
-            className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            className="py-2 px-3 text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800"
             onClick={() => handleClick(page - 1)}
           >
-            {page === 1 ? "-" : page - 1}
+            {page <= 1 ? "-" : page - 1}
           </button>
-        </li>
-        <li>
           <button
             aria-current="page"
-            className="z-10 py-2 px-3 leading-tight text-blue-600 bg-blue-50 border border-blue-300 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+            className="z-10 py-2 px-3 text-blue-600 bg-blue-50 border border-blue-300 hover:bg-blue-100 hover:text-blue-700"
             onClick={() => handleClick(page)}
           >
             {page}
           </button>
-        </li>
-        <li>
           <button
-            className="py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+            className="py-2 px-3 text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
             onClick={() => handleClick(page + 1)}
           >
             {page === totalPages ? "-" : page + 1}
           </button>
-        </li>
-        <li>
           <button
-            className="block py-2 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            onClick={() => handleClick(page + 2)}
+            className="block py-2 px-3 text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700"
+            onClick={() => handleClick(page + 5)}
           >
-            Next
+            {">>"}
           </button>
-        </li>
-      </ul>
+        </div>
+      </span>
     </nav>
   );
 }

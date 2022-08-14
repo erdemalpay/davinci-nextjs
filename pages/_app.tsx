@@ -20,7 +20,7 @@ import {
   QueryClient,
   QueryClientProvider,
   useIsMutating,
-  useIsFetching,
+  // useIsFetching,
 } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { SelectedDateContext } from "../context/SelectedDateContext";
@@ -35,7 +35,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
   const isMutating = useIsMutating();
-  const isFetching = useIsFetching();
+  // const isFetching = useIsFetching();
 
   const initalLocationValue = {
     selectedLocationId,
@@ -53,7 +53,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Hydrate state={pageProps.dehydratedState}>
         <SelectedDateContext.Provider value={initalSelectedDateValue}>
           <LocationContext.Provider value={initalLocationValue}>
-            {isMutating || isFetching ? (
+            {isMutating ? (
               <div className="absolute inset-0 w-full h-full z-50 opacity-50 bg-black text-white">
                 <div className="flex justify-center w-full h-full items-center">
                   <svg

@@ -37,6 +37,7 @@ export type Game = {
   image: string;
   thumbnail: string;
   expansion: boolean;
+  locations: number[];
 };
 
 export type Visit = {

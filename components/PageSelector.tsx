@@ -22,6 +22,10 @@ export function PageSelector() {
       path: "/gameplays",
     },
     {
+      name: "Games",
+      path: "/games",
+    },
+    {
       name: "Memberships",
       path: "/memberships",
     },
