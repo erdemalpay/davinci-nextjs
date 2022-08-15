@@ -2,12 +2,6 @@
 import { FormEvent, useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
 import type { Game } from "../types";
-import {
-  getGames,
-  useDeleteGameMutation,
-  useGetGames,
-  useUpdateGameMutation,
-} from "../utils/api/game";
 import { Pagination } from "../components/common/Pagination";
 import { Switch } from "@headlessui/react";
 import { Header } from "../components/header/Header";
@@ -16,9 +10,13 @@ import { EditableText } from "../components/common/EditableText";
 import { CheckSwitch } from "../components/common/CheckSwitch";
 import { AddGameDialog } from "../components/games/AddGameDialog";
 import { TrashIcon } from "@heroicons/react/solid";
+import { generateApi, generateServerSideApi } from "../utils/api/factory";
+
+const query = { baseQuery: "/games" };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const games = await getGames({ context });
+  const { getItems } = generateServerSideApi<Game>(query);
+  const games = await getItems(context);
   games.sort((a, b) => {
     return a.name > b.name ? 1 : -1;
   });
@@ -27,14 +25,25 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default function Games({ games: initialGames }: { games: Game[] }) {
+  const {
+    useDeleteItemMutation,
+    useUpdateItemMutation,
+    useCreateItemMutation,
+    useGetItems,
+  } = generateApi<Game>(query);
+
+  const { mutate: deleteGame } = useDeleteItemMutation();
+  const { mutate: updateGame } = useUpdateItemMutation();
+  const { isLoading, error, items: games } = useGetItems(initialGames);
+  games?.sort((a, b) => {
+    return a.name > b.name ? 1 : -1;
+  });
+
   const [textFilter, setTextFilter] = useState("");
   const [filteredGames, setFilteredGames] = useState<Game[]>([]);
   const [page, setPage] = useState(1);
   const [gamePerPage, setGamePerPage] = useState(10);
   const [totalPages, setTotalPages] = useState(0);
-  const { isLoading, error, games } = useGetGames(initialGames);
-  const { mutate: deleteGame } = useDeleteGameMutation();
-  const { mutate: updateGame } = useUpdateGameMutation();
   const [gamesCount, setGamesCount] = useState(0);
   const [showGameImages, setShowGameImages] = useState(false);
   const [isAddGameDialogOpen, setIsAddGameDialogOpen] = useState(false);
@@ -73,15 +82,11 @@ export default function Games({ games: initialGames }: { games: Game[] }) {
   function updateGameHandler(event: FormEvent<HTMLInputElement>, item?: Game) {
     if (!item) return;
     const target = event.target as HTMLInputElement;
-    console.log({ value: target.value });
     if (!target.value) return;
     updateGame({
       id: item._id,
       updates: { [target.name]: target.value },
     });
-    toast.success(
-      `Game ${target.name === "name" ? target.value : item.name} updated`
-    );
   }
 
   /* function handleSetExpansion(game: Game) {

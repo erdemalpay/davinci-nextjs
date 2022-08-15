@@ -6,7 +6,6 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useContext } from "react";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { sortTable } from "../sort";
-import { useLocation } from "../../hooks/useLocation";
 import { LocationContext } from "../../context/LocationContext";
 
 interface UpdateTablePayload {

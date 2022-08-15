@@ -7,17 +7,18 @@ import {
 
 import { GetServerSideProps } from "next";
 import { Game, User } from "../types";
-import { getGames } from "../utils/api/game";
 import { GameplayFilter, useGetGameplays } from "../utils/api/gameplay";
 import { useEffect, useState } from "react";
 import { Header } from "../components/header/Header";
 import { Autocomplete } from "../components/common/Autocomplete";
-import { getUsers } from "../utils/api/user";
 import { Input } from "@material-tailwind/react";
+import { generateServerSideApi } from "../utils/api/factory";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const games = await getGames({ context });
-  const users = await getUsers({ context });
+  const { getItems: getGames } = generateServerSideApi({ baseQuery: "/games" });
+  const { getItems: getUsers } = generateServerSideApi({ baseQuery: "/users" });
+  const games = await getGames(context);
+  const users = await getUsers(context);
   return { props: { games, users } };
 };
 

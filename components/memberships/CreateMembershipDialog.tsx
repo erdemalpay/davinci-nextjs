@@ -3,23 +3,26 @@ import { XIcon } from "@heroicons/react/solid";
 import { useForm } from "../../hooks/useForm";
 import { toast } from "react-toastify";
 import { Input } from "@material-tailwind/react";
-import { useCreateMembershipMutation } from "../../utils/api/membership";
 import { addMonths, format, subDays } from "date-fns";
+import { UseMutationResult } from "react-query";
+import { Membership } from "../../types/index";
 
 export function CreateMembershipDialog({
   isOpen,
   close,
+  useCreateItemMutation,
 }: {
   isOpen: boolean;
   close: () => void;
+  useCreateItemMutation: () => UseMutationResult<Membership>;
 }) {
   const { data, handleUpdate } = useForm({
     name: "",
     startDate: format(new Date(), "yyyy-MM-dd"),
     endDate: format(subDays(addMonths(new Date(), 1), 1), "yyyy-MM-dd"),
   });
-
-  const { mutate: createMembership } = useCreateMembershipMutation();
+  // const {} = generateApi()
+  const { mutate: createMembership } = useCreateItemMutation();
 
   async function handleCreate() {
     createMembership(data);

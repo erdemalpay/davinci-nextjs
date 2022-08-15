@@ -1,21 +1,18 @@
 import { GetServerSideProps } from "next";
 import { Membership } from "../types";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useState } from "react";
 import { Header } from "../components/header/Header";
-import { Input } from "@material-tailwind/react";
-import {
-  getMemberships,
-  useDeleteMembershipMutation,
-  useGetMemberships,
-  useUpdateMembershipMutation,
-} from "../utils/api/membership";
 import { CreateMembershipDialog } from "../components/memberships/CreateMembershipDialog";
 import { TrashIcon } from "@heroicons/react/outline";
 import { toast } from "react-toastify";
 import { EditableText } from "../components/common/EditableText";
+import { generateApi, generateServerSideApi } from "../utils/api/factory";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const initialMemberships = await getMemberships({ context });
+  const { getItems } = generateServerSideApi<Membership>({
+    baseQuery: "/memberships",
+  });
+  const initialMemberships = await getItems(context);
   return { props: { initialMemberships } };
 };
 
@@ -24,13 +21,19 @@ export default function Memberships({
 }: {
   initialMemberships: Membership[];
 }) {
-  const { memberships } = useGetMemberships(initialMemberships);
+  const {
+    useDeleteItemMutation,
+    useUpdateItemMutation,
+    useCreateItemMutation,
+    useGetItems,
+  } = generateApi<Membership>({ baseQuery: "/memberships" });
+
+  const { items: memberships } = useGetItems(initialMemberships);
+  const { mutate: deleteMembership } = useDeleteItemMutation();
+  const { mutate: updateMembership } = useUpdateItemMutation();
+
   const [isCreateMembershipDialogOpen, setIsCreateMembershipDialogOpen] =
     useState(false);
-
-  const { mutate: deleteMembership } = useDeleteMembershipMutation();
-  const { mutate: updateMembership } = useUpdateMembershipMutation();
-
   function updateMembershipHandler(
     event: FormEvent<HTMLInputElement>,
     item?: Membership
@@ -154,6 +157,7 @@ export default function Memberships({
         <CreateMembershipDialog
           isOpen={isCreateMembershipDialogOpen}
           close={() => setIsCreateMembershipDialogOpen(false)}
+          useCreateItemMutation={useCreateItemMutation}
         />
       )}
     </>
