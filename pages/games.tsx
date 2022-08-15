@@ -33,6 +33,7 @@ export default function Games({ games: initialGames }: { games: Game[] }) {
   const [totalPages, setTotalPages] = useState(0);
   const [gamesCount, setGamesCount] = useState(0);
   const [showGameImages, setShowGameImages] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [isAddGameDialogOpen, setIsAddGameDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -122,20 +123,17 @@ export default function Games({ games: initialGames }: { games: Game[] }) {
               />
             </div>
             <div className="flex justify-end gap-4 items-center">
+              <h1 className="text-md">Enable Edit Mode</h1>
+              <CheckSwitch
+                checked={editMode}
+                onChange={() => setEditMode((value) => !value)}
+                checkedBg="bg-red-500"
+              ></CheckSwitch>
               <h1 className="text-md">Show Game Covers</h1>
-              <Switch
+              <CheckSwitch
                 checked={showGameImages}
                 onChange={() => setShowGameImages((value) => !value)}
-                className={`${showGameImages ? "bg-green-500" : "bg-red-500"}
-              relative inline-flex h-[20px] w-[36px] border-[1px] cursor-pointer rounded-full border-transparent transition-colors duration-200 ease-in-out focus:outline-none`}
-              >
-                <span
-                  className={`${
-                    showGameImages ? "translate-x-4" : "translate-x-0"
-                  }
-                pointer-events-none inline-block h-[18px] w-[18px] transform rounded-full bg-white transition duration-200 ease-in-out`}
-                />
-              </Switch>
+              ></CheckSwitch>
               <button
                 onClick={() => setIsAddGameDialogOpen(true)}
                 className="py-2 bg-white transition duration-150 ease-in-out hover:border-gray-900 hover:text-gray-900 rounded border border-gray-800 text-gray-800 px-2 lg:px-6 text-sm"
@@ -201,18 +199,30 @@ export default function Games({ games: initialGames }: { games: Game[] }) {
                     ></CheckSwitch>
                   </td> */}
                   <td className="py-2 px-2 lg:px-6">
-                    <CheckSwitch
-                      checked={game.locations?.includes(1)}
-                      onChange={() => handleLocationUpdate(game, 1)}
-                    ></CheckSwitch>
+                    {editMode ? (
+                      <CheckSwitch
+                        checked={game.locations?.includes(1)}
+                        onChange={() => handleLocationUpdate(game, 1)}
+                      ></CheckSwitch>
+                    ) : game.locations?.includes(1) ? (
+                      <div className="text-blue-500">Yes</div>
+                    ) : (
+                      <h2 className="text-red-500">No</h2>
+                    )}
                   </td>
-                  <td className="py-2 px-2 lg:px-6">
-                    <CheckSwitch
-                      checked={game.locations?.includes(2)}
-                      onChange={() => handleLocationUpdate(game, 2)}
-                    ></CheckSwitch>
+                  <td className="p-2 lg:px-6">
+                    {editMode ? (
+                      <CheckSwitch
+                        checked={game.locations?.includes(2)}
+                        onChange={() => handleLocationUpdate(game, 2)}
+                      ></CheckSwitch>
+                    ) : game.locations?.includes(2) ? (
+                      <div className="text-blue-500">Yes</div>
+                    ) : (
+                      <h2 className="text-red-500">No</h2>
+                    )}
                   </td>
-                  <td className="py-2 px-2 lg:px-6">
+                  <td className={`py-2 px-2 lg:px-6 ${!editMode && "hidden"}`}>
                     <button onClick={() => deleteGame(game._id)}>
                       <TrashIcon className="text-red-500 w-6 h-6" />
                     </button>
