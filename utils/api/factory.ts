@@ -1,18 +1,13 @@
 import { GetServerSidePropsContext } from "next";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { get, patch, post, remove, UpdatePayload } from ".";
-import { PossibleContext } from "../token";
 
-interface Props<T> {
-  baseQuery: string;
-}
-
-export function generateServerSideApi<T extends { _id: number }>({
-  baseQuery,
-}: Props<T>) {
+export function generateServerSideApi<T extends { _id: number }>(
+  query: string
+) {
   function getItems(context: GetServerSidePropsContext): Promise<T[]> {
     return get<T[]>({
-      path: baseQuery,
+      path: query,
       context,
     });
   }
@@ -21,8 +16,14 @@ export function generateServerSideApi<T extends { _id: number }>({
   };
 }
 
-export function generateApi<T extends { _id: number }>({
+interface Props<T> {
+  baseQuery: string;
+  initialItems?: T[];
+}
+
+export function useGenerateApi<T extends { _id: number }>({
   baseQuery,
+  initialItems = [],
 }: Props<T>) {
   function getItems(): Promise<T[]> {
     return get<T[]>({
@@ -30,20 +31,20 @@ export function generateApi<T extends { _id: number }>({
     });
   }
 
-  function createItem(itemDetails: Partial<T>): Promise<T> {
+  function createRequest(itemDetails: Partial<T>): Promise<T> {
     return post<Partial<T>, T>({
       path: baseQuery,
       payload: itemDetails,
     });
   }
 
-  function deleteItem(id: number): Promise<T> {
+  function deleteRequest(id: number): Promise<T> {
     return remove<T>({
       path: `${baseQuery}/${id}`,
     });
   }
 
-  function updateItem({ id, updates }: UpdatePayload<T>): Promise<T> {
+  function updateRequest({ id, updates }: UpdatePayload<T>): Promise<T> {
     return patch<Partial<T>, T>({
       path: `${baseQuery}/${id}`,
       payload: updates,
@@ -68,7 +69,7 @@ export function generateApi<T extends { _id: number }>({
 
   function useCreateItemMutation() {
     const queryClient = useQueryClient();
-    return useMutation(createItem, {
+    return useMutation(createRequest, {
       // We are updating tables query data with new item
       onMutate: async (itemDetails) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
@@ -104,7 +105,7 @@ export function generateApi<T extends { _id: number }>({
   function useDeleteItemMutation() {
     const queryClient = useQueryClient();
 
-    return useMutation(deleteItem, {
+    return useMutation(deleteRequest, {
       // We are updating tables query data with new item
       onMutate: async (id) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
@@ -139,7 +140,7 @@ export function generateApi<T extends { _id: number }>({
   }
   function useUpdateItemMutation() {
     const queryClient = useQueryClient();
-    return useMutation(updateItem, {
+    return useMutation(updateRequest, {
       // We are updating tables query data with new item
       onMutate: async ({ id, updates }: UpdatePayload<T>) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
@@ -179,10 +180,15 @@ export function generateApi<T extends { _id: number }>({
     });
   }
 
+  const { items } = useGetItems(initialItems);
+  const { mutate: deleteItem } = useDeleteItemMutation();
+  const { mutate: updateItem } = useUpdateItemMutation();
+  const { mutate: createItem } = useCreateItemMutation();
+
   return {
-    useGetItems,
-    useCreateItemMutation,
-    useDeleteItemMutation,
-    useUpdateItemMutation,
+    items: items || [],
+    deleteItem,
+    updateItem,
+    createItem,
   };
 }

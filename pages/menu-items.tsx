@@ -1,89 +1,116 @@
 import { GetServerSideProps } from "next";
-import { Membership } from "../types";
+import { MenuCategory, MenuItem } from "../types";
 import { FormEvent, useState } from "react";
 import { Header } from "../components/header/Header";
-import { CreateMembershipDialog } from "../components/memberships/CreateMembershipDialog";
 import { TrashIcon } from "@heroicons/react/outline";
 import { toast } from "react-toastify";
 import { EditableText } from "../components/common/EditableText";
 import { generateServerSideApi } from "../utils/api/factory";
-import { useMemberships } from "../utils/api/membership";
+import { useMenuItems } from "../utils/api/menu-item";
+import { Autocomplete } from "../components/common/Autocomplete";
+import { useCategories } from "../utils/api/category";
+import { AddMenuItemDialog } from "../components/menu/AddItemDialog";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { getItems } = generateServerSideApi<Membership>("/memberships");
-  const initialMemberships = await getItems(context);
-  return { props: { initialMemberships } };
+  const { getItems } = generateServerSideApi<MenuCategory>("/menu/items");
+  const initialItems = await getItems(context);
+  return { props: { initialItems } };
 };
 
-export default function Memberships({
-  initialMemberships,
+export default function MenuItems({
+  initialItems,
 }: {
-  initialMemberships: Membership[];
+  initialItems: MenuItem[];
 }) {
-  const { memberships, deleteMembership, updateMembership, createMembership } =
-    useMemberships(initialMemberships);
+  const { items, deleteItem, updateItem, createItem } =
+    useMenuItems(initialItems);
+  const { categories } = useCategories();
 
-  const [isCreateMembershipDialogOpen, setIsCreateMembershipDialogOpen] =
-    useState(false);
-  function updateMembershipHandler(
-    event: FormEvent<HTMLInputElement>,
-    item?: Membership
-  ) {
+  const [isCreateItemDialogOpen, setIsCreateItemDialogOpen] = useState(false);
+  function updateHandler(event: FormEvent<HTMLInputElement>, item?: MenuItem) {
     if (!item) return;
     const target = event.target as HTMLInputElement;
     if (!target.value) return;
-    console.log({ target });
-    updateMembership({
+    updateItem({
       id: item._id,
       updates: { [target.name]: target.value },
     });
-    toast.success(`Membership ${item.name} updated`);
+    toast.success(`Item ${item.name} updated`);
+  }
+
+  function updateCategory(category: number, item: MenuItem) {
+    if (!item) return;
+    updateItem({
+      id: item._id,
+      updates: { category },
+    });
+    toast.success(`Item ${item.name} updated`);
   }
 
   const columns = [
     {
       id: "name",
       header: "Name",
-      cell: (row: Membership) => (
+      cell: (row: MenuItem) => (
         <EditableText
           name="name"
           text={row.name}
-          onUpdate={updateMembershipHandler}
+          onUpdate={updateHandler}
           item={row}
         />
       ),
     },
     {
-      id: "startDate",
-      header: "Start Date",
-      cell: (row: Membership) => (
+      id: "category",
+      header: "Category",
+      cell: (row: MenuItem) => (
+        <select
+          name="category"
+          onChange={(event) =>
+            updateCategory(event.target.value as unknown as number, row)
+          }
+          className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm"
+          value={(row.category as MenuCategory)._id + ""}
+        >
+          {categories.map((category) => (
+            <option key={category._id} value={category._id}>
+              {category.name}
+            </option>
+          ))}
+        </select>
+      ),
+    },
+    {
+      id: "priceBahceli",
+      header: "Bahçeli",
+      cell: (row: MenuItem) => (
         <EditableText
-          name="startDate"
-          text={row.startDate}
-          onUpdate={updateMembershipHandler}
+          name="priceBahceli"
+          type="number"
+          text={row.priceBahceli + ""}
+          onUpdate={updateHandler}
           item={row}
-          type="date"
         />
       ),
     },
     {
-      id: "endDate",
-      header: "End Date",
-      cell: (row: Membership) => (
+      id: "priceNeorama",
+      header: "Neorama",
+      cell: (row: MenuItem) => (
         <EditableText
-          name="endDate"
-          text={row.endDate}
-          onUpdate={updateMembershipHandler}
+          name="priceNeorama"
+          type="number"
+          text={row.priceNeorama + ""}
+          onUpdate={updateHandler}
           item={row}
-          type="date"
         />
       ),
     },
     {
       id: "delete",
       header: "Action",
-      cell: (row: Membership) => (
-        <button onClick={() => deleteMembership(row._id)}>
+      cell: (row: MenuItem) => (
+        <button onClick={() => deleteItem(row._id)}>
           <TrashIcon className="text-red-500 w-6 h-6" />
         </button>
       ),
@@ -99,14 +126,14 @@ export default function Memberships({
           <div className="mb-5 rounded-tl-lg rounded-tr-lg">
             <div className="flex items-center justify-between mb-4">
               <p className="text-base lg:text-2xl font-bold leading-normal text-gray-800">
-                Memberships
+                Menu Items
               </p>
             </div>
           </div>
           <div className="h-full w-full">
             <div className="flex justify-end gap-x-4">
               <button
-                onClick={() => setIsCreateMembershipDialogOpen(true)}
+                onClick={() => setIsCreateItemDialogOpen(true)}
                 className="my-3 bg-white rounded border border-gray-800 text-gray-800 px-6 py-2 text-sm"
               >
                 Add
@@ -124,15 +151,15 @@ export default function Memberships({
                   </tr>
                 </thead>
                 <tbody className="w-full">
-                  {memberships?.map((membership) => (
+                  {items?.map((item) => (
                     <tr
-                      key={membership._id}
+                      key={item._id}
                       className="h-10 text-sm leading-none text-gray-700 border-b border-t border-gray-200 bg-white hover:bg-gray-100"
                     >
                       {columns.map((column) => {
                         return (
                           <td key={column.id} className="">
-                            {column.cell(membership)}
+                            {column.cell(item)}
                           </td>
                         );
                       })}
@@ -144,11 +171,11 @@ export default function Memberships({
           </div>
         </div>
       </div>
-      {isCreateMembershipDialogOpen && (
-        <CreateMembershipDialog
-          isOpen={isCreateMembershipDialogOpen}
-          close={() => setIsCreateMembershipDialogOpen(false)}
-          createMembership={createMembership}
+      {isCreateItemDialogOpen && (
+        <AddMenuItemDialog
+          isOpen={isCreateItemDialogOpen}
+          close={() => setIsCreateItemDialogOpen(false)}
+          createItem={createItem}
         />
       )}
     </>

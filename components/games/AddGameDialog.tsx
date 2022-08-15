@@ -2,19 +2,22 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
 import { Input } from "@material-tailwind/react";
 import { useState } from "react";
-import { useCreateGameMutation, useGetGameDetails } from "../../utils/api/game";
+import { UseMutateFunction } from "react-query";
+import { Game } from "../../types";
+import { useGetGameDetails } from "../../utils/api/game";
 
 export function AddGameDialog({
   isOpen,
   close,
+  createGame,
 }: {
   isOpen: boolean;
   close: () => void;
+  createGame: UseMutateFunction<Game, unknown, Partial<Game>>;
 }) {
   const [gameId, setGameId] = useState<number>();
 
   const { gameDetails } = useGetGameDetails(gameId || 0);
-  const { mutate: createGame } = useCreateGameMutation();
 
   async function handleCreate() {
     if (gameDetails) {

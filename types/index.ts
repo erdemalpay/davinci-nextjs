@@ -56,6 +56,19 @@ export type Membership = {
   endDate: string;
 };
 
+export type MenuCategory = {
+  _id: number;
+  name: string;
+};
+
+export type MenuItem = {
+  _id: number;
+  name: string;
+  category: MenuCategory | number;
+  priceBahceli: number;
+  priceNeorama: number;
+};
+
 export type TagType<T> = {
   _id: string | number;
   name: string;

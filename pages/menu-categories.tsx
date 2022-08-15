@@ -1,89 +1,62 @@
 import { GetServerSideProps } from "next";
-import { Membership } from "../types";
+import { MenuCategory } from "../types";
 import { FormEvent, useState } from "react";
 import { Header } from "../components/header/Header";
-import { CreateMembershipDialog } from "../components/memberships/CreateMembershipDialog";
 import { TrashIcon } from "@heroicons/react/outline";
 import { toast } from "react-toastify";
 import { EditableText } from "../components/common/EditableText";
 import { generateServerSideApi } from "../utils/api/factory";
-import { useMemberships } from "../utils/api/membership";
+import { AddMenuCategoryDialog } from "../components/menu/AddCategoryDialog";
+import { useCategories } from "../utils/api/category";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { getItems } = generateServerSideApi<Membership>("/memberships");
-  const initialMemberships = await getItems(context);
-  return { props: { initialMemberships } };
+  const { getItems } = generateServerSideApi<MenuCategory>("/menu/categories");
+  const initialCategories = await getItems(context);
+  return { props: { initialCategories } };
 };
 
-export default function Memberships({
-  initialMemberships,
+export default function MenuCategories({
+  initialCategories,
 }: {
-  initialMemberships: Membership[];
+  initialCategories: MenuCategory[];
 }) {
-  const { memberships, deleteMembership, updateMembership, createMembership } =
-    useMemberships(initialMemberships);
+  const { categories, deleteCategory, updateCategory, createCategory } =
+    useCategories(initialCategories);
 
-  const [isCreateMembershipDialogOpen, setIsCreateMembershipDialogOpen] =
+  const [isCreateCategoryDialogOpen, setIsCreateCategoryDialogOpen] =
     useState(false);
-  function updateMembershipHandler(
+  function updateCategoryHandler(
     event: FormEvent<HTMLInputElement>,
-    item?: Membership
+    item?: MenuCategory
   ) {
     if (!item) return;
     const target = event.target as HTMLInputElement;
     if (!target.value) return;
-    console.log({ target });
-    updateMembership({
+    updateCategory({
       id: item._id,
       updates: { [target.name]: target.value },
     });
-    toast.success(`Membership ${item.name} updated`);
+    toast.success(`Category ${item.name} updated`);
   }
 
   const columns = [
     {
       id: "name",
       header: "Name",
-      cell: (row: Membership) => (
+      cell: (row: MenuCategory) => (
         <EditableText
           name="name"
           text={row.name}
-          onUpdate={updateMembershipHandler}
+          onUpdate={updateCategoryHandler}
           item={row}
-        />
-      ),
-    },
-    {
-      id: "startDate",
-      header: "Start Date",
-      cell: (row: Membership) => (
-        <EditableText
-          name="startDate"
-          text={row.startDate}
-          onUpdate={updateMembershipHandler}
-          item={row}
-          type="date"
-        />
-      ),
-    },
-    {
-      id: "endDate",
-      header: "End Date",
-      cell: (row: Membership) => (
-        <EditableText
-          name="endDate"
-          text={row.endDate}
-          onUpdate={updateMembershipHandler}
-          item={row}
-          type="date"
         />
       ),
     },
     {
       id: "delete",
       header: "Action",
-      cell: (row: Membership) => (
-        <button onClick={() => deleteMembership(row._id)}>
+      cell: (row: MenuCategory) => (
+        <button onClick={() => deleteCategory(row._id)}>
           <TrashIcon className="text-red-500 w-6 h-6" />
         </button>
       ),
@@ -99,14 +72,14 @@ export default function Memberships({
           <div className="mb-5 rounded-tl-lg rounded-tr-lg">
             <div className="flex items-center justify-between mb-4">
               <p className="text-base lg:text-2xl font-bold leading-normal text-gray-800">
-                Memberships
+                Menu Categories
               </p>
             </div>
           </div>
           <div className="h-full w-full">
             <div className="flex justify-end gap-x-4">
               <button
-                onClick={() => setIsCreateMembershipDialogOpen(true)}
+                onClick={() => setIsCreateCategoryDialogOpen(true)}
                 className="my-3 bg-white rounded border border-gray-800 text-gray-800 px-6 py-2 text-sm"
               >
                 Add
@@ -124,15 +97,15 @@ export default function Memberships({
                   </tr>
                 </thead>
                 <tbody className="w-full">
-                  {memberships?.map((membership) => (
+                  {categories?.map((category) => (
                     <tr
-                      key={membership._id}
+                      key={category._id}
                       className="h-10 text-sm leading-none text-gray-700 border-b border-t border-gray-200 bg-white hover:bg-gray-100"
                     >
                       {columns.map((column) => {
                         return (
                           <td key={column.id} className="">
-                            {column.cell(membership)}
+                            {column.cell(category)}
                           </td>
                         );
                       })}
@@ -144,11 +117,11 @@ export default function Memberships({
           </div>
         </div>
       </div>
-      {isCreateMembershipDialogOpen && (
-        <CreateMembershipDialog
-          isOpen={isCreateMembershipDialogOpen}
-          close={() => setIsCreateMembershipDialogOpen(false)}
-          createMembership={createMembership}
+      {isCreateCategoryDialogOpen && (
+        <AddMenuCategoryDialog
+          isOpen={isCreateCategoryDialogOpen}
+          close={() => setIsCreateCategoryDialogOpen(false)}
+          createCategory={createCategory}
         />
       )}
     </>

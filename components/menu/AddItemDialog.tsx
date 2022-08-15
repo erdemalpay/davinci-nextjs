@@ -2,30 +2,41 @@ import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
 import { useForm } from "../../hooks/useForm";
 import { toast } from "react-toastify";
-import { Input } from "@material-tailwind/react";
-import { addMonths, format, subDays } from "date-fns";
+import { Input, Select } from "@material-tailwind/react";
 import { UseMutateFunction } from "react-query";
-import { Membership } from "../../types/index";
+import { MenuItem, MenuCategory } from "../../types/index";
+import { Autocomplete } from "../common/Autocomplete";
+import { useCategories } from "../../utils/api/category";
 
-export function CreateMembershipDialog({
+export function AddMenuItemDialog({
   isOpen,
   close,
-  createMembership,
+  createItem,
 }: {
   isOpen: boolean;
   close: () => void;
-  createMembership: UseMutateFunction<Membership, unknown, Partial<Membership>>;
+  createItem: UseMutateFunction<MenuItem, unknown, Partial<MenuItem>>;
 }) {
-  const { data, handleUpdate } = useForm({
+  const { data, setData, handleUpdate } = useForm<Partial<MenuItem>>({
     name: "",
-    startDate: format(new Date(), "yyyy-MM-dd"),
-    endDate: format(subDays(addMonths(new Date(), 1), 1), "yyyy-MM-dd"),
+    category: undefined,
+    priceBahceli: 0,
+    priceNeorama: 0,
   });
 
+  const { categories } = useCategories();
+
   async function handleCreate() {
-    createMembership(data);
-    toast.success(`New membership created for ${data.name}`);
+    createItem(data);
+    toast.success(`New category created for ${data.name}`);
     close();
+  }
+
+  function handleCategorySelection(item?: MenuCategory) {
+    console.log({ item });
+    if (item) {
+      setData({ ...data, category: item });
+    }
   }
 
   return (
@@ -52,7 +63,7 @@ export function CreateMembershipDialog({
             <div className="flex items-center justify-center h-full w-full">
               <div className="bg-white rounded-md shadow fixed overflow-y-auto sm:h-auto w-10/12 md:w-8/12 lg:w-1/2 2xl:w-2/5">
                 <div className="bg-gray-100 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
-                  <p className="text-base font-semibold">Create Membership</p>
+                  <p className="text-base font-semibold">Create Category</p>
                   <button onClick={close} className="focus:outline-none">
                     <XIcon className="h-6 w-6" />
                   </button>
@@ -66,24 +77,43 @@ export function CreateMembershipDialog({
                     value={data.name}
                     onChange={handleUpdate}
                   />
-                  <div className="flex flex-col lg:flex-row gap-2 mt-4">
-                    <Input
-                      variant="standard"
-                      name="startDate"
-                      label="Start Date"
-                      type="date"
-                      defaultValue={data.startDate}
-                      onChange={handleUpdate}
-                    />
-                    <Input
-                      variant="standard"
-                      name="endDate"
-                      label="End Date"
-                      type="date"
-                      defaultValue={data.endDate}
-                      onChange={handleUpdate}
-                    />
-                  </div>
+                  <select
+                    name="category"
+                    onChange={(event) => {
+                      console.log({ target: event.target.value });
+                      handleCategorySelection(
+                        categories.find(
+                          (category) =>
+                            category._id ==
+                            (event.target.value as unknown as number)
+                        )
+                      );
+                    }}
+                    className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none"
+                    value={data.category as number}
+                  >
+                    {categories.map((category) => (
+                      <option key={category._id} value={category._id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                  <Input
+                    variant="standard"
+                    name="priceBahceli"
+                    label="Price in Bahçeli"
+                    type="number"
+                    value={data.priceBahceli}
+                    onChange={handleUpdate}
+                  />
+                  <Input
+                    variant="standard"
+                    name="priceNeorama"
+                    label="Price in Neorama"
+                    type="number"
+                    value={data.priceNeorama}
+                    onChange={handleUpdate}
+                  />
                   <div className="flex items-center justify-between my-4">
                     <button
                       onClick={close}
@@ -94,7 +124,12 @@ export function CreateMembershipDialog({
                     <button
                       className="px-6 py-3 bg-gray-800 hover:bg-opacity-80 shadow rounded text-sm text-white disabled:bg-gray-300"
                       onClick={handleCreate}
-                      disabled={!(data.name && data.startDate && data.endDate)}
+                      disabled={
+                        !data.name ||
+                        !data.category ||
+                        !data.priceBahceli ||
+                        !data.priceNeorama
+                      }
                     >
                       Create
                     </button>

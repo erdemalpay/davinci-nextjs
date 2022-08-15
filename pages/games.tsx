@@ -10,12 +10,11 @@ import { EditableText } from "../components/common/EditableText";
 import { CheckSwitch } from "../components/common/CheckSwitch";
 import { AddGameDialog } from "../components/games/AddGameDialog";
 import { TrashIcon } from "@heroicons/react/solid";
-import { generateApi, generateServerSideApi } from "../utils/api/factory";
-
-const query = { baseQuery: "/games" };
+import { generateServerSideApi } from "../utils/api/factory";
+import { useGames } from "../utils/api/game";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { getItems } = generateServerSideApi<Game>(query);
+  const { getItems } = generateServerSideApi<Game>("/games");
   const games = await getItems(context);
   games.sort((a, b) => {
     return a.name > b.name ? 1 : -1;
@@ -25,19 +24,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 };
 
 export default function Games({ games: initialGames }: { games: Game[] }) {
-  const {
-    useDeleteItemMutation,
-    useUpdateItemMutation,
-    useCreateItemMutation,
-    useGetItems,
-  } = generateApi<Game>(query);
-
-  const { mutate: deleteGame } = useDeleteItemMutation();
-  const { mutate: updateGame } = useUpdateItemMutation();
-  const { isLoading, error, items: games } = useGetItems(initialGames);
-  games?.sort((a, b) => {
-    return a.name > b.name ? 1 : -1;
-  });
+  const { games, updateGame, deleteGame, createGame } = useGames(initialGames);
 
   const [textFilter, setTextFilter] = useState("");
   const [filteredGames, setFilteredGames] = useState<Game[]>([]);
@@ -63,9 +50,6 @@ export default function Games({ games: initialGames }: { games: Game[] }) {
     );
     setTotalPages(Math.ceil(filteredGames.length / gamePerPage));
   }, [page, games, gamesCount, gamePerPage, textFilter]);
-
-  if (error) return <p>An error has occurred.</p>;
-  if (isLoading) return <p>Loading...</p>;
 
   const handleClick = (num: number) => {
     let newPage = num;
@@ -243,6 +227,7 @@ export default function Games({ games: initialGames }: { games: Game[] }) {
         <AddGameDialog
           isOpen={isAddGameDialogOpen}
           close={() => setIsAddGameDialogOpen(false)}
+          createGame={createGame}
         />
       )}
     </>

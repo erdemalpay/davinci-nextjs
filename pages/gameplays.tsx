@@ -15,8 +15,8 @@ import { Input } from "@material-tailwind/react";
 import { generateServerSideApi } from "../utils/api/factory";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { getItems: getGames } = generateServerSideApi({ baseQuery: "/games" });
-  const { getItems: getUsers } = generateServerSideApi({ baseQuery: "/users" });
+  const { getItems: getGames } = generateServerSideApi("/games");
+  const { getItems: getUsers } = generateServerSideApi("/users");
   const games = await getGames(context);
   const users = await getUsers(context);
   return { props: { games, users } };

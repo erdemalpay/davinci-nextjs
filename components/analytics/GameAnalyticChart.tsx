@@ -10,11 +10,11 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { useGetGameplayAnalytics } from "../../utils/api/gameplay";
-import { useGetGames } from "../../utils/api/game";
 import { DateFilter, getStartEndDates } from "../../utils/dateFilter";
 import { useQueryClient } from "react-query";
 import { colors } from "../../utils/color";
 import { InputWithLabel } from "../common/InputWithLabel";
+import { useGames } from "../../utils/api/game";
 
 export interface GameCount {
   name: string;
@@ -36,7 +36,7 @@ export function GameAnalyticChart() {
     location,
     endDate
   );
-  const { games } = useGetGames([]);
+  const { games } = useGames();
   const [gameData, setGameData] = useState<GameCount[]>([]);
 
   useEffect(() => {

@@ -9,7 +9,6 @@ import { Table, User, Game, Visit } from "../../types";
 import { TableCard } from "../../components/tables/TableCard";
 import { getUsers, useGetUsers } from "../../utils/api/user";
 import { ActiveVisitList } from "../../components/tables/ActiveVisitList";
-import { getGames, useGetGames } from "../../utils/api/game";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { sortTable } from "../../utils/sort";
 import { getVisits, useGetVisits } from "../../utils/api/visit";
@@ -18,6 +17,8 @@ import { PreviousVisitList } from "../../components/tables/PreviousVisitList";
 import { Switch } from "@headlessui/react";
 import { LocationContext } from "../../context/LocationContext";
 import { AddGameDialog } from "../../components/games/AddGameDialog";
+import { generateServerSideApi } from "../../utils/api/factory";
+import { useGames } from "../../utils/api/game";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);
@@ -35,8 +36,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   let initialVisits: Visit[] = [];
   let initialUsers: User[] = [];
   try {
+    const { getItems: getGames } = generateServerSideApi<Game>("/games");
+    initialGames = await getGames(context);
     initialTables = await getTables({ context });
-    initialGames = await getGames({ context });
     initialVisits = await getVisits({ context });
     initialUsers = await getUsers({ context });
   } catch (err) {
@@ -72,7 +74,7 @@ const TablesPage = ({
   const { setSelectedLocationId } = useContext(LocationContext);
   setSelectedLocationId(location);
 
-  let { games } = useGetGames(initialGames);
+  let { games } = useGames(initialGames);
 
   games = games || initialGames;
 
