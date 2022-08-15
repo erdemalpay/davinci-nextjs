@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { LocationContext } from "../context/LocationContext";
+import { LocationContext } from "../../context/LocationContext";
 import { MenuIcon } from "@heroicons/react/outline";
 import {
   Menu,

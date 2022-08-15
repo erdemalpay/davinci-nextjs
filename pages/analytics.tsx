@@ -1,6 +1,6 @@
-import { GameAnalyticChart } from "../components/GameAnalyticChart";
-import { Header } from "../components/Header";
-import { MentorAnalyticChart } from "../components/MentorAnalyticChart";
+import { GameAnalyticChart } from "../components/analytics/GameAnalyticChart";
+import { Header } from "../components/header/Header";
+import { MentorAnalyticChart } from "../components/analytics/MentorAnalyticChart";
 
 export default function Analytics() {
   return (

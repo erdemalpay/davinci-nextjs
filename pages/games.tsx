@@ -8,13 +8,13 @@ import {
   useGetGames,
   useUpdateGameMutation,
 } from "../utils/api/game";
-import { Pagination } from "../components/Pagination";
+import { Pagination } from "../components/common/Pagination";
 import { Switch } from "@headlessui/react";
-import { Header } from "../components/Header";
+import { Header } from "../components/header/Header";
 import { toast } from "react-toastify";
-import { EditableText } from "../components/EditableText";
-import { CheckSwitch } from "../components/CheckSwitch";
-import { AddGameDialog } from "../components/AddGameDialog";
+import { EditableText } from "../components/common/EditableText";
+import { CheckSwitch } from "../components/common/CheckSwitch";
+import { AddGameDialog } from "../components/games/AddGameDialog";
 import { TrashIcon } from "@heroicons/react/solid";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {

@@ -1,14 +1,14 @@
 import { FormEvent, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { TrashIcon, XIcon } from "@heroicons/react/solid";
-import { Game, Gameplay, Table, User } from "../types";
+import { Game, Gameplay, Table, User } from "../../types";
 import {
   useDeleteGameplayMutation,
   useUpdateGameplayMutation,
-} from "../utils/api/gameplay";
-import { TimeInputWithLabel } from "./TimeInputWithLabel";
-import { Autocomplete } from "./Autocomplete";
-import { ConfirmationDialog } from "./ConfirmationDialog";
+} from "../../utils/api/gameplay";
+import { TimeInputWithLabel } from "../common/TimeInputWithLabel";
+import { Autocomplete } from "../common/Autocomplete";
+import { ConfirmationDialog } from "../common/ConfirmationDialog";
 import { toast } from "react-toastify";
 import { Input } from "@material-tailwind/react";
 

@@ -6,22 +6,22 @@ import {
 } from "@heroicons/react/solid";
 import { FormEvent, useState } from "react";
 import { Tooltip } from "@material-tailwind/react";
-import { Gameplay, Table, User, Game } from "../types";
+import { Gameplay, Table, User, Game } from "../../types";
 import { CreateGameplayDialog } from "./CreateGameplayDialog";
-import { InputWithLabel } from "./InputWithLabel";
-import { CardAction } from "./CardAction";
+import { InputWithLabel } from "../common/InputWithLabel";
+import { CardAction } from "../common/CardAction";
 import { format } from "date-fns";
-import { getDuration } from "../utils/time";
+import { getDuration } from "../../utils/time";
 import {
   useCloseTableMutation,
   useDeleteTableMutation,
   useReopenTableMutation,
   useUpdateTableMutation,
-} from "../utils/api/table";
+} from "../../utils/api/table";
 import { EditGameplayDialog } from "./EditGameplayDialog";
-import { ConfirmationDialog } from "./ConfirmationDialog";
+import { ConfirmationDialog } from "../common/ConfirmationDialog";
 import { toast } from "react-toastify";
-import { EditableText } from "./EditableText";
+import { EditableText } from "../common/EditableText";
 
 export interface TableCardProps {
   table: Table;

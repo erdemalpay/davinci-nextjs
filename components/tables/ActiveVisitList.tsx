@@ -1,13 +1,13 @@
 import { useState, useEffect, useContext } from "react";
-import { Autocomplete } from "./Autocomplete";
-import { InputWithLabelProps } from "./InputWithLabel";
+import { Autocomplete } from "../common/Autocomplete";
+import { InputWithLabelProps } from "../common/InputWithLabel";
 import { Chip } from "@material-tailwind/react";
 import {
   useCreateVisitMutation,
   useFinishVisitMutation,
-} from "../utils/api/visit";
-import { User, Visit } from "../types";
-import { LocationContext } from "../context/LocationContext";
+} from "../../utils/api/visit";
+import { User, Visit } from "../../types";
+import { LocationContext } from "../../context/LocationContext";
 
 interface ActiveMentorListProps extends InputWithLabelProps {
   suggestions: User[];

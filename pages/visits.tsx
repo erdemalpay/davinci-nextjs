@@ -7,7 +7,7 @@ import {
   MonthlyNav,
 } from "../components/calendar/MonthlyCalendar";
 import { VisitEventItem } from "../components/calendar/MonthlyEventItems";
-import { Header } from "../components/Header";
+import { Header } from "../components/header/Header";
 import { Visit } from "../types";
 import { useGetMonthlyVisits, useGetVisits } from "../utils/api/visit";
 

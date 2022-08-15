@@ -1,23 +1,23 @@
 import { useContext, useState, useEffect } from "react";
-import { DateInput } from "../../components/DateInput";
-import { Header } from "../../components/Header";
-import { InputWithLabel } from "../../components/InputWithLabel";
-import { CreateTableDialog } from "../../components/CreateTableDialog";
+import { DateInput } from "../../components/common/DateInput";
+import { Header } from "../../components/header/Header";
+import { InputWithLabel } from "../../components/common/InputWithLabel";
+import { CreateTableDialog } from "../../components/tables/CreateTableDialog";
 import { GetServerSideProps } from "next";
 import { getTables, useGetTables } from "../../utils/api/table";
 import { Table, User, Game, Visit } from "../../types";
-import { TableCard } from "../../components/TableCard";
+import { TableCard } from "../../components/tables/TableCard";
 import { getUsers, useGetUsers } from "../../utils/api/user";
-import { ActiveVisitList } from "../../components/ActiveVisitList";
+import { ActiveVisitList } from "../../components/tables/ActiveVisitList";
 import { getGames, useGetGames } from "../../utils/api/game";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { sortTable } from "../../utils/sort";
 import { getVisits, useGetVisits } from "../../utils/api/visit";
 import { isToday } from "date-fns";
-import { PreviousVisitList } from "../../components/PreviousVisitList";
+import { PreviousVisitList } from "../../components/tables/PreviousVisitList";
 import { Switch } from "@headlessui/react";
 import { LocationContext } from "../../context/LocationContext";
-import { AddGameDialog } from "../../components/AddGameDialog";
+import { AddGameDialog } from "../../components/games/AddGameDialog";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const location = Number(context.params?.location);

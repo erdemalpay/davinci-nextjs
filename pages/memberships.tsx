@@ -1,7 +1,7 @@
 import { GetServerSideProps } from "next";
 import { Membership } from "../types";
 import { FormEvent, useEffect, useState } from "react";
-import { Header } from "../components/Header";
+import { Header } from "../components/header/Header";
 import { Input } from "@material-tailwind/react";
 import {
   getMemberships,
@@ -9,10 +9,10 @@ import {
   useGetMemberships,
   useUpdateMembershipMutation,
 } from "../utils/api/membership";
-import { CreateMembershipDialog } from "../components/CreateMembershipDialog";
+import { CreateMembershipDialog } from "../components/memberships/CreateMembershipDialog";
 import { TrashIcon } from "@heroicons/react/outline";
 import { toast } from "react-toastify";
-import { EditableText } from "../components/EditableText";
+import { EditableText } from "../components/common/EditableText";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const initialMemberships = await getMemberships({ context });

@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import { AnnotationIcon } from "@heroicons/react/solid";
 import { LogoutIcon } from "@heroicons/react/outline";
 import { Tooltip } from "@material-tailwind/react";
-import { useLocation } from "../hooks/useLocation";
+import { useLocation } from "../../hooks/useLocation";
 import { PageSelector } from "./PageSelector";
 
 interface HeaderProps {

@@ -1,5 +1,5 @@
 import { XIcon } from "@heroicons/react/solid";
-import { TagType } from "../types";
+import { TagType } from "../../types";
 
 export interface ChipProps<T> {
   item: T;

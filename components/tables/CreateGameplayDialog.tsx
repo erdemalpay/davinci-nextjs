@@ -1,9 +1,9 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/solid";
-import { Table, Gameplay, User, Game } from "../types";
-import { useForm } from "../hooks/useForm";
-import { useCreateGameplayMutation } from "../utils/api/gameplay";
-import { Autocomplete } from "./Autocomplete";
+import { Table, Gameplay, User, Game } from "../../types";
+import { useForm } from "../../hooks/useForm";
+import { useCreateGameplayMutation } from "../../utils/api/gameplay";
+import { Autocomplete } from "../common/Autocomplete";
 import { toast } from "react-toastify";
 import { Input } from "@material-tailwind/react";
 

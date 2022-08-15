@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { LocationContext } from "../context/LocationContext";
+import { LocationContext } from "../../context/LocationContext";
 import {
   Menu,
   MenuHandler,
@@ -7,7 +7,7 @@ import {
   MenuItem,
 } from "@material-tailwind/react";
 import { useRouter } from "next/router";
-import { useGetLocations } from "../utils/api/location";
+import { useGetLocations } from "../../utils/api/location";
 
 export function LocationSelector() {
   const { selectedLocationId } = useContext(LocationContext);

@@ -9,19 +9,19 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useGetGameplayAnalytics } from "../utils/api/gameplay";
-import { DateFilter, getStartEndDates } from "../utils/dateFilter";
+import { useGetGameplayAnalytics } from "../../utils/api/gameplay";
+import { useGetGames } from "../../utils/api/game";
+import { DateFilter, getStartEndDates } from "../../utils/dateFilter";
 import { useQueryClient } from "react-query";
-import { colors } from "../utils/color";
-import { InputWithLabel } from "./InputWithLabel";
-import { useGetUsers } from "../utils/api/user";
+import { colors } from "../../utils/color";
+import { InputWithLabel } from "../common/InputWithLabel";
 
 export interface GameCount {
   name: string;
   count: number;
 }
 
-export function MentorAnalyticChart() {
+export function GameAnalyticChart() {
   const queryClient = useQueryClient();
   const [dateFilter, setDateFilter] = useState(DateFilter.LAST_MONTH);
   const [startDate, setStartDate] = useState<string>("");
@@ -30,27 +30,27 @@ export function MentorAnalyticChart() {
   const [itemLimit, setItemLimit] = useState(5);
 
   const { data: gameAnalytics } = useGetGameplayAnalytics(
-    "mentor",
+    "game",
     itemLimit,
     startDate,
     location,
     endDate
   );
-  const { users } = useGetUsers([]);
-  const [mentorData, setMentorData] = useState<GameCount[]>([]);
+  const { games } = useGetGames([]);
+  const [gameData, setGameData] = useState<GameCount[]>([]);
 
   useEffect(() => {
     if (!gameAnalytics) return;
-    if (!users?.length) return;
+    if (!games?.length) return;
     const data = gameAnalytics.map((gameplayAnalytic) => {
-      const game = users.find((user) => user._id === gameplayAnalytic._id);
+      const game = games.find((game) => game._id === gameplayAnalytic._id);
       return {
         name: game ? game.name : gameplayAnalytic._id,
         count: gameplayAnalytic.playCount,
       } as GameCount;
     });
-    setMentorData(data);
-  }, [gameAnalytics, users]);
+    setGameData(data);
+  }, [gameAnalytics, games]);
 
   useEffect(() => {
     if (dateFilter === DateFilter.MANUAL) return;
@@ -65,7 +65,7 @@ export function MentorAnalyticChart() {
 
   return (
     <div className="p-4 pb-[200px] w-auto lg:w-1/2 border-2 h-[140%]">
-      <h1 className="text-xl mb-4">Gameplay By Game Mentors</h1>
+      <h1 className="text-xl mb-4">Gameplay By Games</h1>
       <div className="flex flex-col w-1/2 mb-4">
         <label className="flex items-center text-xs">Date Filter:</label>
         <select
@@ -109,7 +109,7 @@ export function MentorAnalyticChart() {
           <select
             onChange={(value) => setLocation(value.target.value)}
             className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm"
-            defaultValue="Canada"
+            value={location}
           >
             <option value="1,2">All</option>
             <option value="1">Bahçeli</option>
@@ -121,7 +121,7 @@ export function MentorAnalyticChart() {
           <select
             onChange={(value) => setItemLimit(Number(value.target.value))}
             className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm "
-            value={itemLimit}
+            defaultValue="Canada"
           >
             <option>5</option>
             <option>10</option>
@@ -129,10 +129,10 @@ export function MentorAnalyticChart() {
           </select>
         </div>
       </div>
-      {mentorData?.length ? (
+      {gameData?.length ? (
         <ResponsiveContainer className={"w-[600px] h-[400px]"}>
           <BarChart
-            data={mentorData}
+            data={gameData}
             margin={{
               top: 50,
               right: 30,
@@ -145,7 +145,7 @@ export function MentorAnalyticChart() {
             <YAxis />
             <Tooltip />
             <Bar dataKey="count" fill="#8884d8" label={{ position: "top" }}>
-              {mentorData.map((entry, index) => (
+              {gameData.map((entry, index) => (
                 <Cell key={`cell-${index}`} fill={colors[index % 10]} />
               ))}
             </Bar>

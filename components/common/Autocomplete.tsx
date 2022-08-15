@@ -2,7 +2,7 @@ import { InputWithLabel, InputWithLabelProps } from "./InputWithLabel";
 import { forwardRef, Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
-import { TagType } from "../types";
+import { TagType } from "../../types";
 import { Input } from "@material-tailwind/react";
 
 interface AutocompleteProps<T> extends InputWithLabelProps {

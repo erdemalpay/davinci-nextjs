@@ -10,8 +10,8 @@ import { Game, User } from "../types";
 import { getGames } from "../utils/api/game";
 import { GameplayFilter, useGetGameplays } from "../utils/api/gameplay";
 import { useEffect, useState } from "react";
-import { Header } from "../components/Header";
-import { Autocomplete } from "../components/Autocomplete";
+import { Header } from "../components/header/Header";
+import { Autocomplete } from "../components/common/Autocomplete";
 import { getUsers } from "../utils/api/user";
 import { Input } from "@material-tailwind/react";
 

@@ -1,6 +1,6 @@
-import { InputWithLabelProps } from "./InputWithLabel";
+import { InputWithLabelProps } from "../common/InputWithLabel";
 import { Chip } from "@material-tailwind/react";
-import { Visit } from "../types";
+import { Visit } from "../../types";
 
 interface PreviousVisitListProps {
   visits: Visit[];
