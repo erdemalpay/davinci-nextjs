@@ -217,9 +217,9 @@ export default function Games({ games: initialGames }: { games: Game[] }) {
                         onChange={() => handleLocationUpdate(game, 2)}
                       ></CheckSwitch>
                     ) : game.locations?.includes(2) ? (
-                      <div className="text-blue-500">Yes</div>
+                      <div className="text-blue-500 py-3">Yes</div>
                     ) : (
-                      <h2 className="text-red-500">No</h2>
+                      <h2 className="text-red-500 py-3">No</h2>
                     )}
                   </td>
                   <td className={`py-2 px-2 lg:px-6 ${!editMode && "hidden"}`}>

@@ -7,15 +7,18 @@ import { UseMutateFunction } from "react-query";
 import { MenuItem, MenuCategory } from "../../types/index";
 import { Autocomplete } from "../common/Autocomplete";
 import { useCategories } from "../../utils/api/category";
+import { InputWithLabel } from "../common/InputWithLabel";
 
 export function AddMenuItemDialog({
   isOpen,
   close,
   createItem,
+  category,
 }: {
   isOpen: boolean;
   close: () => void;
   createItem: UseMutateFunction<MenuItem, unknown, Partial<MenuItem>>;
+  category?: MenuCategory;
 }) {
   const { data, setData, handleUpdate } = useForm<Partial<MenuItem>>({
     name: "",
@@ -23,8 +26,6 @@ export function AddMenuItemDialog({
     priceBahceli: 0,
     priceNeorama: 0,
   });
-
-  const { categories } = useCategories();
 
   async function handleCreate() {
     createItem(data);
@@ -77,27 +78,12 @@ export function AddMenuItemDialog({
                     value={data.name}
                     onChange={handleUpdate}
                   />
-                  <select
+                  <InputWithLabel
                     name="category"
-                    onChange={(event) => {
-                      console.log({ target: event.target.value });
-                      handleCategorySelection(
-                        categories.find(
-                          (category) =>
-                            category._id ==
-                            (event.target.value as unknown as number)
-                        )
-                      );
-                    }}
-                    className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none"
-                    value={data.category as number}
-                  >
-                    {categories.map((category) => (
-                      <option key={category._id} value={category._id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
+                    label="Category"
+                    value={category?.name || ""}
+                    readOnly
+                  />
                   <Input
                     variant="standard"
                     name="priceBahceli"

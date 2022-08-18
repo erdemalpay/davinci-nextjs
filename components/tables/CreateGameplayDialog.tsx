@@ -86,6 +86,7 @@ export function CreateGameplayDialog({
                     name="playerCount"
                     label="Player Count"
                     type="number"
+                    min={0}
                     value={data.playerCount}
                     onChange={handleUpdate}
                   />

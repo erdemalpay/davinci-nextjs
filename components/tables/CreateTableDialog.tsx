@@ -77,6 +77,7 @@ export function CreateTableDialog({
                       variant="standard"
                       label="Player Count"
                       type="number"
+                      min={0}
                       value={data.playerCount}
                       onChange={handleUpdate}
                     />

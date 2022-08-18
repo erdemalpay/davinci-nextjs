@@ -29,14 +29,10 @@ export function PageSelector() {
       name: "Memberships",
       path: "/memberships",
     },
-    /* {
-      name: "Menu Categories",
-      path: "/menu-categories",
-    },
     {
-      name: "Menu Items",
-      path: "/menu-items",
-    }, */
+      name: "Menu",
+      path: "/menu",
+    },
     {
       name: "Analytics",
       path: "/analytics",

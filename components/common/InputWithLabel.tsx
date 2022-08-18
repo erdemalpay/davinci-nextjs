@@ -1,5 +1,3 @@
-import { format } from "date-fns";
-
 export type InputType = "date" | "autocomplete" | "text" | "number" | "time";
 
 export interface InputWithLabelProps {
@@ -21,7 +19,7 @@ export function InputWithLabel({
   type = "text",
   id = label.toLowerCase(),
   onChange,
-  min = 1,
+  min = 0,
   bgColor = "bg-white",
   ...props
 }: InputWithLabelProps) {
@@ -32,13 +30,13 @@ export function InputWithLabel({
         min={min}
         {...props}
         type={type}
-        className={`${bgColor} w-full text-gray-600 border-0 border-b-[1px] dark:text-gray-400 focus:outline-none dark:border-gray-700 dark:bg-gray-800 font-normal h-10 text-base border-gray-300`}
+        className={`${bgColor} w-full text-gray-600 border-0 border-b-[1px] focus:outline-none font-normal h-10 text-base border-gray-300`}
         placeholder=""
         onChange={onChange}
       />
       <label
         htmlFor={id}
-        className="text-gray-800 dark:text-gray-100 text-xs absolute left-0 -top-2.5"
+        className="text-gray-800 text-xs absolute left-0 -top-2.5"
       >
         {label}
       </label>
