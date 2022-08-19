@@ -219,7 +219,7 @@ export default function MenuCategories({
                 onClick={() => setIsCreateCategoryDialogOpen(true)}
                 className="my-3 bg-white rounded border border-gray-800 text-gray-800 px-6 py-2 text-sm"
               >
-                Add
+                Add Category
               </button>
             </div>
             <div className="w-full overflow-x-auto">

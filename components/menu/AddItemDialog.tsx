@@ -5,8 +5,6 @@ import { toast } from "react-toastify";
 import { Input, Select } from "@material-tailwind/react";
 import { UseMutateFunction } from "react-query";
 import { MenuItem, MenuCategory } from "../../types/index";
-import { Autocomplete } from "../common/Autocomplete";
-import { useCategories } from "../../utils/api/category";
 import { InputWithLabel } from "../common/InputWithLabel";
 
 export function AddMenuItemDialog({
@@ -20,9 +18,9 @@ export function AddMenuItemDialog({
   createItem: UseMutateFunction<MenuItem, unknown, Partial<MenuItem>>;
   category?: MenuCategory;
 }) {
-  const { data, setData, handleUpdate } = useForm<Partial<MenuItem>>({
+  const { data, handleUpdate } = useForm<Partial<MenuItem>>({
     name: "",
-    category: undefined,
+    category,
     priceBahceli: 0,
     priceNeorama: 0,
   });
@@ -31,13 +29,6 @@ export function AddMenuItemDialog({
     createItem(data);
     toast.success(`New category created for ${data.name}`);
     close();
-  }
-
-  function handleCategorySelection(item?: MenuCategory) {
-    console.log({ item });
-    if (item) {
-      setData({ ...data, category: item });
-    }
   }
 
   return (
@@ -64,7 +55,7 @@ export function AddMenuItemDialog({
             <div className="flex items-center justify-center h-full w-full">
               <div className="bg-white rounded-md shadow fixed overflow-y-auto sm:h-auto w-10/12 md:w-8/12 lg:w-1/2 2xl:w-2/5">
                 <div className="bg-gray-100 rounded-tl-md rounded-tr-md px-4 md:px-8 md:py-4 py-7 flex items-center justify-between">
-                  <p className="text-base font-semibold">Create Category</p>
+                  <p className="text-base font-semibold">Create Item</p>
                   <button onClick={close} className="focus:outline-none">
                     <XIcon className="h-6 w-6" />
                   </button>
