@@ -208,9 +208,9 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
                       <></>
                     )}
                   </Tooltip>
-                  <h5 className="text-xs">
+                  <h5 className="text-xs whitespace-nowrap">
                     {getDuration(
-                      new Date(gameplay.date),
+                      gameplay.date,
                       gameplay.startHour,
                       gameplay.finishHour
                     )}

@@ -1,38 +1,22 @@
-import { isToday } from "date-fns";
+import { isToday, intervalToDuration } from "date-fns";
 export function getDuration(
-  date: Date,
+  dateString: string,
   startTime: string,
   finishTime?: string
 ) {
-  const start = new Date();
-  const finish = new Date();
-  if (date.toDateString() !== new Date().toDateString()) {
-    start.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-    finish.setFullYear(date.getFullYear(), date.getMonth(), date.getDate());
-  }
+  const start = new Date(`${dateString} ${startTime}`);
+  let end = new Date(`${dateString} ${finishTime}`);
 
-  const [startHour, startMinute] = startTime.split(":");
-  start.setHours(Number(startHour), Number(startMinute), 0, 0);
-  if (finishTime) {
-    const [finishHour, finishMinute] = finishTime.split(":");
-    finish.setHours(Number(finishHour), Number(finishMinute), 0, 0);
-  } else {
-    if (!isToday(date)) {
-      finish.setHours(24, 0, 0, 0);
+  if (!finishTime) {
+    if (isToday(new Date(dateString))) {
+      end = new Date();
+    } else {
+      end = new Date(`${dateString} 23:59`);
     }
   }
-  let duration = finish.getTime() - start.getTime();
-  if (duration < 0) {
-    duration += 24 * 60 * 60 * 1000;
-  }
-  const durationMinute = Math.floor(duration / (60 * 1000));
-  const hours = Math.floor(durationMinute / 60);
-  let minutes = `${durationMinute % 60}`;
+  const { hours, minutes } = intervalToDuration({ start, end });
 
-  if (minutes.length === 1) {
-    minutes = `0${minutes}`;
-  }
-  return `${hours}:${minutes}`;
+  return `${hours ? hours + "h " : ""}${minutes}m`;
 }
 
 export function getTimeString(date: Date) {
