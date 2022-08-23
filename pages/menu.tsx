@@ -32,6 +32,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 interface ItemGroup {
   category: string;
+  order: number;
   items: MenuItem[];
 }
 
@@ -69,11 +70,13 @@ export default function MenuCategories({
       } else {
         const newGroup = {
           category: category.name,
+          order: category.order,
           items: [item],
         };
         itemGroups.push(newGroup);
       }
     });
+    itemGroups.sort((a, b) => (a.order > b.order ? 1 : -1));
     setItemGroups(itemGroups);
   }, [items]);
 
