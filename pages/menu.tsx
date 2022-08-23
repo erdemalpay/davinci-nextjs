@@ -1,6 +1,6 @@
 import { GetServerSideProps } from "next";
 import { MenuCategory, MenuItem } from "../types";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { Header } from "../components/header/Header";
 import { TrashIcon } from "@heroicons/react/outline";
 import { toast } from "react-toastify";
@@ -13,7 +13,12 @@ import { AddMenuItemDialog } from "../components/menu/AddItemDialog";
 import { CheckSwitch } from "../components/common/CheckSwitch";
 import { EditModeText } from "../components/common/EditModeText";
 import { get } from "lodash";
-import { PlusIcon } from "@heroicons/react/solid";
+import {
+  PlusIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
+} from "@heroicons/react/solid";
+import { Tooltip } from "@material-tailwind/react";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { getItems: getCategories } =
@@ -24,6 +29,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const initialItems = await getItems(context);
   return { props: { initialCategories, initialItems } };
 };
+
+interface ItemGroup {
+  category: string;
+  items: MenuItem[];
+}
 
 export default function MenuCategories({
   initialCategories,
@@ -44,6 +54,29 @@ export default function MenuCategories({
 
   const [isCreateCategoryDialogOpen, setIsCreateCategoryDialogOpen] =
     useState(false);
+
+  const [itemGroups, setItemGroups] = useState<ItemGroup[]>([]);
+
+  useEffect(() => {
+    const itemGroups: ItemGroup[] = [];
+    items.forEach((item) => {
+      const category = item.category as MenuCategory;
+      const existingGroup = itemGroups.find(
+        (itemGroup) => itemGroup.category === category.name
+      );
+      if (existingGroup) {
+        existingGroup.items.push(item);
+      } else {
+        const newGroup = {
+          category: category.name,
+          items: [item],
+        };
+        itemGroups.push(newGroup);
+      }
+    });
+    setItemGroups(itemGroups);
+  }, [items]);
+
   function updateCategoryHandler(
     event: FormEvent<HTMLInputElement>,
     item?: MenuCategory
@@ -58,6 +91,22 @@ export default function MenuCategories({
     toast.success(`Category ${item.name} updated`);
   }
 
+  function updateCategoryOrder(category: MenuCategory, up: boolean) {
+    const newOrder = up ? category.order - 1 : category.order + 1;
+    const otherItem = categories.find((c) => c.order === newOrder);
+    updateCategory({
+      id: category._id,
+      updates: { order: newOrder },
+    });
+    if (otherItem) {
+      updateCategory({
+        id: otherItem._id,
+        updates: { order: category.order },
+      });
+    }
+    toast.success("Category order updated");
+  }
+
   function updateHandler(event: FormEvent<HTMLInputElement>, item?: MenuItem) {
     if (!item) return;
     const target = event.target as HTMLInputElement;
@@ -70,15 +119,6 @@ export default function MenuCategories({
     updateItem({
       id: item._id,
       updates: { [target.name]: target.value },
-    });
-    toast.success(`Item ${item.name} updated`);
-  }
-
-  function updateItemCategory(category: number, item: MenuItem) {
-    if (!item) return;
-    updateItem({
-      id: item._id,
-      updates: { category },
     });
     toast.success(`Item ${item.name} updated`);
   }
@@ -110,19 +150,39 @@ export default function MenuCategories({
     {
       id: "delete",
       header: "Action",
-      cell: (row: MenuCategory) => (
+      cell: (row: MenuCategory, index: number, length: number) => (
         <div className="flex gap-4">
-          <button
-            onClick={() => {
-              setSelectedCategory(row);
-              setIsCreateItemDialogOpen(true);
-            }}
-          >
-            <PlusIcon className="text-blue-500 w-6 h-6" />
-          </button>
-          <button onClick={() => checkDeleteCategory(row)}>
-            <TrashIcon className="text-red-500 w-6 h-6" />
-          </button>
+          <Tooltip content="Add item to this category">
+            <button
+              onClick={() => {
+                setSelectedCategory(row);
+                setIsCreateItemDialogOpen(true);
+              }}
+            >
+              <PlusIcon className="text-green-500 w-6 h-6" />
+            </button>
+          </Tooltip>
+          <Tooltip content="Move up">
+            <button
+              onClick={() => updateCategoryOrder(row, true)}
+              className={`${index === 0 ? "invisible" : "visible"}`}
+            >
+              <ChevronUpIcon className="text-blue-500 w-6 h-6" />
+            </button>
+          </Tooltip>
+          <Tooltip content="Move down">
+            <button
+              onClick={() => updateCategoryOrder(row, false)}
+              className={`${index === length - 1 ? "invisible" : "visible"}`}
+            >
+              <ChevronDownIcon className="text-blue-500 w-6 h-6" />
+            </button>
+          </Tooltip>
+          <Tooltip content="Delete category">
+            <button onClick={() => checkDeleteCategory(row)}>
+              <TrashIcon className="text-red-500 w-6 h-6" />
+            </button>
+          </Tooltip>
         </div>
       ),
     },
@@ -139,26 +199,6 @@ export default function MenuCategories({
           onUpdate={updateHandler}
           item={row}
         />
-      ),
-    },
-    {
-      id: "category",
-      header: "Category",
-      cell: (row: MenuItem) => (
-        <select
-          name="category"
-          onChange={(event) =>
-            updateItemCategory(event.target.value as unknown as number, row)
-          }
-          className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm"
-          value={(row.category as number) + ""}
-        >
-          {categories.map((category) => (
-            <option key={category._id} value={category._id}>
-              {category.name}
-            </option>
-          ))}
-        </select>
       ),
     },
     {
@@ -193,9 +233,11 @@ export default function MenuCategories({
       id: "delete",
       header: "Action",
       cell: (row: MenuItem) => (
-        <button onClick={() => deleteItem(row._id)}>
-          <TrashIcon className="text-red-500 w-6 h-6" />
-        </button>
+        <Tooltip content="Delete">
+          <button onClick={() => deleteItem(row._id)}>
+            <TrashIcon className="text-red-500 w-6 h-6" />
+          </button>
+        </Tooltip>
       ),
     },
   ];
@@ -209,7 +251,7 @@ export default function MenuCategories({
           <div className="mb-5 rounded-tl-lg rounded-tr-lg">
             <div className="flex items-center justify-between mb-4">
               <p className="text-base lg:text-2xl font-bold leading-normal text-gray-800">
-                Menu Categories
+                Categories
               </p>
             </div>
           </div>
@@ -234,7 +276,7 @@ export default function MenuCategories({
                   </tr>
                 </thead>
                 <tbody className="w-full">
-                  {categories?.map((category) => (
+                  {categories?.map((category, index) => (
                     <tr
                       key={category._id}
                       className="h-10 text-sm leading-none text-gray-700 border-b border-t border-gray-200 bg-white hover:bg-gray-100"
@@ -242,7 +284,7 @@ export default function MenuCategories({
                       {categoryColumns.map((column) => {
                         return (
                           <td key={column.id} className="">
-                            {column.cell(category)}
+                            {column.cell(category, index, categories.length)}
                           </td>
                         );
                       })}
@@ -253,54 +295,62 @@ export default function MenuCategories({
             </div>
           </div>
         </div>
-        <div className="bg-white shadow w-full px-6 py-5 mt-4">
-          <div className="mb-5 rounded-tl-lg rounded-tr-lg">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-base lg:text-2xl font-bold leading-normal text-gray-800">
-                Menu Items
-              </p>
+        <div className="flex justify-end gap-x-4 items-center">
+          <h1 className="text-md">Edit Prices</h1>
+          <CheckSwitch
+            checked={editMode}
+            onChange={() => setEditMode((value) => !value)}
+            checkedBg="bg-red-500"
+          ></CheckSwitch>
+        </div>
+        {itemGroups.map((itemGroup) => (
+          <div
+            key={itemGroup.category}
+            className="bg-white shadow w-full px-6 py-5 mt-4"
+          >
+            <div className="mb-5 rounded-tl-lg rounded-tr-lg">
+              <div className="flex items-center justify-between mb-4">
+                <p className="text-base lg:text-2xl font-bold leading-normal text-gray-800">
+                  {itemGroup.category}
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="h-full w-full">
-            <div className="flex justify-end gap-x-4 items-center">
-              <h1 className="text-md">Edit Prices</h1>
-              <CheckSwitch
-                checked={editMode}
-                onChange={() => setEditMode((value) => !value)}
-                checkedBg="bg-red-500"
-              ></CheckSwitch>
-            </div>
-            <div className="w-full overflow-x-auto">
-              <table className="w-full whitespace-nowrap">
-                <thead>
-                  <tr className="h-10 w-full text-sm leading-none text-gray-600">
-                    {itemColumns.map((column) => (
-                      <th key={column.id} className="font-bold text-left">
-                        <div className="flex gap-x-2">{column.header}</div>
-                      </th>
+            <div className="h-full w-full">
+              <div className="w-full overflow-x-auto">
+                <table className="w-full whitespace-nowrap">
+                  <thead>
+                    <tr className="h-10 w-full text-sm leading-none text-gray-600">
+                      {itemColumns.map((column) => (
+                        <th
+                          key={column.id}
+                          className="font-bold text-left w-1/4"
+                        >
+                          <div className="flex gap-x-2">{column.header}</div>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="w-full">
+                    {itemGroup.items?.map((item) => (
+                      <tr
+                        key={item._id}
+                        className="h-10 text-sm leading-none text-gray-700 border-b border-t border-gray-200 bg-white hover:bg-gray-100"
+                      >
+                        {itemColumns.map((column) => {
+                          return (
+                            <td key={column.id} className="">
+                              {column.cell(item)}
+                            </td>
+                          );
+                        })}
+                      </tr>
                     ))}
-                  </tr>
-                </thead>
-                <tbody className="w-full">
-                  {items?.map((item) => (
-                    <tr
-                      key={item._id}
-                      className="h-10 text-sm leading-none text-gray-700 border-b border-t border-gray-200 bg-white hover:bg-gray-100"
-                    >
-                      {itemColumns.map((column) => {
-                        return (
-                          <td key={column.id} className="">
-                            {column.cell(item)}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
-        </div>
+        ))}
       </div>
       {isCreateCategoryDialogOpen && (
         <AddMenuCategoryDialog

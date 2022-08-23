@@ -1,3 +1,4 @@
+import { Tooltip } from "@material-tailwind/react";
 import { FormEvent, useState } from "react";
 
 interface Props<T> {
@@ -19,14 +20,16 @@ export function EditableText<T>({
   const [value, setValue] = useState(text);
 
   return !isEditActive ? (
-    <span
-      className="cursor-pointer"
-      onClick={() => {
-        setIsEditActive(true);
-      }}
-    >
-      {text}
-    </span>
+    <Tooltip content="Click to edit">
+      <span
+        className="cursor-pointer"
+        onClick={() => {
+          setIsEditActive(true);
+        }}
+      >
+        {text}
+      </span>
+    </Tooltip>
   ) : (
     <input
       name={name}

@@ -4,7 +4,6 @@ export function getDuration(
   startTime: string,
   finishTime?: string
 ) {
-  console.log({ dateString, startTime });
   const start = parseISO(`${dateString} ${startTime}`);
   let end = parseISO(`${dateString} ${finishTime}`);
 
@@ -15,7 +14,6 @@ export function getDuration(
       end = parseISO(`${dateString} 23:59`);
     }
   }
-  console.log({ start, end });
   const { hours, minutes } = intervalToDuration({ start, end });
 
   return `${hours ? hours + "h " : ""}${minutes}m`;

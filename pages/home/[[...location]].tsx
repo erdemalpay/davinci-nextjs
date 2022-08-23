@@ -16,7 +16,6 @@ import { isToday } from "date-fns";
 import { PreviousVisitList } from "../../components/tables/PreviousVisitList";
 import { Switch } from "@headlessui/react";
 import { LocationContext } from "../../context/LocationContext";
-import { AddGameDialog } from "../../components/games/AddGameDialog";
 import { generateServerSideApi } from "../../utils/api/factory";
 import { useGames } from "../../utils/api/game";
 

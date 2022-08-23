@@ -59,6 +59,7 @@ export type Membership = {
 export type MenuCategory = {
   _id: number;
   name: string;
+  order: number;
 };
 
 export type MenuItem = {
