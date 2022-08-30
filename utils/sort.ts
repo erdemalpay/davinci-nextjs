@@ -5,9 +5,13 @@ export function sortTable(a: Table, b: Table) {
     return 1;
   } else if (!a.finishHour && b.finishHour) {
     return -1;
-  } else if (a.startHour > b.startHour) {
+  } else if (isNaN(+a.name)) {
     return 1;
-  } else if (a.startHour < b.startHour) {
+  } else if (isNaN(+b.name)) {
+    return -1;
+  } else if (+a.name > +b.name) {
+    return 1;
+  } else if (+a.name < +b.name) {
     return -1;
   } else {
     return 0;

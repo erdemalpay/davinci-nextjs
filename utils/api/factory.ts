@@ -2,7 +2,7 @@ import { GetServerSidePropsContext } from "next";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { get, patch, post, remove, UpdatePayload } from ".";
 
-export function generateServerSideApi<T extends { _id: number }>(
+export function generateServerSideApi<T extends { _id: number | string }>(
   query: string
 ) {
   function getItems(context: GetServerSidePropsContext): Promise<T[]> {
@@ -19,15 +19,17 @@ export function generateServerSideApi<T extends { _id: number }>(
 interface Props<T> {
   baseQuery: string;
   initialItems?: T[];
+  fetchQuery?: string;
 }
 
-export function useGenerateApi<T extends { _id: number }>({
+export function useGenerateApi<T extends { _id: number | string }>({
   baseQuery,
   initialItems = [],
+  fetchQuery = baseQuery,
 }: Props<T>) {
   function getItems(): Promise<T[]> {
     return get<T[]>({
-      path: baseQuery,
+      path: fetchQuery,
     });
   }
 
@@ -53,7 +55,7 @@ export function useGenerateApi<T extends { _id: number }>({
 
   function useGetItems(initialItems: T[]) {
     const { isLoading, error, data, isFetching } = useQuery(
-      baseQuery,
+      fetchQuery,
       () => getItems(),
       {
         initialData: initialItems,
@@ -73,15 +75,15 @@ export function useGenerateApi<T extends { _id: number }>({
       // We are updating tables query data with new item
       onMutate: async (itemDetails) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-        await queryClient.cancelQueries(baseQuery);
+        await queryClient.cancelQueries(fetchQuery);
 
         // Snapshot the previous value
-        const previousItems = queryClient.getQueryData<T[]>(baseQuery);
+        const previousItems = queryClient.getQueryData<T[]>(fetchQuery);
 
         const updatedItems = [...(previousItems as T[]), itemDetails];
 
         // Optimistically update to the new value
-        queryClient.setQueryData(baseQuery, updatedItems);
+        queryClient.setQueryData(fetchQuery, updatedItems);
 
         // Return a context object with the snapshotted value
         return { previousItems };
@@ -93,12 +95,12 @@ export function useGenerateApi<T extends { _id: number }>({
         };
         if (previousItemContext?.previousItems) {
           const { previousItems } = previousItemContext;
-          queryClient.setQueryData<T[]>(baseQuery, previousItems);
+          queryClient.setQueryData<T[]>(fetchQuery, previousItems);
         }
       },
       // Always refetch after error or success:
       onSettled: () => {
-        queryClient.invalidateQueries(baseQuery);
+        queryClient.invalidateQueries(fetchQuery);
       },
     });
   }
@@ -109,15 +111,15 @@ export function useGenerateApi<T extends { _id: number }>({
       // We are updating tables query data with new item
       onMutate: async (id) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-        await queryClient.cancelQueries(baseQuery);
+        await queryClient.cancelQueries(fetchQuery);
 
         // Snapshot the previous value
-        const previousItems = queryClient.getQueryData<T[]>(baseQuery) || [];
+        const previousItems = queryClient.getQueryData<T[]>(fetchQuery) || [];
 
         const updatedItems = previousItems.filter((item) => item._id !== id);
 
         // Optimistically update to the new value
-        queryClient.setQueryData(baseQuery, updatedItems);
+        queryClient.setQueryData(fetchQuery, updatedItems);
 
         // Return a context object with the snapshotted value
         return { previousItems };
@@ -129,12 +131,12 @@ export function useGenerateApi<T extends { _id: number }>({
         };
         if (previousItemContext?.previousItems) {
           const { previousItems } = previousItemContext;
-          queryClient.setQueryData<T[]>(baseQuery, previousItems);
+          queryClient.setQueryData<T[]>(fetchQuery, previousItems);
         }
       },
       // Always refetch after error or success:
       onSettled: () => {
-        queryClient.invalidateQueries(baseQuery);
+        queryClient.invalidateQueries(fetchQuery);
       },
     });
   }
@@ -144,10 +146,10 @@ export function useGenerateApi<T extends { _id: number }>({
       // We are updating tables query data with new item
       onMutate: async ({ id, updates }: UpdatePayload<T>) => {
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-        await queryClient.cancelQueries(baseQuery);
+        await queryClient.cancelQueries(fetchQuery);
 
         // Snapshot the previous value
-        const previousItems = queryClient.getQueryData<T[]>(baseQuery) || [];
+        const previousItems = queryClient.getQueryData<T[]>(fetchQuery) || [];
 
         const updatedItems = [...previousItems];
 
@@ -158,7 +160,7 @@ export function useGenerateApi<T extends { _id: number }>({
         }
 
         // Optimistically update to the new value
-        queryClient.setQueryData(baseQuery, updatedItems);
+        queryClient.setQueryData(fetchQuery, updatedItems);
 
         // Return a context object with the snapshotted value
         return { previousItems };
@@ -170,12 +172,12 @@ export function useGenerateApi<T extends { _id: number }>({
         };
         if (previousItemContext?.previousItems) {
           const { previousItems } = previousItemContext;
-          queryClient.setQueryData<T[]>(baseQuery, previousItems);
+          queryClient.setQueryData<T[]>(fetchQuery, previousItems);
         }
       },
       // Always refetch after error or success:
       onSettled: () => {
-        queryClient.invalidateQueries(baseQuery);
+        queryClient.invalidateQueries(fetchQuery);
       },
     });
   }

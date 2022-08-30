@@ -7,7 +7,7 @@ import { GetServerSideProps } from "next";
 import { getTables, useGetTables } from "../../utils/api/table";
 import { Table, User, Game, Visit } from "../../types";
 import { TableCard } from "../../components/tables/TableCard";
-import { getUsers, useGetUsers } from "../../utils/api/user";
+import { getActiveUsers, useGetActiveUsers } from "../../utils/api/user";
 import { ActiveVisitList } from "../../components/tables/ActiveVisitList";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { sortTable } from "../../utils/sort";
@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     initialGames = await getGames(context);
     initialTables = await getTables({ context });
     initialVisits = await getVisits({ context });
-    initialUsers = await getUsers({ context });
+    initialUsers = await getActiveUsers({ context });
   } catch (err) {
     console.error(err);
   }
@@ -83,7 +83,7 @@ const TablesPage = ({
   let { tables } = useGetTables(initialTables);
   tables = tables || initialTables;
 
-  let { users } = useGetUsers(initialUsers);
+  let { users } = useGetActiveUsers(initialUsers);
   users = users || initialUsers;
 
   // Sort tables first active tables, then closed ones.

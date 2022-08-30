@@ -29,6 +29,7 @@ export type User = {
   _id: string;
   name: string;
   role: string;
+  active: boolean;
 };
 
 export type Game = {

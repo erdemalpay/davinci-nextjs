@@ -10,7 +10,7 @@ interface RequestWithPayload<P> extends BaseRequest {
 }
 
 export interface UpdatePayload<P> {
-  id: number;
+  id: number | string;
   updates: Partial<P>;
 }
 
