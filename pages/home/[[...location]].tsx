@@ -222,7 +222,7 @@ const TablesPage = ({
             />
           </Switch>
         </div>
-        <div className="h-full grid grid-cols-1 lg:grid-cols-4 mt-4 gap-x-8">
+        <div className="h-full hidden lg:grid grid-cols-4 mt-4 gap-x-8">
           {tableColumns.map((tables, idx) => (
             <div key={idx}>
               {tables.map((table) => (
@@ -234,6 +234,16 @@ const TablesPage = ({
                 />
               ))}
             </div>
+          ))}
+        </div>
+        <div className="h-full grid lg:hidden grid-cols-1 mt-4 gap-x-8">
+          {tables.map((table) => (
+            <TableCard
+              key={table._id || table.startHour}
+              table={table}
+              mentors={mentors}
+              games={games as Game[]}
+            />
           ))}
         </div>
       </div>
