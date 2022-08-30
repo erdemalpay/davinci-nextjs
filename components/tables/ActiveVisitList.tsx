@@ -8,6 +8,7 @@ import {
 } from "../../utils/api/visit";
 import { User, Visit } from "../../types";
 import { LocationContext } from "../../context/LocationContext";
+import { format } from "date-fns";
 
 interface ActiveMentorListProps extends InputWithLabelProps {
   suggestions: User[];
@@ -33,9 +34,13 @@ export function ActiveVisitList({
   }
 
   function handleSelection(item: User) {
+    const date = format(new Date(), "yyyy-MM-dd");
+    const startHour = format(new Date(), "HH:mm");
     createVisit({
       user: item,
       location: selectedLocationId,
+      date,
+      startHour,
     });
     // setItems([...items, item]);
   }
