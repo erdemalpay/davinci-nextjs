@@ -34,6 +34,10 @@ export function PageSelector() {
       path: "/users",
     },
     {
+      name: "Visits",
+      path: "/visits",
+    },
+    {
       name: "Menu",
       path: "/menu",
     },
