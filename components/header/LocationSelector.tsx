@@ -1,11 +1,6 @@
 import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
-import {
-  Menu,
-  MenuHandler,
-  MenuList,
-  MenuItem,
-} from "@material-tailwind/react";
+import { Menu } from "@material-tailwind/react";
 import { useRouter } from "next/router";
 import { useGetLocations } from "../../utils/api/location";
 
@@ -17,27 +12,17 @@ export function LocationSelector() {
   const selectedLocation = locations?.find(
     (location) => location._id === selectedLocationId
   );
-  return (
-    <Menu>
-      <MenuHandler>
-        <button className="text-sm border-2 rounded p-2 text-white">
-          {selectedLocation?.name}
-        </button>
-      </MenuHandler>
-      <MenuList>
-        {locations.map((location) => {
-          return (
-            <MenuItem
-              key={location.name}
-              onClick={() => {
-                router.push(`/home/${location._id}`);
-              }}
-            >
-              {location.name}
-            </MenuItem>
-          );
-        })}
-      </MenuList>
-    </Menu>
-  );
+  return locations.map((location) => (
+    <button
+      key={location._id}
+      onClick={() => {
+        router.push(`/home/${location._id}`);
+      }}
+      className={`text-sm ${
+        selectedLocation?._id === location._id ? "border-2" : "border-0"
+      } rounded p-2 text-white`}
+    >
+      {location.name}
+    </button>
+  ));
 }
