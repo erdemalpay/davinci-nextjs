@@ -34,6 +34,7 @@ export function ActiveVisitList({
   }
 
   function handleSelection(item: User) {
+    if (!item) return;
     const date = format(new Date(), "yyyy-MM-dd");
     const startHour = format(new Date(), "HH:mm");
     createVisit({
@@ -50,7 +51,7 @@ export function ActiveVisitList({
       suggestions.filter(
         (s) =>
           !visits
-            .map((visit) => !visit.finishHour && visit.user._id)
+            .map((visit) => !visit.finishHour && visit.user?._id)
             .includes(s._id) && s.name !== "-"
       )
     );
@@ -69,8 +70,8 @@ export function ActiveVisitList({
       <div className="flex flex-wrap gap-4 mt-2">
         {visits.map((visit) => (
           <Chip
-            key={visit.user._id}
-            value={visit.user.name}
+            key={visit.user?._id}
+            value={visit.user?.name}
             color="blue-grey"
             dismissible={{ onClose: () => handleChipClose(visit) }}
           />
