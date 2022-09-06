@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import { MenuCategory, MenuItem } from "../types";
 import { FormEvent, useEffect, useState } from "react";
 import { Header } from "../components/header/Header";
@@ -20,7 +20,7 @@ import {
 } from "@heroicons/react/solid";
 import { Tooltip } from "@material-tailwind/react";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const { getItems: getCategories } =
     generateServerSideApi<MenuCategory>("/menu/categories");
   const initialCategories = await getCategories();

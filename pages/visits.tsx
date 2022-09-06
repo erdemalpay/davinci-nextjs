@@ -9,7 +9,7 @@ import {
 import { VisitEventItem } from "../components/calendar/MonthlyEventItems";
 import { Header } from "../components/header/Header";
 import { Visit } from "../types";
-import { useGetMonthlyVisits, useGetVisits } from "../utils/api/visit";
+import { useGetMonthlyVisits } from "../utils/api/visit";
 
 export default function Analytics() {
   let [currentMonth, setCurrentMonth] = useState<Date>(

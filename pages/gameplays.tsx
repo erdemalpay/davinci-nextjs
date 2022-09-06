@@ -5,7 +5,7 @@ import {
   ArrowNarrowDownIcon,
 } from "@heroicons/react/outline";
 
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import { Game, User } from "../types";
 import { GameplayFilter, useGetGameplays } from "../utils/api/gameplay";
 import { useEffect, useState } from "react";
@@ -14,9 +14,9 @@ import { Autocomplete } from "../components/common/Autocomplete";
 import { Input } from "@material-tailwind/react";
 import { generateServerSideApi } from "../utils/api/factory";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { getItems: getGames } = generateServerSideApi("/games");
-  const { getItems: getUsers } = generateServerSideApi("/users");
+export const getStaticProps: GetStaticProps = async () => {
+  const { getItems: getGames } = generateServerSideApi<Game>("/games");
+  const { getItems: getUsers } = generateServerSideApi<User>("/users");
   const games = await getGames();
   const users = await getUsers();
   return { props: { games, users } };

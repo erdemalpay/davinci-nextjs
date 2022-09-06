@@ -1,11 +1,11 @@
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import type { User } from "../types";
 import { getCurrentUser } from "../utils/api/user";
 import { useQuery } from "react-query";
 
 const path = "/user/profile";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const user = await getCurrentUser();
   return { props: { user } };
 };

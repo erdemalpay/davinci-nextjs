@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import { User } from "../types";
 import { FormEvent, useState } from "react";
 import { Header } from "../components/header/Header";
@@ -10,7 +10,7 @@ import { getAllUsers, useGetAllUsers, useUsers } from "../utils/api/user";
 import { Switch } from "@headlessui/react";
 import { CheckSwitch } from "../components/common/CheckSwitch";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const initialUsers = await getAllUsers();
   return { props: { initialUsers } };
 };

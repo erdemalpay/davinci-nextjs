@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import { Membership } from "../types";
 import { FormEvent, useState } from "react";
 import { Header } from "../components/header/Header";
@@ -9,7 +9,7 @@ import { EditableText } from "../components/common/EditableText";
 import { generateServerSideApi } from "../utils/api/factory";
 import { useMemberships } from "../utils/api/membership";
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getStaticProps: GetStaticProps = async () => {
   const { getItems } = generateServerSideApi<Membership>("/memberships");
   const initialMemberships = await getItems();
   return { props: { initialMemberships } };

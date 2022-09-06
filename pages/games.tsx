@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import { FormEvent, useEffect, useState } from "react";
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import type { Game } from "../types";
 import { Pagination } from "../components/common/Pagination";
 import { Switch } from "@headlessui/react";
@@ -13,9 +13,9 @@ import { TrashIcon } from "@heroicons/react/solid";
 import { generateServerSideApi } from "../utils/api/factory";
 import { useGames } from "../utils/api/game";
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const { getItems } = generateServerSideApi<Game>("/games");
-  const games = await getItems();
+export const getStaticProps: GetStaticProps = async () => {
+  const { getItems: getGames } = generateServerSideApi<Game>("/games");
+  const games = await getGames();
   games.sort((a, b) => {
     return a.name > b.name ? 1 : -1;
   });
