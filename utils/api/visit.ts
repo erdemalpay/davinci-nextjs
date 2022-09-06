@@ -1,27 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Visit } from "../../types";
 import { get, patch, post } from ".";
-import { PossibleContext } from "../token";
 import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { format } from "date-fns";
-import { useLocation } from "../../hooks/useLocation";
+import { GetStaticPropsContext } from "next";
 
 interface UpdateVisitPayload {
   id: number;
-}
-
-// This is only called on server side in ServerSideProps
-export function getVisits({ context }: PossibleContext): Promise<Visit[]> {
-  const location = Number(context?.params?.location);
-  return get<Visit[]>({
-    path: `/visits?location=${location}&date=${format(
-      new Date(),
-      "yyyy-MM-dd"
-    )}`,
-    context,
-  });
 }
 
 export function createVisit(visit: Partial<Visit>): Promise<Visit> {
@@ -38,7 +25,7 @@ export function finishVisit({ id }: UpdateVisitPayload): Promise<Visit> {
   });
 }
 
-export function useGetVisits(initialVisits: Visit[]) {
+export function useGetVisits() {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
   const query = `/visits?location=${selectedLocationId}&date=${format(
@@ -46,12 +33,8 @@ export function useGetVisits(initialVisits: Visit[]) {
     "yyyy-MM-dd"
   )}`;
 
-  const { isLoading, error, data, isFetching } = useQuery(
-    query,
-    () => get<Visit[]>({ path: query }),
-    {
-      initialData: initialVisits,
-    }
+  const { isLoading, error, data, isFetching } = useQuery(query, () =>
+    get<Visit[]>({ path: query })
   );
   return {
     isLoading,

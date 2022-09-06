@@ -1,29 +1,25 @@
 import { useQuery } from "react-query";
 import { User } from "../../types";
 import { get } from "../api";
-import { PossibleContext } from "../token";
 import { useGenerateApi } from "./factory";
 
-export function getCurrentUser({
-  context,
-}: PossibleContext = {}): Promise<User> {
-  return get<User>({ path: "/users/me", context });
+export function getCurrentUser(): Promise<User> {
+  return get<User>({ path: "/users/me" });
 }
 
 const getUsersQuery = "/users";
 
-export function getUser(params?: PossibleContext): Promise<User> {
-  return get<User>({ path: "/users/me", context: params?.context });
+export function getUser(): Promise<User> {
+  return get<User>({ path: "/users/me" });
 }
 
-export function getActiveUsers(params?: PossibleContext): Promise<User[]> {
-  return get<User[]>({ path: getUsersQuery, context: params?.context });
+export function getActiveUsers(): Promise<User[]> {
+  return get<User[]>({ path: getUsersQuery });
 }
 
-export function getAllUsers(params?: PossibleContext): Promise<User[]> {
+export function getAllUsers(): Promise<User[]> {
   return get<User[]>({
     path: `${getUsersQuery}?all=true`,
-    context: params?.context,
   });
 }
 

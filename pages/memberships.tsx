@@ -9,9 +9,9 @@ import { EditableText } from "../components/common/EditableText";
 import { generateServerSideApi } from "../utils/api/factory";
 import { useMemberships } from "../utils/api/membership";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const { getItems } = generateServerSideApi<Membership>("/memberships");
-  const initialMemberships = await getItems(context);
+  const initialMemberships = await getItems();
   return { props: { initialMemberships } };
 };
 

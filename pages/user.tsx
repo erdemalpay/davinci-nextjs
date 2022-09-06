@@ -5,8 +5,8 @@ import { useQuery } from "react-query";
 
 const path = "/user/profile";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const user = await getCurrentUser({ context });
+export const getServerSideProps: GetServerSideProps = async () => {
+  const user = await getCurrentUser();
   return { props: { user } };
 };
 

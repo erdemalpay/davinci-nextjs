@@ -13,9 +13,9 @@ import { TrashIcon } from "@heroicons/react/solid";
 import { generateServerSideApi } from "../utils/api/factory";
 import { useGames } from "../utils/api/game";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const { getItems } = generateServerSideApi<Game>("/games");
-  const games = await getItems(context);
+  const games = await getItems();
   games.sort((a, b) => {
     return a.name > b.name ? 1 : -1;
   });

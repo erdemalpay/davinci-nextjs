@@ -20,13 +20,13 @@ import {
 } from "@heroicons/react/solid";
 import { Tooltip } from "@material-tailwind/react";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const { getItems: getCategories } =
     generateServerSideApi<MenuCategory>("/menu/categories");
-  const initialCategories = await getCategories(context);
+  const initialCategories = await getCategories();
 
   const { getItems } = generateServerSideApi<MenuCategory>("/menu/items");
-  const initialItems = await getItems(context);
+  const initialItems = await getItems();
   return { props: { initialCategories, initialItems } };
 };
 

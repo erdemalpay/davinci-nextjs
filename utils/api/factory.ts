@@ -1,14 +1,12 @@
-import { GetServerSidePropsContext } from "next";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { get, patch, post, remove, UpdatePayload } from ".";
 
 export function generateServerSideApi<T extends { _id: number | string }>(
   query: string
 ) {
-  function getItems(context: GetServerSidePropsContext): Promise<T[]> {
+  function getItems(): Promise<T[]> {
     return get<T[]>({
       path: query,
-      context,
     });
   }
   return {

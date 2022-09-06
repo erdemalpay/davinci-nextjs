@@ -17,8 +17,8 @@ import { generateServerSideApi } from "../utils/api/factory";
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { getItems: getGames } = generateServerSideApi("/games");
   const { getItems: getUsers } = generateServerSideApi("/users");
-  const games = await getGames(context);
-  const users = await getUsers(context);
+  const games = await getGames();
+  const users = await getUsers();
   return { props: { games, users } };
 };
 

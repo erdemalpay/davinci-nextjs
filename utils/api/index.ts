@@ -1,7 +1,7 @@
 import axios from "axios";
-import { getToken, PossibleContext } from "../token";
+import { getToken } from "../token";
 
-interface BaseRequest extends PossibleContext {
+interface BaseRequest {
   path: string;
 }
 
@@ -27,8 +27,8 @@ function printStackTrace() {
 }
 
 // T = ResponseType
-export async function get<T>({ path, context }: BaseRequest): Promise<T> {
-  const token = getToken({ context });
+export async function get<T>({ path }: BaseRequest): Promise<T> {
+  const token = getToken();
   const headers: HeadersInit = { "Content-Type": "application/json" };
   if (token) {
     headers.Authorization = `Bearer ${token}`;

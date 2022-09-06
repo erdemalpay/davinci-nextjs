@@ -113,7 +113,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
       <div
         className={`${bgColor} rounded-tl-md rounded-tr-md px-4 lg:px-6 lg:py-4 py-6 flex items-center justify-between mb-2`}
       >
-        <p className="text-base font-semibold cursor-pointer">
+        <p className="text-base font-semibold cursor-pointer w-full">
           <EditableText
             name="name"
             text={table.name}

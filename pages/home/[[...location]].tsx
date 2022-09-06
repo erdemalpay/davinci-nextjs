@@ -3,15 +3,15 @@ import { DateInput } from "../../components/common/DateInput";
 import { Header } from "../../components/header/Header";
 import { InputWithLabel } from "../../components/common/InputWithLabel";
 import { CreateTableDialog } from "../../components/tables/CreateTableDialog";
-import { GetServerSideProps } from "next";
-import { getTables, useGetTables } from "../../utils/api/table";
-import { Table, User, Game, Visit } from "../../types";
+import { GetStaticPaths, GetStaticProps } from "next";
+import { useGetTables } from "../../utils/api/table";
+import { Table, User, Game } from "../../types";
 import { TableCard } from "../../components/tables/TableCard";
 import { getActiveUsers, useGetActiveUsers } from "../../utils/api/user";
 import { ActiveVisitList } from "../../components/tables/ActiveVisitList";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { sortTable } from "../../utils/sort";
-import { getVisits, useGetVisits } from "../../utils/api/visit";
+import { useGetVisits } from "../../utils/api/visit";
 import { isToday } from "date-fns";
 import { PreviousVisitList } from "../../components/tables/PreviousVisitList";
 import { Switch } from "@headlessui/react";
@@ -19,7 +19,19 @@ import { LocationContext } from "../../context/LocationContext";
 import { generateServerSideApi } from "../../utils/api/factory";
 import { useGames } from "../../utils/api/game";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getStaticPaths: GetStaticPaths = () => {
+  const paths = [
+    { params: { location: ["1"] } },
+    { params: { location: ["2"] } },
+  ];
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export const getStaticProps: GetStaticProps = async (context) => {
   const location = Number(context.params?.location);
 
   if (!location) {
@@ -30,25 +42,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
-  let initialTables: Table[] = [];
   let initialGames: Game[] = [];
-  let initialVisits: Visit[] = [];
   let initialUsers: User[] = [];
   try {
     const { getItems: getGames } = generateServerSideApi<Game>("/games");
-    initialGames = await getGames(context);
-    initialTables = await getTables({ context });
-    initialVisits = await getVisits({ context });
-    initialUsers = await getActiveUsers({ context });
+    [initialGames, initialUsers] = await Promise.all([
+      getGames(),
+      getActiveUsers(),
+    ]);
   } catch (err) {
     console.error(err);
   }
   return {
     props: {
       initialUsers,
-      initialTables,
       initialGames,
-      initialVisits,
       location,
     },
   };
@@ -56,15 +64,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 const TablesPage = ({
   initialUsers,
-  initialTables,
   initialGames,
-  initialVisits,
   location,
 }: {
   initialUsers: User[];
-  initialTables: Table[];
   initialGames: Game[];
-  initialVisits: Visit[];
   location: number;
 }) => {
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
@@ -77,11 +81,11 @@ const TablesPage = ({
 
   games = games || initialGames;
 
-  let { visits } = useGetVisits(initialVisits);
-  visits = visits || initialVisits;
+  let { visits } = useGetVisits();
+  visits = visits || [];
 
-  let { tables } = useGetTables(initialTables);
-  tables = tables || initialTables;
+  let { tables } = useGetTables();
+  tables = tables || [];
 
   let { users } = useGetActiveUsers(initialUsers);
   users = users || initialUsers;

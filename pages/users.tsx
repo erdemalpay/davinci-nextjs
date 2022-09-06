@@ -10,8 +10,8 @@ import { getAllUsers, useGetAllUsers, useUsers } from "../utils/api/user";
 import { Switch } from "@headlessui/react";
 import { CheckSwitch } from "../components/common/CheckSwitch";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const initialUsers = await getAllUsers({ context });
+export const getServerSideProps: GetServerSideProps = async () => {
+  const initialUsers = await getAllUsers();
   return { props: { initialUsers } };
 };
 

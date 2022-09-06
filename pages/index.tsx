@@ -5,7 +5,7 @@ const Home = () => {
   const router = useRouter();
   getUser()
     .then((user) => {
-      router.push("/home");
+      router.push("/home/1");
     })
     .catch((err) => {
       router.push("/login");
