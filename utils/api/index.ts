@@ -27,9 +27,7 @@ function printStackTrace() {
 }
 
 export async function revalidate(path: string) {
-  return axios.get(
-    `/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATE_TOKEN}&path=${path}`
-  );
+  return axios.get(`/api/revalidate?path=${path}`);
 }
 
 // T = ResponseType
