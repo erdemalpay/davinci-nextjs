@@ -12,14 +12,12 @@ import { useEffect, useState } from "react";
 import { Header } from "../components/header/Header";
 import { Autocomplete } from "../components/common/Autocomplete";
 import { Input } from "@material-tailwind/react";
-import { generateServerSideApi } from "../utils/api/factory";
+import { dehydratedState, fetchItems, Paths } from "../utils/api/factory";
+import { useGetGames } from "../utils/api/game";
+import { useGetUsers } from "../utils/api/user";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { getItems: getGames } = generateServerSideApi<Game>("/games");
-  const { getItems: getUsers } = generateServerSideApi<User>("/users");
-  const games = await getGames();
-  const users = await getUsers();
-  return { props: { games, users } };
+  return dehydratedState([Paths.Games, Paths.Users]);
 };
 
 interface GameplayRow {
@@ -30,13 +28,7 @@ interface GameplayRow {
   date: string;
 }
 
-export default function Gameplays({
-  games,
-  users,
-}: {
-  games: Game[];
-  users: User[];
-}) {
+export default function Gameplays() {
   const [gameplays, setGameplays] = useState<GameplayRow[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [filterData, setFilterData] = useState<GameplayFilter>({
@@ -45,6 +37,8 @@ export default function Gameplays({
   });
 
   const { data } = useGetGameplays(filterData);
+  const games = useGetGames();
+  const users = useGetUsers();
 
   useEffect(() => {
     if (data) {

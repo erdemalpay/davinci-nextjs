@@ -14,14 +14,18 @@ import { DateFilter, getStartEndDates } from "../../utils/dateFilter";
 import { useQueryClient } from "react-query";
 import { colors } from "../../utils/color";
 import { InputWithLabel } from "../common/InputWithLabel";
-import { useGames } from "../../utils/api/game";
+import { Game } from "../../types";
 
 export interface GameCount {
   name: string;
   count: number;
 }
 
-export function GameAnalyticChart() {
+interface Props {
+  games: Game[];
+}
+
+export function GameAnalyticChart({ games }: Props) {
   const queryClient = useQueryClient();
   const [dateFilter, setDateFilter] = useState(DateFilter.LAST_MONTH);
   const [startDate, setStartDate] = useState<string>("");
@@ -36,7 +40,7 @@ export function GameAnalyticChart() {
     location,
     endDate
   );
-  const { games } = useGames();
+
   const [gameData, setGameData] = useState<GameCount[]>([]);
 
   useEffect(() => {

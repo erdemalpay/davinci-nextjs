@@ -5,10 +5,10 @@ import { Header } from "../components/header/Header";
 import { TrashIcon } from "@heroicons/react/outline";
 import { toast } from "react-toastify";
 import { EditableText } from "../components/common/EditableText";
-import { generateServerSideApi } from "../utils/api/factory";
+import { dehydratedState, Paths } from "../utils/api/factory";
 import { AddMenuCategoryDialog } from "../components/menu/AddCategoryDialog";
-import { useCategories } from "../utils/api/category";
-import { useMenuItems } from "../utils/api/menu-item";
+import { useCategoryMutations, useGetCategories } from "../utils/api/category";
+import { useGetMenuItems, useMenuItemMutations } from "../utils/api/menu-item";
 import { AddMenuItemDialog } from "../components/menu/AddItemDialog";
 import { CheckSwitch } from "../components/common/CheckSwitch";
 import { EditModeText } from "../components/common/EditModeText";
@@ -21,13 +21,7 @@ import {
 import { Tooltip } from "@material-tailwind/react";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { getItems: getCategories } =
-    generateServerSideApi<MenuCategory>("/menu/categories");
-  const initialCategories = await getCategories();
-
-  const { getItems } = generateServerSideApi<MenuCategory>("/menu/items");
-  const initialItems = await getItems();
-  return { props: { initialCategories, initialItems } };
+  return dehydratedState([Paths.MenuCategories, Paths.MenuItems]);
 };
 
 interface ItemGroup {
@@ -36,18 +30,13 @@ interface ItemGroup {
   items: MenuItem[];
 }
 
-export default function MenuCategories({
-  initialCategories,
-  initialItems,
-}: {
-  initialCategories: MenuCategory[];
-  initialItems: MenuItem[];
-}) {
-  const { categories, deleteCategory, updateCategory, createCategory } =
-    useCategories(initialCategories);
+export default function MenuCategories() {
+  const categories = useGetCategories();
+  const { deleteCategory, updateCategory, createCategory } =
+    useCategoryMutations();
 
-  const { items, deleteItem, updateItem, createItem } =
-    useMenuItems(initialItems);
+  const items = useGetMenuItems();
+  const { deleteItem, updateItem, createItem } = useMenuItemMutations();
 
   const [isCreateItemDialogOpen, setIsCreateItemDialogOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -60,6 +49,7 @@ export default function MenuCategories({
 
   useEffect(() => {
     const itemGroups: ItemGroup[] = [];
+    if (!items) return;
     items.forEach((item) => {
       const category = item.category as MenuCategory;
       const existingGroup = itemGroups.find(
@@ -96,7 +86,8 @@ export default function MenuCategories({
 
   function updateCategoryOrder(category: MenuCategory, up: boolean) {
     const newOrder = up ? category.order - 1 : category.order + 1;
-    const otherItem = categories.find((c) => c.order === newOrder);
+    const otherItem =
+      categories && categories.find((c) => c.order === newOrder);
     updateCategory({
       id: category._id,
       updates: { order: newOrder },
@@ -127,7 +118,7 @@ export default function MenuCategories({
   }
 
   function checkDeleteCategory(category: MenuCategory) {
-    if (items.find((item) => item.category === category._id)) {
+    if (items && items.find((item) => item.category === category._id)) {
       toast.error(
         `Category "${category.name}" cannot be deleted, it has items assigned. Remove/reassign them first to delete this category.`,
         { autoClose: 5000 }

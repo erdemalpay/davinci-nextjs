@@ -26,6 +26,12 @@ function printStackTrace() {
   console.log(stack);
 }
 
+export async function revalidate(path: string) {
+  return axios.get(
+    `/api/revalidate?secret=${process.env.NEXT_PUBLIC_REVALIDATE_TOKEN}&path=${path}`
+  );
+}
+
 // T = ResponseType
 export async function get<T>({ path }: BaseRequest): Promise<T> {
   const token = getToken();
@@ -33,7 +39,6 @@ export async function get<T>({ path }: BaseRequest): Promise<T> {
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
-
   const { data } = await axios.get<T>(
     `${process.env.NEXT_PUBLIC_API_HOST}${path}`,
     {

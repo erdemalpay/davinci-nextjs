@@ -1,36 +1,61 @@
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { get, patch, post, remove, UpdatePayload } from ".";
+import {
+  dehydrate,
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
+import { get, patch, post, remove, revalidate, UpdatePayload } from ".";
 
-export function generateServerSideApi<T extends { _id: number | string }>(
-  query: string
-) {
-  function getItems(): Promise<T[]> {
-    return get<T[]>({
-      path: query,
-    });
-  }
+export const Paths = {
+  Games: "/games",
+  Users: "/users",
+  Memberships: "/memberships",
+  MenuCategories: "/menu/categories",
+  MenuItems: "/menu/items",
+  AllUsers: "/users?all=true",
+  Location: "/location",
+};
+
+export function fetchItems<T extends { _id: number | string }>(
+  path: string
+): Promise<T[]> {
+  return get<T[]>({
+    path,
+  });
+}
+
+export async function dehydratedState(paths: string[]) {
+  const queryClient = new QueryClient();
+  await Promise.all(
+    paths.map((path) => queryClient.prefetchQuery(path, () => fetchItems(path)))
+  );
   return {
-    getItems,
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
   };
 }
 
 interface Props<T> {
   baseQuery: string;
-  initialItems?: T[];
   fetchQuery?: string;
 }
 
-export function useGenerateApi<T extends { _id: number | string }>({
+export function useGetItems<T extends { _id: number | string }>(
+  fetchQuery: string,
+  stale: boolean = true
+) {
+  const { data } = useQuery(fetchQuery, () => fetchItems<T>(fetchQuery), {
+    staleTime: stale ? 0 : Infinity,
+  });
+  return data || [];
+}
+
+export function useMutationApi<T extends { _id: number | string }>({
   baseQuery,
-  initialItems = [],
   fetchQuery = baseQuery,
 }: Props<T>) {
-  function getItems(): Promise<T[]> {
-    return get<T[]>({
-      path: fetchQuery,
-    });
-  }
-
   function createRequest(itemDetails: Partial<T>): Promise<T> {
     return post<Partial<T>, T>({
       path: baseQuery,
@@ -51,27 +76,12 @@ export function useGenerateApi<T extends { _id: number | string }>({
     });
   }
 
-  function useGetItems(initialItems: T[]) {
-    const { isLoading, error, data, isFetching } = useQuery(
-      fetchQuery,
-      () => getItems(),
-      {
-        initialData: initialItems,
-      }
-    );
-    return {
-      isLoading,
-      error,
-      items: data,
-      isFetching,
-    };
-  }
-
   function useCreateItemMutation() {
     const queryClient = useQueryClient();
     return useMutation(createRequest, {
       // We are updating tables query data with new item
       onMutate: async (itemDetails) => {
+        console.log("ON MUTATE");
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
         await queryClient.cancelQueries(fetchQuery);
 
@@ -84,7 +94,7 @@ export function useGenerateApi<T extends { _id: number | string }>({
         queryClient.setQueryData(fetchQuery, updatedItems);
 
         // Return a context object with the snapshotted value
-        return { previousItems };
+        return { previousItems: [] };
       },
       // If the mutation fails, use the context returned from onMutate to roll back
       onError: (_err, _newTable, context) => {
@@ -97,7 +107,8 @@ export function useGenerateApi<T extends { _id: number | string }>({
         }
       },
       // Always refetch after error or success:
-      onSettled: () => {
+      onSettled: async () => {
+        await revalidate(fetchQuery);
         queryClient.invalidateQueries(fetchQuery);
       },
     });
@@ -133,7 +144,8 @@ export function useGenerateApi<T extends { _id: number | string }>({
         }
       },
       // Always refetch after error or success:
-      onSettled: () => {
+      onSettled: async () => {
+        await revalidate(fetchQuery);
         queryClient.invalidateQueries(fetchQuery);
       },
     });
@@ -174,19 +186,18 @@ export function useGenerateApi<T extends { _id: number | string }>({
         }
       },
       // Always refetch after error or success:
-      onSettled: () => {
+      onSettled: async () => {
+        await revalidate(fetchQuery);
         queryClient.invalidateQueries(fetchQuery);
       },
     });
   }
 
-  const { items } = useGetItems(initialItems);
   const { mutate: deleteItem } = useDeleteItemMutation();
   const { mutate: updateItem } = useUpdateItemMutation();
   const { mutate: createItem } = useCreateItemMutation();
 
   return {
-    items: items || [],
     deleteItem,
     updateItem,
     createItem,

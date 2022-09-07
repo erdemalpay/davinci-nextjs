@@ -14,7 +14,7 @@ import { DateFilter, getStartEndDates } from "../../utils/dateFilter";
 import { useQueryClient } from "react-query";
 import { colors } from "../../utils/color";
 import { InputWithLabel } from "../common/InputWithLabel";
-import { useGetActiveUsers } from "../../utils/api/user";
+import { useGetUsers } from "../../utils/api/user";
 
 export interface GameCount {
   name: string;
@@ -36,7 +36,7 @@ export function MentorAnalyticChart() {
     location,
     endDate
   );
-  const { users } = useGetActiveUsers([]);
+  const users = useGetUsers();
   const [mentorData, setMentorData] = useState<GameCount[]>([]);
 
   useEffect(() => {

@@ -6,22 +6,21 @@ import { CreateMembershipDialog } from "../components/memberships/CreateMembersh
 import { TrashIcon } from "@heroicons/react/outline";
 import { toast } from "react-toastify";
 import { EditableText } from "../components/common/EditableText";
-import { generateServerSideApi } from "../utils/api/factory";
-import { useMemberships } from "../utils/api/membership";
+import { dehydratedState, Paths } from "../utils/api/factory";
+import {
+  useGetMemberships,
+  useMembershipMutations,
+} from "../utils/api/membership";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { getItems } = generateServerSideApi<Membership>("/memberships");
-  const initialMemberships = await getItems();
-  return { props: { initialMemberships } };
+  return dehydratedState([Paths.Memberships]);
 };
 
-export default function Memberships({
-  initialMemberships,
-}: {
-  initialMemberships: Membership[];
-}) {
-  const { memberships, deleteMembership, updateMembership, createMembership } =
-    useMemberships(initialMemberships);
+export default function Memberships() {
+  const { deleteMembership, updateMembership, createMembership } =
+    useMembershipMutations();
+
+  const memberships = useGetMemberships();
 
   const [isCreateMembershipDialogOpen, setIsCreateMembershipDialogOpen] =
     useState(false);

@@ -23,6 +23,7 @@ export function CreateMembershipDialog({
   });
 
   async function handleCreate() {
+    console.log({ data });
     createMembership(data);
     toast.success(`New membership created for ${data.name}`);
     close();

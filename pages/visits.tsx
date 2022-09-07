@@ -11,7 +11,7 @@ import { Header } from "../components/header/Header";
 import { Visit } from "../types";
 import { useGetMonthlyVisits } from "../utils/api/visit";
 
-export default function Analytics() {
+export default function Visits() {
   let [currentMonth, setCurrentMonth] = useState<Date>(
     startOfMonth(new Date())
   );

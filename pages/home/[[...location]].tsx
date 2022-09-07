@@ -7,7 +7,7 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import { useGetTables } from "../../utils/api/table";
 import { Table, User, Game } from "../../types";
 import { TableCard } from "../../components/tables/TableCard";
-import { getActiveUsers, useGetActiveUsers } from "../../utils/api/user";
+import { useGetUsers } from "../../utils/api/user";
 import { ActiveVisitList } from "../../components/tables/ActiveVisitList";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { sortTable } from "../../utils/sort";
@@ -16,8 +16,9 @@ import { isToday } from "date-fns";
 import { PreviousVisitList } from "../../components/tables/PreviousVisitList";
 import { Switch } from "@headlessui/react";
 import { LocationContext } from "../../context/LocationContext";
-import { generateServerSideApi } from "../../utils/api/factory";
-import { useGames } from "../../utils/api/game";
+import { dehydratedState, fetchItems, Paths } from "../../utils/api/factory";
+import { useGetGames } from "../../utils/api/game";
+import { useRouter } from "next/router";
 
 export const getStaticPaths: GetStaticPaths = () => {
   const paths = [
@@ -42,44 +43,19 @@ export const getStaticProps: GetStaticProps = async (context) => {
       },
     };
   }
-  let initialGames: Game[] = [];
-  let initialUsers: User[] = [];
-  try {
-    const { getItems: getGames } = generateServerSideApi<Game>("/games");
-    [initialGames, initialUsers] = await Promise.all([
-      getGames(),
-      getActiveUsers(),
-    ]);
-  } catch (err) {
-    console.error(err);
-  }
-  return {
-    props: {
-      initialUsers,
-      initialGames,
-      location,
-    },
-  };
+  return dehydratedState([Paths.Games, Paths.Users]);
 };
 
-const TablesPage = ({
-  initialUsers,
-  initialGames,
-  location,
-}: {
-  initialUsers: User[];
-  initialGames: Game[];
-  location: number;
-}) => {
+const TablesPage = () => {
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
   const { setSelectedDate, selectedDate } = useContext(SelectedDateContext);
   const [showAllTables, setShowAllTables] = useState(true);
   const { setSelectedLocationId } = useContext(LocationContext);
+  const router = useRouter();
+  const location = parseInt(router.query.location as string, 10);
   setSelectedLocationId(location);
 
-  let { games } = useGames(initialGames);
-
-  games = games || initialGames;
+  const games = useGetGames() || [];
 
   let { visits } = useGetVisits();
   visits = visits || [];
@@ -87,8 +63,7 @@ const TablesPage = ({
   let { tables } = useGetTables();
   tables = tables || [];
 
-  let { users } = useGetActiveUsers(initialUsers);
-  users = users || initialUsers;
+  let users = useGetUsers() || [];
 
   // Sort tables first active tables, then closed ones.
   // if both active then sort by name

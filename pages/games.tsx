@@ -3,28 +3,22 @@ import { FormEvent, useEffect, useState } from "react";
 import { GetStaticProps } from "next";
 import type { Game } from "../types";
 import { Pagination } from "../components/common/Pagination";
-import { Switch } from "@headlessui/react";
 import { Header } from "../components/header/Header";
 import { toast } from "react-toastify";
 import { EditableText } from "../components/common/EditableText";
 import { CheckSwitch } from "../components/common/CheckSwitch";
 import { AddGameDialog } from "../components/games/AddGameDialog";
 import { TrashIcon } from "@heroicons/react/solid";
-import { generateServerSideApi } from "../utils/api/factory";
-import { useGames } from "../utils/api/game";
+import { dehydratedState, fetchItems, Paths } from "../utils/api/factory";
+import { useGameMutations, useGetGames } from "../utils/api/game";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { getItems: getGames } = generateServerSideApi<Game>("/games");
-  const games = await getGames();
-  games.sort((a, b) => {
-    return a.name > b.name ? 1 : -1;
-  });
-
-  return { props: { games } };
+  return dehydratedState([Paths.Games]);
 };
 
-export default function Games({ games: initialGames }: { games: Game[] }) {
-  const { games, updateGame, deleteGame, createGame } = useGames(initialGames);
+export default function Games() {
+  const games = useGetGames();
+  const { updateGame, deleteGame, createGame } = useGameMutations();
 
   const [textFilter, setTextFilter] = useState("");
   const [filteredGames, setFilteredGames] = useState<Game[]>([]);

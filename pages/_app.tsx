@@ -24,6 +24,7 @@ import {
 } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { SelectedDateContext } from "../context/SelectedDateContext";
+import { dehydrate } from "react-query";
 
 const queryClient = new QueryClient();
 
@@ -100,10 +101,10 @@ function Wrapper(appProps: AppProps) {
     </QueryClientProvider>
   );
 }
-
+/* 
 Wrapper.getInitialProps = async (appContext: AppContext) => {
   const appProps = await App.getInitialProps(appContext);
   return { ...appProps, pageProps: { ...appProps.pageProps } };
-};
+}; */
 
 export default Wrapper;
