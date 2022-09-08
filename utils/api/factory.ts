@@ -40,6 +40,8 @@ export async function dehydratedState(paths: string[]) {
 interface Props<T> {
   baseQuery: string;
   fetchQuery?: string;
+  needsRevalidate?: boolean;
+  sortFunction?: (a: Partial<T>, b: Partial<T>) => number;
 }
 
 export function useGetItems<T extends { _id: number | string }>(
@@ -55,6 +57,8 @@ export function useGetItems<T extends { _id: number | string }>(
 export function useMutationApi<T extends { _id: number | string }>({
   baseQuery,
   fetchQuery = baseQuery,
+  needsRevalidate = true,
+  sortFunction,
 }: Props<T>) {
   function createRequest(itemDetails: Partial<T>): Promise<T> {
     return post<Partial<T>, T>({
@@ -81,7 +85,6 @@ export function useMutationApi<T extends { _id: number | string }>({
     return useMutation(createRequest, {
       // We are updating tables query data with new item
       onMutate: async (itemDetails) => {
-        console.log("ON MUTATE");
         // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
         await queryClient.cancelQueries(fetchQuery);
 
@@ -89,6 +92,9 @@ export function useMutationApi<T extends { _id: number | string }>({
         const previousItems = queryClient.getQueryData<T[]>(fetchQuery);
 
         const updatedItems = [...(previousItems as T[]), itemDetails];
+        if (sortFunction) {
+          updatedItems.sort(sortFunction);
+        }
 
         // Optimistically update to the new value
         queryClient.setQueryData(fetchQuery, updatedItems);
@@ -108,7 +114,9 @@ export function useMutationApi<T extends { _id: number | string }>({
       },
       // Always refetch after error or success:
       onSettled: async () => {
-        await revalidate(fetchQuery);
+        if (needsRevalidate) {
+          await revalidate(fetchQuery);
+        }
         queryClient.invalidateQueries(fetchQuery);
       },
     });
@@ -126,6 +134,9 @@ export function useMutationApi<T extends { _id: number | string }>({
         const previousItems = queryClient.getQueryData<T[]>(fetchQuery) || [];
 
         const updatedItems = previousItems.filter((item) => item._id !== id);
+        if (sortFunction) {
+          updatedItems.sort(sortFunction);
+        }
 
         // Optimistically update to the new value
         queryClient.setQueryData(fetchQuery, updatedItems);
@@ -145,7 +156,9 @@ export function useMutationApi<T extends { _id: number | string }>({
       },
       // Always refetch after error or success:
       onSettled: async () => {
-        await revalidate(fetchQuery);
+        if (needsRevalidate) {
+          await revalidate(fetchQuery);
+        }
         queryClient.invalidateQueries(fetchQuery);
       },
     });
@@ -169,6 +182,10 @@ export function useMutationApi<T extends { _id: number | string }>({
           }
         }
 
+        if (sortFunction) {
+          updatedItems.sort(sortFunction);
+        }
+
         // Optimistically update to the new value
         queryClient.setQueryData(fetchQuery, updatedItems);
 
@@ -187,7 +204,9 @@ export function useMutationApi<T extends { _id: number | string }>({
       },
       // Always refetch after error or success:
       onSettled: async () => {
-        await revalidate(fetchQuery);
+        if (needsRevalidate) {
+          await revalidate(fetchQuery);
+        }
         queryClient.invalidateQueries(fetchQuery);
       },
     });

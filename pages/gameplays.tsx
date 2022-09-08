@@ -125,7 +125,6 @@ export default function Gameplays() {
   }
 
   function handleSort(value: string) {
-    console.log({ filterData, value });
     if (filterData.sort === value) {
       if (filterData.asc === 1) {
         // if sorted ascending, convert to descending

@@ -1,9 +1,8 @@
 import "../styles/globals.css";
-import type { AppProps, AppContext } from "next/app";
+import type { AppProps } from "next/app";
 import { LocationContext } from "../context/LocationContext";
 import { useState } from "react";
 
-import App from "next/app";
 import { ToastContainer, Slide } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -24,7 +23,6 @@ import {
 } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { SelectedDateContext } from "../context/SelectedDateContext";
-import { dehydrate } from "react-query";
 
 const queryClient = new QueryClient();
 
@@ -101,10 +99,5 @@ function Wrapper(appProps: AppProps) {
     </QueryClientProvider>
   );
 }
-/* 
-Wrapper.getInitialProps = async (appContext: AppContext) => {
-  const appProps = await App.getInitialProps(appContext);
-  return { ...appProps, pageProps: { ...appProps.pageProps } };
-}; */
 
 export default Wrapper;

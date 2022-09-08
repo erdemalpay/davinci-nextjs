@@ -2,6 +2,7 @@ import Cookies from "js-cookie";
 
 export function getToken() {
   let isServer = typeof window === "undefined";
+
   if (isServer) {
     return process.env.JWT_TOKEN || "";
   } else {

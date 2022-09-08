@@ -14,9 +14,8 @@ import { format } from "date-fns";
 import { getDuration } from "../../utils/time";
 import {
   useCloseTableMutation,
-  useDeleteTableMutation,
   useReopenTableMutation,
-  useUpdateTableMutation,
+  useTableMutations,
 } from "../../utils/api/table";
 import { EditGameplayDialog } from "./EditGameplayDialog";
 import { ConfirmationDialog } from "../common/ConfirmationDialog";
@@ -39,8 +38,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     useState(false);
   const [isEditTableNameActive, setIsEditTableNameActive] = useState(false);
   const [selectedGameplay, setSelectedGameplay] = useState<Gameplay>();
-  const { mutate: deleteTable } = useDeleteTableMutation();
-  const { mutate: updateTable } = useUpdateTableMutation();
+  const { updateTable, deleteTable } = useTableMutations();
   const { mutate: closeTable } = useCloseTableMutation();
   const { mutate: reopenTable } = useReopenTableMutation();
 
@@ -100,7 +98,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
 
   function handleTableDelete() {
     if (!table._id) return;
-    deleteTable({ id: table._id });
+    deleteTable(table._id);
     setIsDeleteConfirmationDialogOpen(false);
     toast.success(`Table ${table.name} deleted`);
   }

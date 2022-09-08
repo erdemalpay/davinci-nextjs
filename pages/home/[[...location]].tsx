@@ -60,7 +60,7 @@ const TablesPage = () => {
   let { visits } = useGetVisits();
   visits = visits || [];
 
-  let { tables } = useGetTables();
+  let tables = useGetTables();
   tables = tables || [];
 
   let users = useGetUsers() || [];

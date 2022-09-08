@@ -31,7 +31,7 @@ export default function Memberships() {
     if (!item) return;
     const target = event.target as HTMLInputElement;
     if (!target.value) return;
-    console.log({ target });
+
     updateMembership({
       id: item._id,
       updates: { [target.name]: target.value },
