@@ -1,38 +1,65 @@
-import { GetServerSidePropsContext } from "next";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { get, patch, post, remove, UpdatePayload } from ".";
+import {
+  dehydrate,
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
+import { get, patch, post, remove, revalidate, UpdatePayload } from ".";
 
-export function generateServerSideApi<T extends { _id: number | string }>(
-  query: string
-) {
-  function getItems(context: GetServerSidePropsContext): Promise<T[]> {
-    return get<T[]>({
-      path: query,
-      context,
-    });
-  }
+export const Paths = {
+  Games: "/games",
+  Users: "/users",
+  Memberships: "/memberships",
+  MenuCategories: "/menu/categories",
+  MenuItems: "/menu/items",
+  AllUsers: "/users?all=true",
+  Location: "/location",
+};
+
+export function fetchItems<T extends { _id: number | string }>(
+  path: string
+): Promise<T[]> {
+  return get<T[]>({
+    path,
+  });
+}
+
+export async function dehydratedState(paths: string[]) {
+  const queryClient = new QueryClient();
+  await Promise.all(
+    paths.map((path) => queryClient.prefetchQuery(path, () => fetchItems(path)))
+  );
   return {
-    getItems,
+    props: {
+      dehydratedState: dehydrate(queryClient),
+    },
   };
 }
 
 interface Props<T> {
   baseQuery: string;
-  initialItems?: T[];
   fetchQuery?: string;
+  needsRevalidate?: boolean;
+  sortFunction?: (a: Partial<T>, b: Partial<T>) => number;
 }
 
-export function useGenerateApi<T extends { _id: number | string }>({
-  baseQuery,
-  initialItems = [],
-  fetchQuery = baseQuery,
-}: Props<T>) {
-  function getItems(): Promise<T[]> {
-    return get<T[]>({
-      path: fetchQuery,
-    });
-  }
+export function useGetItems<T extends { _id: number | string }>(
+  fetchQuery: string,
+  stale: boolean = true
+) {
+  const { data } = useQuery(fetchQuery, () => fetchItems<T>(fetchQuery), {
+    staleTime: stale ? 0 : Infinity,
+  });
+  return data || [];
+}
 
+export function useMutationApi<T extends { _id: number | string }>({
+  baseQuery,
+  fetchQuery = baseQuery,
+  needsRevalidate = true,
+  sortFunction,
+}: Props<T>) {
   function createRequest(itemDetails: Partial<T>): Promise<T> {
     return post<Partial<T>, T>({
       path: baseQuery,
@@ -53,22 +80,6 @@ export function useGenerateApi<T extends { _id: number | string }>({
     });
   }
 
-  function useGetItems(initialItems: T[]) {
-    const { isLoading, error, data, isFetching } = useQuery(
-      fetchQuery,
-      () => getItems(),
-      {
-        initialData: initialItems,
-      }
-    );
-    return {
-      isLoading,
-      error,
-      items: data,
-      isFetching,
-    };
-  }
-
   function useCreateItemMutation() {
     const queryClient = useQueryClient();
     return useMutation(createRequest, {
@@ -81,6 +92,9 @@ export function useGenerateApi<T extends { _id: number | string }>({
         const previousItems = queryClient.getQueryData<T[]>(fetchQuery);
 
         const updatedItems = [...(previousItems as T[]), itemDetails];
+        if (sortFunction) {
+          updatedItems.sort(sortFunction);
+        }
 
         // Optimistically update to the new value
         queryClient.setQueryData(fetchQuery, updatedItems);
@@ -99,7 +113,10 @@ export function useGenerateApi<T extends { _id: number | string }>({
         }
       },
       // Always refetch after error or success:
-      onSettled: () => {
+      onSettled: async () => {
+        if (needsRevalidate) {
+          await revalidate(fetchQuery);
+        }
         queryClient.invalidateQueries(fetchQuery);
       },
     });
@@ -117,6 +134,9 @@ export function useGenerateApi<T extends { _id: number | string }>({
         const previousItems = queryClient.getQueryData<T[]>(fetchQuery) || [];
 
         const updatedItems = previousItems.filter((item) => item._id !== id);
+        if (sortFunction) {
+          updatedItems.sort(sortFunction);
+        }
 
         // Optimistically update to the new value
         queryClient.setQueryData(fetchQuery, updatedItems);
@@ -135,7 +155,10 @@ export function useGenerateApi<T extends { _id: number | string }>({
         }
       },
       // Always refetch after error or success:
-      onSettled: () => {
+      onSettled: async () => {
+        if (needsRevalidate) {
+          await revalidate(fetchQuery);
+        }
         queryClient.invalidateQueries(fetchQuery);
       },
     });
@@ -159,6 +182,10 @@ export function useGenerateApi<T extends { _id: number | string }>({
           }
         }
 
+        if (sortFunction) {
+          updatedItems.sort(sortFunction);
+        }
+
         // Optimistically update to the new value
         queryClient.setQueryData(fetchQuery, updatedItems);
 
@@ -176,19 +203,20 @@ export function useGenerateApi<T extends { _id: number | string }>({
         }
       },
       // Always refetch after error or success:
-      onSettled: () => {
+      onSettled: async () => {
+        if (needsRevalidate) {
+          await revalidate(fetchQuery);
+        }
         queryClient.invalidateQueries(fetchQuery);
       },
     });
   }
 
-  const { items } = useGetItems(initialItems);
   const { mutate: deleteItem } = useDeleteItemMutation();
   const { mutate: updateItem } = useUpdateItemMutation();
   const { mutate: createItem } = useCreateItemMutation();
 
   return {
-    items: items || [],
     deleteItem,
     updateItem,
     createItem,

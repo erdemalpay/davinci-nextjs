@@ -1,16 +1,18 @@
-import { useGenerateApi } from "./factory";
+import { Paths, useGetItems, useMutationApi } from "./factory";
 import { MenuCategory } from "../../types/index";
 
-export function useCategories(initialItems: MenuCategory[] = []) {
+export function useCategoryMutations() {
   const {
-    items: categories,
     deleteItem: deleteCategory,
     updateItem: updateCategory,
     createItem: createCategory,
-  } = useGenerateApi<MenuCategory>({
-    baseQuery: "/menu/categories",
-    initialItems,
+  } = useMutationApi<MenuCategory>({
+    baseQuery: Paths.MenuCategories,
   });
 
-  return { categories, deleteCategory, updateCategory, createCategory };
+  return { deleteCategory, updateCategory, createCategory };
+}
+
+export function useGetCategories() {
+  return useGetItems<MenuCategory>(Paths.MenuCategories, false);
 }

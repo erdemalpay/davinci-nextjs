@@ -1,6 +1,5 @@
 import { get, patch, post, remove } from "./index";
 import { Gameplay, Table } from "../../types/index";
-import { PossibleContext } from "../token";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
@@ -8,7 +7,7 @@ import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { format } from "date-fns";
 import { sortTable } from "../sort";
 
-interface GameplayCreateRequest extends PossibleContext {
+interface GameplayCreateRequest {
   table: number;
   payload: Gameplay;
 }

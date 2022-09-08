@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import { User } from "../types";
 import { FormEvent, useState } from "react";
 import { Header } from "../components/header/Header";
@@ -6,18 +6,18 @@ import { CreateUserDialog } from "../components/users/CreateUserDialog";
 // import { TrashIcon } from "@heroicons/react/outline";
 import { toast } from "react-toastify";
 import { EditableText } from "../components/common/EditableText";
-import { getAllUsers, useGetAllUsers, useUsers } from "../utils/api/user";
+import { useGetAllUsers, useUserMutations } from "../utils/api/user";
 import { Switch } from "@headlessui/react";
 import { CheckSwitch } from "../components/common/CheckSwitch";
+import { dehydratedState, Paths } from "../utils/api/factory";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const initialUsers = await getAllUsers({ context });
-  return { props: { initialUsers } };
+export const getStaticProps: GetStaticProps = async () => {
+  return dehydratedState([Paths.AllUsers]);
 };
 
-export default function Users({ initialUsers }: { initialUsers: User[] }) {
-  const { updateUser, createUser } = useUsers(initialUsers);
-  const { users } = useGetAllUsers(initialUsers);
+export default function Users() {
+  const { updateUser, createUser } = useUserMutations();
+  const users = useGetAllUsers();
   const [showInactiveUsers, setShowInactiveUsers] = useState(false);
 
   const [isCreateUserDialogOpen, setIsCreateUserDialogOpen] = useState(false);

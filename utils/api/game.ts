@@ -1,24 +1,22 @@
 import { Game } from "../../types";
 import { get } from ".";
 import { useQuery } from "react-query";
-import { useGenerateApi } from "./factory";
+import { Paths, useGetItems, useMutationApi } from "./factory";
 
-export function useGames(initialItems: Game[] = []) {
+export function useGameMutations() {
   const {
-    items: games,
     deleteItem: deleteGame,
     updateItem: updateGame,
     createItem: createGame,
-  } = useGenerateApi<Game>({
-    baseQuery: "/games",
-    initialItems,
+  } = useMutationApi<Game>({
+    baseQuery: Paths.Games,
   });
 
-  games?.sort((a, b) => {
-    return a.name > b.name ? 1 : -1;
-  });
+  return { deleteGame, updateGame, createGame };
+}
 
-  return { games, deleteGame, updateGame, createGame };
+export function useGetGames() {
+  return useGetItems<Game>(Paths.Games, false);
 }
 
 export function useGetGameDetails(gameId: number) {

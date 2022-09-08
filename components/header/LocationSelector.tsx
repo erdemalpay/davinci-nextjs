@@ -1,12 +1,11 @@
 import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
-import { Menu } from "@material-tailwind/react";
 import { useRouter } from "next/router";
 import { useGetLocations } from "../../utils/api/location";
 
 export function LocationSelector() {
   const { selectedLocationId } = useContext(LocationContext);
-  const { locations } = useGetLocations();
+  const locations = useGetLocations();
   const router = useRouter();
   if (!locations) return null;
   const selectedLocation = locations?.find(

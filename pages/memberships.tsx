@@ -1,4 +1,4 @@
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import { Membership } from "../types";
 import { FormEvent, useState } from "react";
 import { Header } from "../components/header/Header";
@@ -6,22 +6,21 @@ import { CreateMembershipDialog } from "../components/memberships/CreateMembersh
 import { TrashIcon } from "@heroicons/react/outline";
 import { toast } from "react-toastify";
 import { EditableText } from "../components/common/EditableText";
-import { generateServerSideApi } from "../utils/api/factory";
-import { useMemberships } from "../utils/api/membership";
+import { dehydratedState, Paths } from "../utils/api/factory";
+import {
+  useGetMemberships,
+  useMembershipMutations,
+} from "../utils/api/membership";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { getItems } = generateServerSideApi<Membership>("/memberships");
-  const initialMemberships = await getItems(context);
-  return { props: { initialMemberships } };
+export const getStaticProps: GetStaticProps = async () => {
+  return dehydratedState([Paths.Memberships]);
 };
 
-export default function Memberships({
-  initialMemberships,
-}: {
-  initialMemberships: Membership[];
-}) {
-  const { memberships, deleteMembership, updateMembership, createMembership } =
-    useMemberships(initialMemberships);
+export default function Memberships() {
+  const { deleteMembership, updateMembership, createMembership } =
+    useMembershipMutations();
+
+  const memberships = useGetMemberships();
 
   const [isCreateMembershipDialogOpen, setIsCreateMembershipDialogOpen] =
     useState(false);
@@ -32,7 +31,7 @@ export default function Memberships({
     if (!item) return;
     const target = event.target as HTMLInputElement;
     if (!target.value) return;
-    console.log({ target });
+
     updateMembership({
       id: item._id,
       updates: { [target.name]: target.value },

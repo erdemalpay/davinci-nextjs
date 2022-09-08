@@ -15,7 +15,7 @@ export type Location = {
 };
 
 export type Table = {
-  _id?: number;
+  _id: number;
   name: string;
   date: string;
   playerCount: number;

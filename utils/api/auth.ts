@@ -11,8 +11,6 @@ export interface LoginResponse {
   token: string;
 }
 
-const baseURL = `${process.env.NEXT_PUBLIC_API_HOST}/auth/login`;
-
 export async function login(payload: LoginCredentials) {
   const response = await post<LoginCredentials, AxiosResponse<LoginResponse>>({
     path: "/auth/login",

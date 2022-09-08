@@ -14,9 +14,8 @@ import { format } from "date-fns";
 import { getDuration } from "../../utils/time";
 import {
   useCloseTableMutation,
-  useDeleteTableMutation,
   useReopenTableMutation,
-  useUpdateTableMutation,
+  useTableMutations,
 } from "../../utils/api/table";
 import { EditGameplayDialog } from "./EditGameplayDialog";
 import { ConfirmationDialog } from "../common/ConfirmationDialog";
@@ -39,8 +38,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     useState(false);
   const [isEditTableNameActive, setIsEditTableNameActive] = useState(false);
   const [selectedGameplay, setSelectedGameplay] = useState<Gameplay>();
-  const { mutate: deleteTable } = useDeleteTableMutation();
-  const { mutate: updateTable } = useUpdateTableMutation();
+  const { updateTable, deleteTable } = useTableMutations();
   const { mutate: closeTable } = useCloseTableMutation();
   const { mutate: reopenTable } = useReopenTableMutation();
 
@@ -58,7 +56,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
 
   function finishTable() {
     closeTable({
-      id: table._id!,
+      id: table._id,
       updates: { finishHour: format(new Date(), "HH:mm") },
     });
     setIsCloseConfirmationDialogOpen(false);
@@ -67,7 +65,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
 
   function reopenTableBack() {
     reopenTable({
-      id: table._id!,
+      id: table._id,
     });
     toast.success(`Table ${table.name} reopened`);
   }
@@ -87,7 +85,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     const target = event.target as HTMLInputElement;
     if (!target.value) return;
     updateTable({
-      id: table._id!,
+      id: table._id,
       updates: { [target.name]: target.value },
     });
     toast.success(`Table ${table.name} updated`);
@@ -100,7 +98,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
 
   function handleTableDelete() {
     if (!table._id) return;
-    deleteTable({ id: table._id });
+    deleteTable(table._id);
     setIsDeleteConfirmationDialogOpen(false);
     toast.success(`Table ${table.name} deleted`);
   }
@@ -113,7 +111,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
       <div
         className={`${bgColor} rounded-tl-md rounded-tr-md px-4 lg:px-6 lg:py-4 py-6 flex items-center justify-between mb-2`}
       >
-        <p className="text-base font-semibold cursor-pointer">
+        <p className="text-base font-semibold cursor-pointer w-full">
           <EditableText
             name="name"
             text={table.name}

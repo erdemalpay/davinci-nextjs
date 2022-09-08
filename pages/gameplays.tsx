@@ -5,21 +5,19 @@ import {
   ArrowNarrowDownIcon,
 } from "@heroicons/react/outline";
 
-import { GetServerSideProps } from "next";
+import { GetStaticProps } from "next";
 import { Game, User } from "../types";
 import { GameplayFilter, useGetGameplays } from "../utils/api/gameplay";
 import { useEffect, useState } from "react";
 import { Header } from "../components/header/Header";
 import { Autocomplete } from "../components/common/Autocomplete";
 import { Input } from "@material-tailwind/react";
-import { generateServerSideApi } from "../utils/api/factory";
+import { dehydratedState, Paths } from "../utils/api/factory";
+import { useGetGames } from "../utils/api/game";
+import { useGetUsers } from "../utils/api/user";
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { getItems: getGames } = generateServerSideApi("/games");
-  const { getItems: getUsers } = generateServerSideApi("/users");
-  const games = await getGames(context);
-  const users = await getUsers(context);
-  return { props: { games, users } };
+export const getStaticProps: GetStaticProps = async () => {
+  return dehydratedState([Paths.Games, Paths.Users]);
 };
 
 interface GameplayRow {
@@ -30,13 +28,7 @@ interface GameplayRow {
   date: string;
 }
 
-export default function Gameplays({
-  games,
-  users,
-}: {
-  games: Game[];
-  users: User[];
-}) {
+export default function Gameplays() {
   const [gameplays, setGameplays] = useState<GameplayRow[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [filterData, setFilterData] = useState<GameplayFilter>({
@@ -45,6 +37,8 @@ export default function Gameplays({
   });
 
   const { data } = useGetGameplays(filterData);
+  const games = useGetGames();
+  const users = useGetUsers();
 
   useEffect(() => {
     if (data) {
@@ -131,7 +125,6 @@ export default function Gameplays({
   }
 
   function handleSort(value: string) {
-    console.log({ filterData, value });
     if (filterData.sort === value) {
       if (filterData.asc === 1) {
         // if sorted ascending, convert to descending

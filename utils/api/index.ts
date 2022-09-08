@@ -1,7 +1,7 @@
 import axios from "axios";
-import { getToken, PossibleContext } from "../token";
+import { getToken } from "../token";
 
-interface BaseRequest extends PossibleContext {
+interface BaseRequest {
   path: string;
 }
 
@@ -26,14 +26,17 @@ function printStackTrace() {
   console.log(stack);
 }
 
+export async function revalidate(path: string) {
+  return axios.get(`/api/revalidate?path=${path}`);
+}
+
 // T = ResponseType
-export async function get<T>({ path, context }: BaseRequest): Promise<T> {
-  const token = getToken({ context });
+export async function get<T>({ path }: BaseRequest): Promise<T> {
+  const token = getToken();
   const headers: HeadersInit = { "Content-Type": "application/json" };
   if (token) {
     headers.Authorization = `Bearer ${token}`;
   }
-
   const { data } = await axios.get<T>(
     `${process.env.NEXT_PUBLIC_API_HOST}${path}`,
     {

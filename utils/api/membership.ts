@@ -1,16 +1,18 @@
 import { Membership } from "../../types/index";
-import { useGenerateApi } from "./factory";
+import { Paths, useGetItems, useMutationApi } from "./factory";
 
-export function useMemberships(initialItems: Membership[] = []) {
+export function useMembershipMutations() {
   const {
-    items: memberships,
     deleteItem: deleteMembership,
     updateItem: updateMembership,
     createItem: createMembership,
-  } = useGenerateApi<Membership>({
-    baseQuery: "/memberships",
-    initialItems,
+  } = useMutationApi<Membership>({
+    baseQuery: Paths.Memberships,
   });
 
-  return { memberships, deleteMembership, updateMembership, createMembership };
+  return { deleteMembership, updateMembership, createMembership };
+}
+
+export function useGetMemberships() {
+  return useGetItems<Membership>(Paths.Memberships, false);
 }
