@@ -1,4 +1,4 @@
-import { GetStaticProps, GetServerSideProps } from "next";
+import { GetServerSideProps } from "next";
 import type { User } from "../types";
 import { getCurrentUser } from "../utils/api/user";
 import { useQuery } from "react-query";

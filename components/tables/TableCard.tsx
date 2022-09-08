@@ -56,7 +56,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
 
   function finishTable() {
     closeTable({
-      id: table._id!,
+      id: table._id,
       updates: { finishHour: format(new Date(), "HH:mm") },
     });
     setIsCloseConfirmationDialogOpen(false);
@@ -65,7 +65,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
 
   function reopenTableBack() {
     reopenTable({
-      id: table._id!,
+      id: table._id,
     });
     toast.success(`Table ${table.name} reopened`);
   }
@@ -85,7 +85,7 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
     const target = event.target as HTMLInputElement;
     if (!target.value) return;
     updateTable({
-      id: table._id!,
+      id: table._id,
       updates: { [target.name]: target.value },
     });
     toast.success(`Table ${table.name} updated`);

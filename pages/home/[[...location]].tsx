@@ -16,7 +16,7 @@ import { isToday } from "date-fns";
 import { PreviousVisitList } from "../../components/tables/PreviousVisitList";
 import { Switch } from "@headlessui/react";
 import { LocationContext } from "../../context/LocationContext";
-import { dehydratedState, fetchItems, Paths } from "../../utils/api/factory";
+import { dehydratedState, Paths } from "../../utils/api/factory";
 import { useGetGames } from "../../utils/api/game";
 import { useRouter } from "next/router";
 

@@ -9,7 +9,7 @@ import { EditableText } from "../components/common/EditableText";
 import { CheckSwitch } from "../components/common/CheckSwitch";
 import { AddGameDialog } from "../components/games/AddGameDialog";
 import { TrashIcon } from "@heroicons/react/solid";
-import { dehydratedState, fetchItems, Paths } from "../utils/api/factory";
+import { dehydratedState, Paths } from "../utils/api/factory";
 import { useGameMutations, useGetGames } from "../utils/api/game";
 
 export const getStaticProps: GetStaticProps = async () => {

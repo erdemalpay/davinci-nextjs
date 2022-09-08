@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { Header } from "../components/header/Header";
 import { Autocomplete } from "../components/common/Autocomplete";
 import { Input } from "@material-tailwind/react";
-import { dehydratedState, fetchItems, Paths } from "../utils/api/factory";
+import { dehydratedState, Paths } from "../utils/api/factory";
 import { useGetGames } from "../utils/api/game";
 import { useGetUsers } from "../utils/api/user";
 

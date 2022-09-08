@@ -5,7 +5,6 @@ import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { format } from "date-fns";
-import { GetStaticPropsContext } from "next";
 
 interface UpdateVisitPayload {
   id: number;
