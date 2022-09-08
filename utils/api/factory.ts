@@ -100,7 +100,7 @@ export function useMutationApi<T extends { _id: number | string }>({
         queryClient.setQueryData(fetchQuery, updatedItems);
 
         // Return a context object with the snapshotted value
-        return { previousItems: [] };
+        return { previousItems };
       },
       // If the mutation fails, use the context returned from onMutate to roll back
       onError: (_err, _newTable, context) => {
