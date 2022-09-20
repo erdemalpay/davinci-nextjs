@@ -8,10 +8,12 @@ import {
 } from "../components/calendar/MonthlyCalendar";
 import { VisitEventItem } from "../components/calendar/MonthlyEventItems";
 import { Header } from "../components/header/Header";
+import { useCheckLogin } from "../hooks/useCheckLogin";
 import { Visit } from "../types";
 import { useGetMonthlyVisits } from "../utils/api/visit";
 
 export default function Visits() {
+  useCheckLogin();
   let [currentMonth, setCurrentMonth] = useState<Date>(
     startOfMonth(new Date())
   );

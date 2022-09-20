@@ -15,6 +15,7 @@ import { Input } from "@material-tailwind/react";
 import { dehydratedState, Paths } from "../utils/api/factory";
 import { useGetGames } from "../utils/api/game";
 import { useGetUsers } from "../utils/api/user";
+import { useCheckLogin } from "../hooks/useCheckLogin";
 
 export const getStaticProps: GetStaticProps = async () => {
   return dehydratedState([Paths.Games, Paths.Users]);
@@ -29,6 +30,7 @@ interface GameplayRow {
 }
 
 export default function Gameplays() {
+  useCheckLogin();
   const [gameplays, setGameplays] = useState<GameplayRow[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [filterData, setFilterData] = useState<GameplayFilter>({

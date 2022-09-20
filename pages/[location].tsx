@@ -1,69 +1,54 @@
-import { useContext, useState, useEffect } from "react";
-import { DateInput } from "../../components/common/DateInput";
-import { Header } from "../../components/header/Header";
-import { InputWithLabel } from "../../components/common/InputWithLabel";
-import { CreateTableDialog } from "../../components/tables/CreateTableDialog";
+import { useContext, useState, useEffect, useMemo } from "react";
+import { DateInput } from "../components/common/DateInput";
+import { Header } from "../components/header/Header";
+import { InputWithLabel } from "../components/common/InputWithLabel";
+import { CreateTableDialog } from "../components/tables/CreateTableDialog";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { useGetTables } from "../../utils/api/table";
-import { Table, User, Game } from "../../types";
-import { TableCard } from "../../components/tables/TableCard";
-import { useGetUsers } from "../../utils/api/user";
-import { ActiveVisitList } from "../../components/tables/ActiveVisitList";
-import { SelectedDateContext } from "../../context/SelectedDateContext";
-import { sortTable } from "../../utils/sort";
-import { useGetVisits } from "../../utils/api/visit";
+import { useGetTables } from "../utils/api/table";
+import { Table, User, Game } from "../types";
+import { TableCard } from "../components/tables/TableCard";
+import { useGetUsers } from "../utils/api/user";
+import { ActiveVisitList } from "../components/tables/ActiveVisitList";
+import { SelectedDateContext } from "../context/SelectedDateContext";
+import { sortTable } from "../utils/sort";
+import { useGetVisits } from "../utils/api/visit";
 import { isToday } from "date-fns";
-import { PreviousVisitList } from "../../components/tables/PreviousVisitList";
+import { PreviousVisitList } from "../components/tables/PreviousVisitList";
 import { Switch } from "@headlessui/react";
-import { LocationContext } from "../../context/LocationContext";
-import { dehydratedState, Paths } from "../../utils/api/factory";
-import { useGetGames } from "../../utils/api/game";
+import { LocationContext } from "../context/LocationContext";
+import { dehydratedState, Paths } from "../utils/api/factory";
+import { useGetGames } from "../utils/api/game";
 import { useRouter } from "next/router";
+import { useCheckLogin } from "../hooks/useCheckLogin";
+import { isEqual } from "lodash";
 
 export const getStaticPaths: GetStaticPaths = () => {
-  const paths = [
-    { params: { location: ["1"] } },
-    { params: { location: ["2"] } },
-  ];
+  const paths = [{ params: { location: "1" } }, { params: { location: "2" } }];
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 };
 
 export const getStaticProps: GetStaticProps = async (context) => {
-  const location = Number(context.params?.location);
-
-  if (!location) {
-    return {
-      redirect: {
-        statusCode: 301,
-        destination: "/home/1",
-      },
-    };
-  }
   return dehydratedState([Paths.Games, Paths.Users]);
 };
 
 const TablesPage = () => {
+  useCheckLogin();
+  const router = useRouter();
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
   const { setSelectedDate, selectedDate } = useContext(SelectedDateContext);
   const [showAllTables, setShowAllTables] = useState(true);
   const { setSelectedLocationId } = useContext(LocationContext);
-  const router = useRouter();
   const location = parseInt(router.query.location as string, 10);
   setSelectedLocationId(location);
 
-  const games = useGetGames() || [];
-
-  let { visits } = useGetVisits();
-  visits = visits || [];
-
+  const games = useGetGames();
+  let visits = useGetVisits();
   let tables = useGetTables();
-  tables = tables || [];
-
-  let users = useGetUsers() || [];
+  let users = useGetUsers();
 
   // Sort tables first active tables, then closed ones.
   // if both active then sort by name
@@ -113,7 +98,13 @@ const TablesPage = () => {
       );
     }
 
-    setMentors(newMentors);
+    setMentors((mentors) => {
+      if (isEqual(mentors, newMentors)) {
+        return mentors;
+      } else {
+        return newMentors;
+      }
+    });
   }, [defaultUser, visits]);
 
   return (
@@ -235,5 +226,7 @@ const TablesPage = () => {
     </>
   );
 };
+
+// TablesPage.whyDidYouRender = true;
 
 export default TablesPage;

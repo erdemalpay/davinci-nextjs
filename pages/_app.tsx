@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "../scripts/wdyr";
 import type { AppProps } from "next/app";
 import { LocationContext } from "../context/LocationContext";
 import { useState } from "react";

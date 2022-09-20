@@ -11,12 +11,14 @@ import {
   useGetMemberships,
   useMembershipMutations,
 } from "../utils/api/membership";
+import { useCheckLogin } from "../hooks/useCheckLogin";
 
 export const getStaticProps: GetStaticProps = async () => {
   return dehydratedState([Paths.Memberships]);
 };
 
 export default function Memberships() {
+  useCheckLogin();
   const { deleteMembership, updateMembership, createMembership } =
     useMembershipMutations();
 

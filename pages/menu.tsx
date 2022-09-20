@@ -19,6 +19,7 @@ import {
   ChevronDownIcon,
 } from "@heroicons/react/solid";
 import { Tooltip } from "@material-tailwind/react";
+import { useCheckLogin } from "../hooks/useCheckLogin";
 
 export const getStaticProps: GetStaticProps = async () => {
   return dehydratedState([Paths.MenuCategories, Paths.MenuItems]);
@@ -31,6 +32,7 @@ interface ItemGroup {
 }
 
 export default function MenuCategories() {
+  useCheckLogin();
   const categories = useGetCategories();
   const { deleteCategory, updateCategory, createCategory } =
     useCategoryMutations();
@@ -105,7 +107,6 @@ export default function MenuCategories() {
     if (!item) return;
     const target = event.target as HTMLInputElement;
     if (!target.value) return;
-    console.log({ item, value: target.value });
     if (get(item, target.name) === +target.value) {
       return;
     }

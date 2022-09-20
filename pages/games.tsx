@@ -11,12 +11,14 @@ import { AddGameDialog } from "../components/games/AddGameDialog";
 import { TrashIcon } from "@heroicons/react/solid";
 import { dehydratedState, Paths } from "../utils/api/factory";
 import { useGameMutations, useGetGames } from "../utils/api/game";
+import { useCheckLogin } from "../hooks/useCheckLogin";
 
 export const getStaticProps: GetStaticProps = async () => {
   return dehydratedState([Paths.Games]);
 };
 
 export default function Games() {
+  useCheckLogin();
   const games = useGetGames();
   const { updateGame, deleteGame, createGame } = useGameMutations();
 

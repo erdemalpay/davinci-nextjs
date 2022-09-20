@@ -29,7 +29,7 @@ const LoginPage: NextPage = () => {
     try {
       setError(false);
       await login(payload);
-      router.push("/home/1");
+      router.push("/1");
     } catch (error) {
       setError(true);
 

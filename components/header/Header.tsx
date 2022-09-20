@@ -29,7 +29,7 @@ export function Header({ showLocationSelector = true }: HeaderProps) {
       <nav className="w-full bg-gray-800 shadow">
         <div className="px-2 lg:px-6 h-16 flex justify-between mx-2 lg:mx-20">
           <div className="flex items-center">
-            <Link href={`/home/${selectedLocation?._id}`}>
+            <Link href={`/${selectedLocation?._id}`}>
               <a className="text-base text-white font-bold tracking-normal leading-tight">
                 Da Vinci Panel
               </a>

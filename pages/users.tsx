@@ -10,12 +10,14 @@ import { useGetAllUsers, useUserMutations } from "../utils/api/user";
 import { Switch } from "@headlessui/react";
 import { CheckSwitch } from "../components/common/CheckSwitch";
 import { dehydratedState, Paths } from "../utils/api/factory";
+import { useCheckLogin } from "../hooks/useCheckLogin";
 
 export const getStaticProps: GetStaticProps = async () => {
   return dehydratedState([Paths.AllUsers]);
 };
 
 export default function Users() {
+  useCheckLogin();
   const { updateUser, createUser } = useUserMutations();
   const users = useGetAllUsers();
   const [showInactiveUsers, setShowInactiveUsers] = useState(false);

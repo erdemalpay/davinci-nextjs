@@ -2,6 +2,7 @@ import { GetServerSideProps } from "next";
 import type { User } from "../types";
 import { getCurrentUser } from "../utils/api/user";
 import { useQuery } from "react-query";
+import { useCheckLogin } from "../hooks/useCheckLogin";
 
 const path = "/user/profile";
 
@@ -11,6 +12,7 @@ export const getServerSideProps: GetServerSideProps = async () => {
 };
 
 export default function UserComponent({ user: initialUser }: { user: User }) {
+  useCheckLogin();
   const { data, error } = useQuery(path, () => getCurrentUser(), {
     initialData: initialUser,
   });

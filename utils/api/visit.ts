@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { LocationContext } from "../../context/LocationContext";
 import { SelectedDateContext } from "../../context/SelectedDateContext";
 import { format } from "date-fns";
+import { useGetItems } from "./factory";
 
 interface UpdateVisitPayload {
   id: number;
@@ -27,20 +28,13 @@ export function finishVisit({ id }: UpdateVisitPayload): Promise<Visit> {
 export function useGetVisits() {
   const { selectedLocationId } = useContext(LocationContext);
   const { selectedDate } = useContext(SelectedDateContext);
-  const query = `/visits?location=${selectedLocationId}&date=${format(
-    selectedDate!,
-    "yyyy-MM-dd"
-  )}`;
-
-  const { isLoading, error, data, isFetching } = useQuery(query, () =>
-    get<Visit[]>({ path: query })
+  return useGetItems<Visit>(
+    `/visits?location=${selectedLocationId}&date=${format(
+      selectedDate!,
+      "yyyy-MM-dd"
+    )}`,
+    true
   );
-  return {
-    isLoading,
-    error,
-    visits: data,
-    isFetching,
-  };
 }
 
 export function useGetMonthlyVisits(location: number, date: string) {

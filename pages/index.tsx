@@ -1,19 +1,7 @@
-import { useRouter } from "next/router";
-import { useEffect } from "react";
-import { getUser } from "../utils/api/user";
+import { useCheckLogin } from "../hooks/useCheckLogin";
 
 const Home = () => {
-  const router = useRouter();
-  useEffect(() => {
-    getUser()
-      .then((user) => {
-        router.push("/home/1");
-      })
-      .catch((err) => {
-        router.push("/login");
-      });
-  }, [router]);
-
+  useCheckLogin("/1");
   return null;
 };
 

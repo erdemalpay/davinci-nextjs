@@ -4,6 +4,7 @@ import { MentorAnalyticChart } from "../components/analytics/MentorAnalyticChart
 import { GetStaticProps } from "next";
 import { fetchItems, Paths } from "../utils/api/factory";
 import { Game } from "../types";
+import { useCheckLogin } from "../hooks/useCheckLogin";
 
 export const getStaticProps: GetStaticProps = async () => {
   const games = await fetchItems<Game>(Paths.Games);
@@ -15,6 +16,7 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 export default function Analytics({ games }: { games: Game[] }) {
+  useCheckLogin();
   return (
     <>
       <Header showLocationSelector={false} />

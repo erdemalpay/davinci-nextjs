@@ -17,7 +17,7 @@ export function LocationSelector() {
         <button
           key={location._id}
           onClick={() => {
-            router.push(`/home/${location._id}`);
+            router.push(`/${location._id}`);
           }}
           className={`text-sm ${
             selectedLocation?._id === location._id ? "border-2" : "border-0"

@@ -15,7 +15,7 @@ export function PageSelector() {
   const routes = [
     {
       name: "Tables",
-      path: `/home/${selectedLocationId}`,
+      path: `/${selectedLocationId}`,
     },
     {
       name: "Gameplays",
