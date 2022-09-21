@@ -17,6 +17,16 @@ export const Paths = {
   Location: "/location",
 };
 
+// This map is for revalidating server side page rendering.
+// Whenever any mutation is triggered for paths in key values, we need to rerender each page in value array
+export const revalidationMap = {
+  [Paths.Users]: ["/1", "/2", "/gameplays", "/users"],
+  [Paths.Games]: ["/1", "/2", "/gameplays", "/games"],
+  [Paths.Memberships]: ["/memberships"],
+  [Paths.MenuCategories]: ["/menu"],
+  [Paths.MenuItems]: ["/menu"],
+};
+
 export function fetchItems<T extends { _id: number | string }>(
   path: string
 ): Promise<T[]> {
@@ -115,7 +125,7 @@ export function useMutationApi<T extends { _id: number | string }>({
       // Always refetch after error or success:
       onSettled: async () => {
         if (needsRevalidate) {
-          await revalidate(fetchQuery);
+          await revalidate(revalidationMap[baseQuery]);
         }
         queryClient.invalidateQueries(fetchQuery);
       },
@@ -157,7 +167,7 @@ export function useMutationApi<T extends { _id: number | string }>({
       // Always refetch after error or success:
       onSettled: async () => {
         if (needsRevalidate) {
-          await revalidate(fetchQuery);
+          await revalidate(revalidationMap[baseQuery]);
         }
         queryClient.invalidateQueries(fetchQuery);
       },
@@ -205,7 +215,7 @@ export function useMutationApi<T extends { _id: number | string }>({
       // Always refetch after error or success:
       onSettled: async () => {
         if (needsRevalidate) {
-          await revalidate(fetchQuery);
+          await revalidate(revalidationMap[baseQuery]);
         }
         queryClient.invalidateQueries(fetchQuery);
       },

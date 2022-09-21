@@ -26,8 +26,11 @@ function printStackTrace() {
   console.log(stack);
 }
 
-export async function revalidate(path: string) {
-  return axios.get(`/api/revalidate?path=${path}`);
+export async function revalidate(paths: string[]) {
+  console.log({ paths });
+  return Promise.all(
+    paths.map((path) => axios.get(`/api/revalidate?path=${path}`))
+  );
 }
 
 // T = ResponseType
