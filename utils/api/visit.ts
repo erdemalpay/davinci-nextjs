@@ -20,8 +20,8 @@ export function createVisit(visit: Partial<Visit>): Promise<Visit> {
 
 export function finishVisit({ id }: UpdateVisitPayload): Promise<Visit> {
   return patch<Partial<Visit>, Visit>({
-    path: `/visits/${id}`,
-    payload: { finishHour: format(new Date(), "HH:mm") },
+    path: `/visits/finish/${id}`,
+    payload: {},
   });
 }
 

@@ -35,13 +35,9 @@ export function ActiveVisitList({
 
   function handleSelection(item: User) {
     if (!item) return;
-    const date = format(new Date(), "yyyy-MM-dd");
-    const startHour = format(new Date(), "HH:mm");
     createVisit({
       user: item,
       location: selectedLocationId,
-      date,
-      startHour,
     });
     // setItems([...items, item]);
   }
