@@ -118,7 +118,7 @@ export default function Gameplays() {
 
   function handlePageChange(value: number) {
     const newPage = filterData.page + value;
-    if (newPage > 0 && newPage <= totalItems / filterData.limit) {
+    if (newPage > 0 && newPage <= Math.ceil(totalItems / filterData.limit)) {
       setFilterData({
         ...filterData,
         page: newPage,
