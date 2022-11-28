@@ -46,8 +46,8 @@
     "eslint": "8.7.0",
     "eslint-config-next": "12.0.8",
     "jest": "^27.5.1",
-    "postcss": "^8.4.5",
-    "tailwindcss": "^3.0.15",
+    "postcss": "^8.4.19",
+    "tailwindcss": "^3.2.4",
     "tailwindcss-named-groups": "^0.0.5",
     "typescript": "4.5.4"
   }

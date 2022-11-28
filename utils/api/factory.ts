@@ -15,6 +15,8 @@ export const Paths = {
   MenuItems: "/menu/items",
   AllUsers: "/users?all=true",
   Location: "/location",
+  Reservations: "/reservations",
+  ReservationsCall: "/reservations/call",
 };
 
 // This map is for revalidating server side page rendering.
@@ -217,6 +219,7 @@ export function useMutationApi<T extends { _id: number | string }>({
         if (needsRevalidate) {
           await revalidate(revalidationMap[baseQuery]);
         }
+        console.log({ fetchQuery });
         queryClient.invalidateQueries(fetchQuery);
       },
     });

@@ -1,25 +1,25 @@
 import { useContext, useState, useEffect, useMemo } from "react";
-import { DateInput } from "../components/common/DateInput";
-import { Header } from "../components/header/Header";
-import { InputWithLabel } from "../components/common/InputWithLabel";
-import { CreateTableDialog } from "../components/tables/CreateTableDialog";
+import { DateInput } from "../../components/common/DateInput";
+import { Header } from "../../components/header/Header";
+import { InputWithLabel } from "../../components/common/InputWithLabel";
+import { CreateTableDialog } from "../../components/tables/CreateTableDialog";
 import { GetStaticPaths, GetStaticProps } from "next";
-import { useGetTables } from "../utils/api/table";
-import { Table, User, Game } from "../types";
-import { TableCard } from "../components/tables/TableCard";
-import { useGetUsers } from "../utils/api/user";
-import { ActiveVisitList } from "../components/tables/ActiveVisitList";
-import { SelectedDateContext } from "../context/SelectedDateContext";
-import { sortTable } from "../utils/sort";
-import { useGetVisits } from "../utils/api/visit";
+import { useGetTables } from "../../utils/api/table";
+import { Table, User, Game } from "../../types";
+import { TableCard } from "../../components/tables/TableCard";
+import { useGetUsers } from "../../utils/api/user";
+import { ActiveVisitList } from "../../components/tables/ActiveVisitList";
+import { SelectedDateContext } from "../../context/SelectedDateContext";
+import { sortTable } from "../../utils/sort";
+import { useGetVisits } from "../../utils/api/visit";
 import { isToday } from "date-fns";
-import { PreviousVisitList } from "../components/tables/PreviousVisitList";
+import { PreviousVisitList } from "../../components/tables/PreviousVisitList";
 import { Switch } from "@headlessui/react";
-import { LocationContext } from "../context/LocationContext";
-import { dehydratedState, Paths } from "../utils/api/factory";
-import { useGetGames } from "../utils/api/game";
+import { LocationContext } from "../../context/LocationContext";
+import { dehydratedState, Paths } from "../../utils/api/factory";
+import { useGetGames } from "../../utils/api/game";
 import { useRouter } from "next/router";
-import { useCheckLogin } from "../hooks/useCheckLogin";
+import { useCheckLogin } from "../../hooks/useCheckLogin";
 import { isEqual } from "lodash";
 
 export const getStaticPaths: GetStaticPaths = () => {
@@ -41,7 +41,8 @@ const TablesPage = () => {
   const [isCreateTableDialogOpen, setIsCreateTableDialogOpen] = useState(false);
   const { setSelectedDate, selectedDate } = useContext(SelectedDateContext);
   const [showAllTables, setShowAllTables] = useState(true);
-  const { setSelectedLocationId } = useContext(LocationContext);
+  const { selectedLocationId, setSelectedLocationId } =
+    useContext(LocationContext);
   const location = parseInt(router.query.location as string, 10);
   setSelectedLocationId(location);
 
@@ -121,6 +122,14 @@ const TablesPage = () => {
               />
             </div>
             <div className="flex justify-between gap-x-4">
+              <button
+                onClick={() =>
+                  router.push(`/${selectedLocationId}/reservations`)
+                }
+                className="my-3 bg-white transition duration-150 ease-in-out hover:border-gray-900 hover:text-gray-900 rounded border border-gray-800 text-gray-800 px-6 text-sm"
+              >
+                Open Reservations
+              </button>
               <button
                 onClick={() => setIsCreateTableDialogOpen(true)}
                 className="my-3 bg-white transition duration-150 ease-in-out hover:border-gray-900 hover:text-gray-900 rounded border border-gray-800 text-gray-800 px-6 text-sm"

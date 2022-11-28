@@ -1,7 +1,7 @@
-import { InputWithLabel, InputWithLabelProps } from "./InputWithLabel";
-import { forwardRef, Fragment, useState } from "react";
+import { InputWithLabelProps } from "./InputWithLabel";
+import { Fragment, useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
-import { CheckIcon, SelectorIcon } from "@heroicons/react/solid";
+import { SelectorIcon } from "@heroicons/react/solid";
 import { TagType } from "../../types";
 import { Input } from "@material-tailwind/react";
 
@@ -33,7 +33,7 @@ export function Autocomplete<T>({
             .includes(query.toLowerCase().replace(/\s+/g, ""));
         });
 
-  /* We are wrapping Autocomplete component with <form autocomplete /> to prevent second autocomplete coming from browser */
+  /* We are wrapping Autocomplete component with <form autocomplete="off" /> to prevent second autocomplete coming from browser */
   return (
     <div className="w-full flex">
       <form className="w-full flex" autoComplete="off">

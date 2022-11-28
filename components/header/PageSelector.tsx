@@ -18,6 +18,10 @@ export function PageSelector() {
       path: `/${selectedLocationId}`,
     },
     {
+      name: "Reservations",
+      path: `/${selectedLocationId}/reservations`,
+    },
+    {
       name: "Gameplays",
       path: "/gameplays",
     },

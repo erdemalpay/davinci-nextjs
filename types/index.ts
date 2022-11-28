@@ -71,6 +71,30 @@ export type MenuItem = {
   priceNeorama: number;
 };
 
+export enum ReservationStatusEnum {
+  WAITING = "Waiting",
+  COMING = "Coming",
+  NOT_COMING = "Not coming",
+  NOT_RESPONDED = "Not responded",
+  ALREADY_CAME = "Already came",
+}
+
+export type Reservation = {
+  _id: number;
+  location: number;
+  name: string;
+  phone: string;
+  playerCount: number;
+  date: string;
+  reservedTable: string;
+  reservationHour: string;
+  callHour: string;
+  approveHour: string;
+  callCount: number;
+  finishHour: string;
+  status: ReservationStatusEnum;
+};
+
 export type TagType<T> = {
   _id: string | number;
   name: string;

@@ -1,43 +1,66 @@
-import { PropsWithChildren, useState } from "react";
+import { Fragment, useState } from "react";
+import { Listbox, Transition } from "@headlessui/react";
+import { CheckIcon, ChevronDownIcon } from "@heroicons/react/solid";
 
-interface DropdownProps {
-  text: string;
+interface Props<T> {
+  items: T[];
+  value: T;
+  onChange: (t: T) => void;
 }
 
-interface DropdownItemProps {
-  text: string;
-  onClick: () => void;
-}
-
-export function DropdownItem({ text, onClick }: DropdownItemProps) {
+export default function Dropdown<T>({ items, value, onChange }: Props<T>) {
   return (
-    <li
-      onClick={onClick}
-      className="cursor-pointer text-gray-600 text-sm leading-3 tracking-normal py-2 hover:text-indigo-700 focus:text-indigo-700 focus:outline-none"
-    >
-      <span className="ml-2">{text}</span>
-    </li>
-  );
-}
-
-export function Dropdown({ text, children }: PropsWithChildren<DropdownProps>) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="h-full flex">
-      <div
-        aria-haspopup="true"
-        className="cursor-pointer flex items-center"
-        onClick={() => setOpen(!open)}
-      >
-        {open ? (
-          <ul className="p-2 w-40 border-r bg-white absolute rounded z-40 left-0 shadow mt-16 lg:mt-36">
-            {children}
-          </ul>
-        ) : (
-          ""
-        )}
-        <p className="text-white text-sm">{text}</p>
-      </div>
+    <div className="top-16 w-72">
+      <Listbox value={value} onChange={onChange}>
+        <div className="relative mt-1">
+          <Listbox.Button className="relative w-full cursor-default rounded-lg bg-white py-2 pl-3 pr-10 text-left shadow-md focus:outline-none focus-visible:border-indigo-500 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-orange-300 sm:text-sm">
+            <span className="block truncate">{value}</span>
+            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+              <ChevronDownIcon
+                className="h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+            </span>
+          </Listbox.Button>
+          <Transition
+            as={Fragment}
+            leave="transition ease-in duration-100"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              {items.map((item, itemIdx) => (
+                <Listbox.Option
+                  key={itemIdx}
+                  className={({ active }) =>
+                    `relative cursor-default select-none py-2 pl-10 pr-4 ${
+                      active ? "bg-amber-100 text-amber-900" : "text-gray-900"
+                    }`
+                  }
+                  value={item}
+                >
+                  {({ selected }) => (
+                    <>
+                      <span
+                        className={`block truncate ${
+                          selected ? "font-medium" : "font-normal"
+                        }`}
+                      >
+                        {item}
+                      </span>
+                      {selected ? (
+                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-amber-600">
+                          <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                        </span>
+                      ) : null}
+                    </>
+                  )}
+                </Listbox.Option>
+              ))}
+            </Listbox.Options>
+          </Transition>
+        </div>
+      </Listbox>
     </div>
   );
 }
