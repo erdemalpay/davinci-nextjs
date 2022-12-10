@@ -1,7 +1,7 @@
 import { GetStaticPaths, GetStaticProps } from "next";
 import { FormEvent, useContext, useState } from "react";
 import { Header } from "../../components/header/Header";
-import { TrashIcon } from "@heroicons/react/outline";
+import { LockOpenIcon } from "@heroicons/react/outline";
 import { toast } from "react-toastify";
 import { EditableText } from "../../components/common/EditableText";
 import { dehydratedState, Paths } from "../../utils/api/factory";
@@ -96,6 +96,13 @@ export default function Reservations() {
     ].includes(reservation.status);
   }
 
+  function isNotCompleted(reservation: Reservation) {
+    return ![
+      ReservationStatusEnum.NOT_COMING,
+      ReservationStatusEnum.ALREADY_CAME,
+    ].includes(reservation.status);
+  }
+
   function isCalled(reservation: Reservation) {
     return [
       ReservationStatusEnum.COMING,
@@ -141,6 +148,7 @@ export default function Reservations() {
           text={row.phone}
           onUpdate={updateReservationHandler}
           item={row}
+          type="phone"
         />
       ),
     },
@@ -178,6 +186,7 @@ export default function Reservations() {
       cell: (row: Reservation) => (
         <span>{row.callCount ? row.callCount : "-"}</span>
       ),
+      hideOnMobile: true,
     },
     {
       id: "callTime",
@@ -185,6 +194,7 @@ export default function Reservations() {
       cell: (row: Reservation) => (
         <span>{row.callHour ? row.callHour : "-"}</span>
       ),
+      hideOnMobile: true,
     },
     {
       id: "status",
@@ -192,7 +202,7 @@ export default function Reservations() {
       cell: (row: Reservation) => <span>{row.status}</span>,
     },
     {
-      id: "actions",
+      id: "callAction",
       header: "",
       hide: isCalled,
       cell: (row: Reservation) => (
@@ -211,7 +221,7 @@ export default function Reservations() {
       ),
     },
     {
-      id: "actions",
+      id: "comeAction",
       header: "",
       hide: isCompleted,
       cell: (row: Reservation) => (
@@ -227,6 +237,27 @@ export default function Reservations() {
               }}
             >
               <CheckIcon className="text-green-500 w-6 h-6" />
+            </button>
+          </Tooltip>
+        </div>
+      ),
+    },
+    {
+      id: "revertAction",
+      header: "",
+      hide: isNotCompleted,
+      cell: (row: Reservation) => (
+        <div className="flex gap-4">
+          <Tooltip content="Open back">
+            <button
+              onClick={() => {
+                updateReservation({
+                  id: row._id,
+                  updates: { status: ReservationStatusEnum.WAITING },
+                });
+              }}
+            >
+              <LockOpenIcon className="text-green-500 w-6 h-6" />
             </button>
           </Tooltip>
         </div>
@@ -283,12 +314,19 @@ export default function Reservations() {
               </Switch>
             </div>
             <div className="w-full overflow-x-auto h-full">
-              <table className="w-full whitespace-nowrap  border border-gray-300">
+              <table className="w-full whitespace-nowrap border border-gray-300 text-center">
                 <thead>
                   <tr className="h-10 w-full text-sm leading-none text-gray-600">
                     {reservationColumns.map((column) => (
-                      <th key={column.id} className="font-bold text-left">
-                        <div className="flex gap-x-2">{column.header}</div>
+                      <th
+                        key={column.id}
+                        className={`font-bold text-left ${
+                          column.hideOnMobile ? "hidden" : ""
+                        }`}
+                      >
+                        <div className="justify-center flex gap-x-2">
+                          {column.header}
+                        </div>
                       </th>
                     ))}
                   </tr>
@@ -310,9 +348,9 @@ export default function Reservations() {
                           return (
                             <td
                               key={column.id}
-                              className={
+                              className={`${
                                 isCompleted(reservation) ? "line-through" : ""
-                              }
+                              } ${column.hideOnMobile ? "hidden" : ""}`}
                             >
                               {!column.hide?.(reservation) &&
                                 column.cell(reservation)}

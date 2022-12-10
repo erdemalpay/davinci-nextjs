@@ -27,7 +27,12 @@ export function EditableText<T>({
           setIsEditActive(true);
         }}
       >
-        {text}
+        {type === "phone"
+          ? `(${text.slice(0, 4)} ${text.slice(4, 7)} ${text.slice(
+              7,
+              9
+            )} ${text.slice(9, 11)})`
+          : text}
       </span>
     </Tooltip>
   ) : (
