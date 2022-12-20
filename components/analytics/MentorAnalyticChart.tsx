@@ -15,6 +15,7 @@ import { useQueryClient } from "react-query";
 import { colors } from "../../utils/color";
 import { InputWithLabel } from "../common/InputWithLabel";
 import { useGetUsers } from "../../utils/api/user";
+import { EditableText } from "../common/EditableText";
 
 export interface GameCount {
   name: string;
@@ -73,10 +74,11 @@ export function MentorAnalyticChart() {
           className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm"
           value={dateFilter}
         >
-          <option value="1">This Week</option>
-          <option value="2">Last Week</option>
-          <option value="3">This Month</option>
-          <option value="4">Last Month</option>
+          <option value="1">Single Day</option>
+          <option value="2">This Week</option>
+          <option value="3">Last Week</option>
+          <option value="4">This Month</option>
+          <option value="5">Last Month</option>
           <option value="0">Manual</option>
         </select>
       </div>
@@ -88,19 +90,23 @@ export function MentorAnalyticChart() {
           value={startDate}
           onChange={(event) => {
             setStartDate((event.target as HTMLInputElement).value);
-            setDateFilter(DateFilter.MANUAL);
+            if (dateFilter === DateFilter.SINGLE_DAY) {
+              setEndDate((event.target as HTMLInputElement).value);
+            } else {
+              setDateFilter(DateFilter.MANUAL);
+            }
           }}
         />
         <InputWithLabel
           type="date"
           name="End Date"
-          label={`${endDate ? "End Date" : ""}`}
+          label="End Date"
           value={endDate}
           onChange={(event) => {
             setEndDate((event.target as HTMLInputElement).value);
             setDateFilter(DateFilter.MANUAL);
           }}
-          className={`${endDate ? "" : "hidden"}`}
+          hidden={!endDate || dateFilter === DateFilter.SINGLE_DAY}
         />
       </div>
       <div className="flex w-full justify-between gap-2">
@@ -118,15 +124,16 @@ export function MentorAnalyticChart() {
         </div>
         <div className="flex flex-col w-1/2">
           <label className="flex items-center text-xs">Number of items:</label>
-          <select
-            onChange={(value) => setItemLimit(Number(value.target.value))}
-            className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm "
-            value={itemLimit}
-          >
-            <option>5</option>
-            <option>10</option>
-            <option>20</option>
-          </select>
+          <EditableText
+            name="name"
+            type="number"
+            text={itemLimit.toString()}
+            onUpdate={(event) =>
+              setItemLimit(Number((event.target as HTMLInputElement).value))
+            }
+            item={itemLimit}
+            inactiveStyle="border-b-[1px]"
+          />
         </div>
       </div>
       {mentorData?.length ? (

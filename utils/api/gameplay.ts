@@ -80,11 +80,15 @@ export function useGetGameplayAnalytics(
   limit: number,
   startDate: string,
   location: string,
-  endDate?: string
+  endDate?: string,
+  mentor?: string
 ) {
   let query = `/gameplays/group?location=${location}&startDate=${startDate}&field=${field}&limit=${limit}`;
   if (endDate) {
     query += `&endDate=${endDate}`;
+  }
+  if (mentor) {
+    query += `&mentor=${mentor}`;
   }
 
   const { isLoading, error, data, isFetching } = useQuery(query, () =>

@@ -7,6 +7,7 @@ interface Props<T> {
   name: string;
   item?: T;
   type?: string;
+  inactiveStyle?: string;
 }
 
 export function EditableText<T>({
@@ -15,6 +16,7 @@ export function EditableText<T>({
   item,
   name,
   type = "text",
+  inactiveStyle,
 }: Props<T>) {
   const [isEditActive, setIsEditActive] = useState(false);
   const [value, setValue] = useState(text);
@@ -22,7 +24,7 @@ export function EditableText<T>({
   return !isEditActive ? (
     <Tooltip content="Click to edit">
       <span
-        className="cursor-pointer"
+        className={`cursor-pointer h-full border-0 border-gray-300 flex items-center ${inactiveStyle}`}
         onClick={() => {
           setIsEditActive(true);
         }}
@@ -38,7 +40,7 @@ export function EditableText<T>({
   ) : (
     <input
       name={name}
-      className="bg-white text-gray-600 border-0 border-b-[1px] focus:outline-none font-normal text-base border-gray-300"
+      className="bg-white text-gray-600 border-0 border-b-[1px] focus:outline-none font-normal text-base border-gray-300 h-full"
       placeholder={text}
       type={type}
       value={value}

@@ -15,6 +15,8 @@ import { useQueryClient } from "react-query";
 import { colors } from "../../utils/color";
 import { InputWithLabel } from "../common/InputWithLabel";
 import { Game } from "../../types";
+import { EditableText } from "../common/EditableText";
+import { useGetUsers } from "../../utils/api/user";
 
 export interface GameCount {
   name: string;
@@ -31,14 +33,17 @@ export function GameAnalyticChart({ games }: Props) {
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string | undefined>("");
   const [location, setLocation] = useState<string>("1,2");
+  const [mentor, setMentor] = useState<string>("");
   const [itemLimit, setItemLimit] = useState(5);
+  const users = useGetUsers();
 
   const { data: gameAnalytics } = useGetGameplayAnalytics(
     "game",
     itemLimit,
     startDate,
     location,
-    endDate
+    endDate,
+    mentor
   );
 
   const [gameData, setGameData] = useState<GameCount[]>([]);
@@ -77,10 +82,11 @@ export function GameAnalyticChart({ games }: Props) {
           className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm"
           value={dateFilter}
         >
-          <option value="1">This Week</option>
-          <option value="2">Last Week</option>
-          <option value="3">This Month</option>
-          <option value="4">Last Month</option>
+          <option value="1">Single Day</option>
+          <option value="2">This Week</option>
+          <option value="3">Last Week</option>
+          <option value="4">This Month</option>
+          <option value="5">Last Month</option>
           <option value="0">Manual</option>
         </select>
       </div>
@@ -92,19 +98,23 @@ export function GameAnalyticChart({ games }: Props) {
           value={startDate}
           onChange={(event) => {
             setStartDate((event.target as HTMLInputElement).value);
-            setDateFilter(DateFilter.MANUAL);
+            if (dateFilter === DateFilter.SINGLE_DAY) {
+              setEndDate((event.target as HTMLInputElement).value);
+            } else {
+              setDateFilter(DateFilter.MANUAL);
+            }
           }}
         />
         <InputWithLabel
           type="date"
           name="End Date"
-          label={`${endDate ? "End Date" : ""}`}
+          label="End Date"
           value={endDate}
           onChange={(event) => {
             setEndDate((event.target as HTMLInputElement).value);
             setDateFilter(DateFilter.MANUAL);
           }}
-          className={`${endDate ? "" : "hidden"}`}
+          hidden={!endDate || dateFilter === DateFilter.SINGLE_DAY}
         />
       </div>
       <div className="flex w-full justify-between gap-2">
@@ -121,16 +131,32 @@ export function GameAnalyticChart({ games }: Props) {
           </select>
         </div>
         <div className="flex flex-col w-1/2">
-          <label className="flex items-center text-xs">Number of items:</label>
+          <label className="flex items-center text-xs ">Mentor:</label>
           <select
-            onChange={(value) => setItemLimit(Number(value.target.value))}
-            className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm "
-            defaultValue="Canada"
+            onChange={(value) => setMentor(value.target.value)}
+            className="py-2 border-b-[1px] border-b-grey-300 focus:outline-none text-sm"
+            value={mentor}
           >
-            <option>5</option>
-            <option>10</option>
-            <option>20</option>
+            <option value="">All</option>
+            {users.map((mentor) => (
+              <option key={mentor._id} value={mentor._id}>
+                {mentor.name}
+              </option>
+            ))}
           </select>
+        </div>
+        <div className="flex flex-col w-1/2">
+          <label className="flex items-center text-xs">Number of items:</label>
+          <EditableText
+            name="name"
+            type="number"
+            text={itemLimit.toString()}
+            onUpdate={(event) =>
+              setItemLimit(Number((event.target as HTMLInputElement).value))
+            }
+            item={itemLimit}
+            inactiveStyle="border-b-[1px]"
+          />
         </div>
       </div>
       {gameData?.length ? (

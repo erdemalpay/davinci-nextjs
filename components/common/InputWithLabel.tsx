@@ -11,6 +11,7 @@ export interface InputWithLabelProps {
   value?: string | number;
   defaultValue?: string | number;
   bgColor?: string;
+  hidden?: boolean;
   onChange?: (event: React.FormEvent<HTMLInputElement>) => void;
 }
 
@@ -21,10 +22,11 @@ export function InputWithLabel({
   onChange,
   min = 0,
   bgColor = "bg-white",
+  hidden = false,
   ...props
 }: InputWithLabelProps) {
   return (
-    <div className="relative mt-4 w-full">
+    <div className={`relative mt-4 w-full ${hidden ? "hidden" : ""}`}>
       <input
         id={id}
         min={min}

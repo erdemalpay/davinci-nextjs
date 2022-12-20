@@ -1,7 +1,9 @@
 import {
+  endOfDay,
   endOfISOWeek,
   endOfMonth,
   format,
+  startOfDay,
   startOfISOWeek,
   startOfMonth,
   subMonths,
@@ -11,10 +13,11 @@ import {
 const DATE_FORMAT = "yyyy-MM-dd";
 
 export enum DateFilter {
-  THIS_WEEK = "1",
-  LAST_WEEK = "2",
-  THIS_MONTH = "3",
-  LAST_MONTH = "4",
+  SINGLE_DAY = "1",
+  THIS_WEEK = "2",
+  LAST_WEEK = "3",
+  THIS_MONTH = "4",
+  LAST_MONTH = "5",
   MANUAL = "0",
 }
 
@@ -22,7 +25,10 @@ export function getStartEndDates(filter: string) {
   const filterType = filter as DateFilter;
   let startDate = "";
   let endDate;
-  if (filterType === DateFilter.THIS_WEEK) {
+  if (filterType === DateFilter.SINGLE_DAY) {
+    startDate = format(startOfDay(new Date()), DATE_FORMAT);
+    endDate = format(endOfDay(new Date()), DATE_FORMAT);
+  } else if (filterType === DateFilter.THIS_WEEK) {
     startDate = format(startOfISOWeek(new Date()), DATE_FORMAT);
     endDate = undefined;
   } else if (filterType === DateFilter.LAST_WEEK) {
