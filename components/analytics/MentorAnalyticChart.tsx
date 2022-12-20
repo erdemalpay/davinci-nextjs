@@ -24,7 +24,7 @@ export interface GameCount {
 
 export function MentorAnalyticChart() {
   const queryClient = useQueryClient();
-  const [dateFilter, setDateFilter] = useState(DateFilter.LAST_MONTH);
+  const [dateFilter, setDateFilter] = useState(DateFilter.SINGLE_DAY);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string | undefined>("");
   const [location, setLocation] = useState<string>("1,2");
