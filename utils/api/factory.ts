@@ -11,6 +11,7 @@ export const Paths = {
   Games: "/games",
   Users: "/users",
   Memberships: "/memberships",
+  Rewards: "/rewards",
   MenuCategories: "/menu/categories",
   MenuItems: "/menu/items",
   AllUsers: "/users?all=true",
@@ -25,6 +26,7 @@ export const revalidationMap = {
   [Paths.Users]: ["/1", "/2", "/gameplays", "/users"],
   [Paths.Games]: ["/1", "/2", "/gameplays", "/games"],
   [Paths.Memberships]: ["/memberships"],
+  [Paths.Rewards]: ["/rewards"],
   [Paths.MenuCategories]: ["/menu"],
   [Paths.MenuItems]: ["/menu"],
 };

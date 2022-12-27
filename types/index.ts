@@ -57,6 +57,14 @@ export type Membership = {
   endDate: string;
 };
 
+export type Reward = {
+  _id: number;
+  name: string;
+  startDate: string;
+  endDate: string;
+  used: boolean;
+};
+
 export type MenuCategory = {
   _id: number;
   name: string;

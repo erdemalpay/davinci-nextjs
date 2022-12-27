@@ -34,6 +34,10 @@ export function PageSelector() {
       path: "/memberships",
     },
     {
+      name: "Rewards",
+      path: "/rewards",
+    },
+    {
       name: "Users",
       path: "/users",
     },
