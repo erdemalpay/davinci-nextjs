@@ -197,15 +197,14 @@ export function TableCard({ table, mentors, games }: TableCardProps) {
                   <h1 className="text-xs">({gameplay.playerCount})</h1>
                 </div>
                 <div className="flex">
-                  <Tooltip content={gameplay.mentor?.name}>
-                    {gameplay.mentor?._id !== "dv" ? (
-                      <div className="bg-gray-300 rounded-full px-2 uppercase mr-1">
-                        {gameplay.mentor?.name[0]}
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </Tooltip>
+                  {gameplay.mentor?._id !== "dv" ? (
+                    <div className="bg-gray-300 rounded-full px-2 mr-1 whitespace-nowrap">
+                      {gameplay.mentor?.name}
+                    </div>
+                  ) : (
+                    <></>
+                  )}
+
                   <h5 className="text-xs whitespace-nowrap">
                     {getDuration(
                       gameplay.date,

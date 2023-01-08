@@ -221,7 +221,7 @@ export function useMutationApi<T extends { _id: number | string }>({
         if (needsRevalidate) {
           await revalidate(revalidationMap[baseQuery]);
         }
-        console.log({ fetchQuery });
+
         queryClient.invalidateQueries(fetchQuery);
       },
     });

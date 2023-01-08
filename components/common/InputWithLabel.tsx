@@ -1,8 +1,8 @@
 export type InputType = "date" | "autocomplete" | "text" | "number" | "time";
 
 export interface InputWithLabelProps {
-  name: string;
-  label: string;
+  name?: string;
+  label?: string;
   type?: InputType;
   id?: string;
   readOnly?: boolean;
@@ -18,7 +18,7 @@ export interface InputWithLabelProps {
 export function InputWithLabel({
   label,
   type = "text",
-  id = label.toLowerCase(),
+  id,
   onChange,
   min = 0,
   bgColor = "bg-white",

@@ -1,4 +1,4 @@
-import { User } from "../../types";
+import { Role, User } from "../../types";
 import { get } from "../api";
 import { useGetItems, useMutationApi, Paths } from "./factory";
 
@@ -28,4 +28,8 @@ export function useGetUsers() {
 
 export function useGetAllUsers() {
   return useGetItems<User>(Paths.AllUsers, false);
+}
+
+export function useGetAllUserRoles() {
+  return useGetItems<Role>(`${Paths.Users}/roles`, false);
 }

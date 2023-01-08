@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { Autocomplete } from "../common/Autocomplete";
 import { InputWithLabelProps } from "../common/InputWithLabel";
-import { Chip } from "@material-tailwind/react";
+import { Chip, Tooltip } from "@material-tailwind/react";
 import {
   useCreateVisitMutation,
   useFinishVisitMutation,
@@ -65,12 +65,14 @@ export function ActiveVisitList({
       </div>
       <div className="flex flex-wrap gap-4 mt-2">
         {visits.map((visit) => (
-          <Chip
-            key={visit.user?._id}
-            value={visit.user?.name}
-            color="blue-grey"
-            dismissible={{ onClose: () => handleChipClose(visit) }}
-          />
+          <Tooltip key={visit.user?._id} content={visit.user?.role?.name}>
+            <Chip
+              value={visit.user?.name}
+              style={{ backgroundColor: visit.user?.role?.color }}
+              color="grey"
+              dismissible={{ onClose: () => handleChipClose(visit) }}
+            />
+          </Tooltip>
         ))}
       </div>
     </div>

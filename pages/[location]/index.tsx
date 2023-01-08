@@ -66,6 +66,20 @@ const TablesPage = () => {
     }
   });
 
+  visits.sort((a, b) => {
+    if (a.user.role.name > b.user.role.name) {
+      return 1;
+    } else if (a.user.role.name < b.user.role.name) {
+      return -1;
+    } else if (a.user.name > b.user.name) {
+      return 1;
+    } else if (a.user.name < b.user.name) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
+
   const defaultUser: User = users.find((user) => user._id === "dv") as User;
 
   const [mentors, setMentors] = useState<User[]>(

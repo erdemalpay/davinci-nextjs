@@ -85,7 +85,7 @@ export default function Reservations() {
       id: selectedReservation._id,
       updates: { status: value },
     });
-    console.log({ selectedReservation });
+
     setIsReservationCalledDialogOpen(false);
   }
 

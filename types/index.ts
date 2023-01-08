@@ -25,11 +25,18 @@ export type Table = {
   gameplays: Gameplay[];
 };
 
+export type Role = {
+  _id: number;
+  name: string;
+  color: string;
+  permissions: RolePermissionEnum[];
+};
+
 export type User = {
   _id: string;
   name: string;
-  role: string;
   active: boolean;
+  role: Role;
 };
 
 export type Game = {
@@ -107,3 +114,11 @@ export type TagType<T> = {
   _id: string | number;
   name: string;
 } & T;
+
+export enum RolePermissionEnum {
+  ADMIN = "Admin",
+  MANAGEMENT = "Management",
+  CHECKIN = "CheckIn",
+  TABLES = "Tables",
+  ANALYTICS = "Analytics",
+}

@@ -49,9 +49,9 @@ export default function Gameplays() {
         items.map((gameplay) => ({
           _id: gameplay?._id || 0,
           game: (gameplay?.game as Game)?.name,
-          mentor: gameplay.mentor.name,
-          playerCount: gameplay.playerCount,
-          date: gameplay.date,
+          mentor: gameplay?.mentor?.name,
+          playerCount: gameplay?.playerCount,
+          date: gameplay?.date,
         }))
       );
       setTotalItems(totalCount);

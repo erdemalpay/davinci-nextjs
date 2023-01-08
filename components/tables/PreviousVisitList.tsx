@@ -1,5 +1,5 @@
 import { InputWithLabelProps } from "../common/InputWithLabel";
-import { Chip } from "@material-tailwind/react";
+import { Chip, Tooltip } from "@material-tailwind/react";
 import { Visit } from "../../types";
 
 interface PreviousVisitListProps {
@@ -13,15 +13,17 @@ export function PreviousVisitList({ visits }: PreviousVisitListProps) {
         htmlFor="mentors"
         className="flex text-gray-800 dark:text-gray-100 text-sm items-center"
       >
-        {"Who's at cafe:"}
+        {"Who was at cafe:"}
       </label>
       <div className="flex flex-wrap gap-4 mt-2" id="mentors">
         {visits.map((visit) => (
-          <Chip
-            key={visit.user._id}
-            value={visit.user.name}
-            color="blue-grey"
-          />
+          <Tooltip key={visit?.user?._id} content={visit.user?.role?.name}>
+            <Chip
+              value={visit.user.name}
+              style={{ backgroundColor: visit.user?.role?.color }}
+              color="grey"
+            />
+          </Tooltip>
         ))}
       </div>
     </div>

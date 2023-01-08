@@ -11,6 +11,8 @@ import { Switch } from "@headlessui/react";
 import { CheckSwitch } from "../components/common/CheckSwitch";
 import { dehydratedState, Paths } from "../utils/api/factory";
 import { useCheckLogin } from "../hooks/useCheckLogin";
+import { Chip } from "@material-tailwind/react";
+import { EditableUserRole } from "../components/common/EditableUserRole";
 
 export const getStaticProps: GetStaticProps = async () => {
   return dehydratedState([Paths.AllUsers]);
@@ -60,6 +62,16 @@ export default function Users() {
           onUpdate={updateUserHandler}
           item={row}
         />
+      ),
+    },
+    {
+      id: "role",
+      header: "Role",
+      visible: true,
+      cell: (row: User) => (
+        <div className="flex flex-wrap gap-4 mt-2 w-1/2" id="roles">
+          <EditableUserRole userId={row._id} item={row.role} />
+        </div>
       ),
     },
     {

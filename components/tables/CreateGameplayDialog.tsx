@@ -133,7 +133,7 @@ export function CreateGameplayDialog({
                     <button
                       className="px-6 py-3 bg-gray-800 hover:bg-opacity-80 shadow rounded text-sm text-white disabled:bg-gray-300"
                       onClick={handleCreate}
-                      disabled={!(data.mentor && data.game && data.playerCount)}
+                      disabled={!(data.mentor && data.game)}
                     >
                       Create
                     </button>

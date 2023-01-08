@@ -14,7 +14,6 @@ interface AutocompleteProps<T> extends InputWithLabelProps {
 
 export function Autocomplete<T>({
   suggestions,
-  name,
   label,
   handleSelection,
   initialValue,
@@ -62,7 +61,7 @@ export function Autocomplete<T>({
                 <Input
                   variant="standard"
                   className="w-full pr-10 text-sm"
-                  name={name}
+                  /* name={name} */
                   label={label}
                   value={showSelected ? selected?.name || query : query}
                   onFocus={() => setQuery("")}
