@@ -7,7 +7,7 @@ import { Game } from "../types";
 import { useCheckLogin } from "../hooks/useCheckLogin";
 
 export const getStaticProps: GetStaticProps = async () => {
-  const games = await fetchItems<Game>(Paths.Games);
+  const games = (await fetchItems<Game>(Paths.Games)) || [];
   games.sort((a, b) => {
     return a.name > b.name ? 1 : -1;
   });
